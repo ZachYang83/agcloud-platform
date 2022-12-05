@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgSysLogMapper" >
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgSysLog" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="LOGIN_NAME" property="loginName"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="IP_ADDRESS" property="ipAddress"/>
+        <result column="BROWSER" property="browser" />
+        <result column="SYS_NAME" property="sysName"/>
+        <result column="FUNC_NAME" property="funcName"/>
+        <result column="OPER_RESULT" property="operResult"/>
+        <result column="OPER_DATE" property="operDate"/>
+        <result column="EXCEPTION_MESSAGE" property="exceptionMessage"/>
+        <result column="TYPE" property="type"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID, LOGIN_NAME, USER_NAME, IP_ADDRESS, BROWSER, SYS_NAME, FUNC_NAME, OPER_RESULT,OPER_DATE,EXCEPTION_MESSAGE,TYPE
+    </sql>
+    <select id="findList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from AG_SYS_LOG
+        <where>
+            <if test="userName != null and userName !=''">
+                and USER_NAME LIKE CONCAT(CONCAT('%', TRIM(#{userName})), '%')
+            </if>
+            <if test="ipAddress != null" >
+                and IP_ADDRESS LIKE CONCAT(CONCAT('%', TRIM(#{ipAddress})), '%')
+            </if>
+
+          <!--  <if test="operDate != null" >
+                and OPER_DATE = #{operDate}
+            </if>-->
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    <if test="accessTimeStart != null and accessTimeStart != ''">
+                        and OPER_DATE &gt;= to_date(#{accessTimeStart},'yyyy-mm-dd hh24:mi:ss')
+                    </if>
+                    <if test="accessTimeEnd != null and accessTimeEnd != ''">
+                        and OPER_DATE &lt;= to_date(#{accessTimeEnd},'yyyy-MM-dd hh24:mi:ss')
+                    </if>
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    <if test="accessTimeStart != null and accessTimeStart != ''">
+                        and OPER_DATE &gt;= #{accessTimeStart}
+                    </if>
+                    <if test="accessTimeEnd != null and accessTimeEnd != ''">
+                        and OPER_DATE &lt;= #{accessTimeEnd}
+                    </if>
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    <if test="accessTimeStart != null and accessTimeStart != ''">
+                        and OPER_DATE &gt;= TO_TIMESTAMP(#{accessTimeStart},'yyyy-mm-dd hh24:mi:ss')
+                    </if>
+                    <if test="accessTimeEnd != null and accessTimeEnd != ''">
+                        and OPER_DATE &lt;= TO_TIMESTAMP(#{accessTimeEnd},'yyyy-MM-dd hh24:mi:ss')
+                    </if>
+                </when>
+            </choose>
+
+        </where>
+        ORDER BY OPER_DATE desc
+    </select>
+    <insert id="save" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgSysLog">
+        INSERT INTO AG_SYS_LOG(ID,LOGIN_NAME,USER_NAME,IP_ADDRESS,BROWSER,SYS_NAME,FUNC_NAME,OPER_RESULT,OPER_DATE,EXCEPTION_MESSAGE,TYPE)
+        VALUES (#{id},#{loginName},#{userName},#{ipAddress},#{browser},#{sysName},#{funcName},
+        #{operResult},#{operDate,jdbcType=TIMESTAMP},#{exceptionMessage},#{type})
+    </insert>
+
+    <resultMap id="SysLogMap" type="Map">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR"/>
+        <result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP"/>
+        <result column="LOGIN_MESSAGE" property="loginMessage" jdbcType="VARCHAR"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="LOGOUT_TIME" property="logoutTime" jdbcType="TIMESTAMP"/>
+        <result column="LOGOUT_MESSAGE" property="logoutMessage" jdbcType="VARCHAR"/>
+        <result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findSysLoginLog" resultMap="SysLogMap">
+        select
+        LOGIN_NAME,LOGIN_TIME,LOGIN_MESSAGE,USER_NAME,LOGOUT_TIME,LOGOUT_MESSAGE,CLIENT_IP
+        from OPU_LOG_USER_LOGIN
+        <where>
+
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    <if test="startTime != null and startTime != '' and flag == '0'.toString()">
+                        and LOGIN_TIME &gt; to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss')
+                        and LOGIN_TIME is not null order by LOGIN_TIME asc
+                    </if>
+
+                    <if test="startTime != null and startTime != '' and flag == '1'.toString()">
+                        and LOGOUT_TIME &gt; to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')
+                        and LOGOUT_TIME is not null order by LOGOUT_TIME asc
+                    </if>
+
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    <if test="startTime != null and startTime != '' and flag == '0'.toString()">
+                        and LOGIN_TIME &gt; #{startTime}
+                        and LOGIN_TIME is not null order by LOGIN_TIME asc
+                    </if>
+
+                    <if test="startTime != null and startTime != '' and flag == '1'.toString()">
+                        and LOGOUT_TIME &gt; #{startTime}
+                        and LOGOUT_TIME is not null order by LOGOUT_TIME asc
+                    </if>
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    <if test="startTime != null and startTime != '' and flag == '0'.toString()">
+                        and LOGIN_TIME &gt; TO_TIMESTAMP(#{startTime},'yyyy-MM-dd hh24:mi:ss')
+                        and LOGIN_TIME is not null order by LOGIN_TIME asc
+                    </if>
+
+                    <if test="startTime != null and startTime != '' and flag == '1'.toString()">
+                        and LOGOUT_TIME &gt; TO_TIMESTAMP(#{startTime},'yyyy-MM-dd hh24:mi:ss')
+                        and LOGOUT_TIME is not null order by LOGOUT_TIME asc
+                    </if>
+                </when>
+            </choose>
+
+        </where>
+    </select>
+</mapper>

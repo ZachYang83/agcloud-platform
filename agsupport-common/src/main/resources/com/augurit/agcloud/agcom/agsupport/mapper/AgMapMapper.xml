@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgMapMapper" >
+    <resultMap id="ResultMapWithBLOBs" type="com.augurit.agcloud.agcom.agsupport.domain.AgMapCustom" >
+        <result column="glb" property="glb" jdbcType="BINARY" />
+    </resultMap>
+
+  <select id="findAll" resultType="Map" >
+     select * from ${tableName}
+    where 1=1
+    <if test="sqlParam != null ">
+       and  ${sqlParam}
+    </if>
+  </select>
+
+    <select id="findAllDef" resultType="Map" parameterType="String">
+       ${_parameter}
+    </select>
+
+    <select id="findBytes" resultMap="ResultMapWithBLOBs" parameterType="String">
+       ${_parameter}
+    </select>
+
+    <select id="findBytes2" resultType="_byte[]"  parameterType="String">
+       ${_parameter}
+    </select>
+</mapper>

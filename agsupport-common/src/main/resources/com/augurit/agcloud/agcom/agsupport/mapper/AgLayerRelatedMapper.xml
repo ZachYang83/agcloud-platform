@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgLayerRelatedMapper">
+
+    <resultMap id="resultMapForAgLayerRelated" type="com.augurit.agcloud.agcom.agsupport.domain.AgLayerRelated">
+        <id column="ID" property="id"/>
+        <result column="TYPE" property="type"/>
+        <result column="NAME" property="name"/>
+        <result column="SERVICE_DIR_LAYER_ID" property="serviceDirLayerId"/>
+        <result column="SERVICE_FIELD" property="serviceField"/>
+        <result column="RELATED_DIR_LAYER_ID" property="relatedDirLayerId"/>
+        <result column="RELATED_FIELD" property="relatedField"/>
+        <result column="URL" property="url"/>
+        <result column="URL_PARAMS" property="urlParams"/>
+
+    </resultMap>
+
+    <resultMap id="resultMapForDirLayer" type="com.augurit.agcloud.agcom.agsupport.domain.DirLayer">
+            <id column="DIR_LAYER_ID" property="dirLayerId"/>
+            <result column="LAYER_ID" property="id"/>
+            <result column="NAME" property="name"/>
+            <result column="NAME_CN" property="nameCn"/>
+            <result column="URL" property="url"/>
+            <result column="LAYER_TYPE" property="layerType"/>
+            <result column="FEATURE_TYPE" property="featureType"/>
+            <result column="LAYER_TABLE" property="layerTable"/>
+            <result column="IS_BASE_MAP" property="isBaseMap"/>
+            <result column="PARAM_ID" property="paramId"/>
+            <result column="IS_PROXY" property="isProxy"/>
+            <result column="PROXY_URL" property="proxyUrl"/>
+            <result column="VECTOR_LAYER_ID" property="vectorLayerId"/>
+            <result column="DATA" property="data"/>
+            <result column="EXTENT" property="extent"/>
+            <result column="METADATA_ID" property="metadataId"/>
+            <result column="IS_EXTERNAL" property="isExternal"/>
+            <result column="VISIBLE_MINZOOM" property="visibleMinZoom"/>
+            <result column="VISIBLE_MAXZOOM" property="visibleMaxZoom"/>
+    </resultMap>
+
+    <sql id="allColumns">
+        ID,
+        TYPE,
+        NAME,
+        SERVICE_DIR_LAYER_ID,
+        SERVICE_FIELD,
+        RELATED_DIR_LAYER_ID,
+        RELATED_FIELD,
+        URL,
+        URL_PARAMS
+    </sql>
+
+    <!--分页查询所有图层-->
+    <select id="getByServiceDirLayerId" resultMap="resultMapForAgLayerRelated">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_LAYER_RELATED
+        WHERE SERVICE_DIR_LAYER_ID = #{serviceDirLayerId}
+    </select>
+
+    <!--分页查询所有图层-->
+    <select id="findById" resultMap="resultMapForAgLayerRelated">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_LAYER_RELATED
+        WHERE  ID = #{id}
+    </select>
+
+    <!--分页查询指定数据源下的属性表-->
+    <select id="findPropertyTablesByDataSourceId" resultMap="resultMapForDirLayer">
+        SELECT
+               b.ID as DIR_LAYER_ID,
+               a.*
+        FROM AG_LAYER a INNER JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID and a.LAYER_TYPE='000001'
+        WHERE data like '%dataSourceId%' and data like CONCAT(CONCAT('%', #{dataSourceId}), '%')
+    </select>
+
+    <!--新增图层属性关联关系-->
+    <insert id="save">
+        INSERT INTO AG_LAYER_RELATED (
+                                      ID,
+                                      TYPE,
+                                      NAME,
+                                      SERVICE_DIR_LAYER_ID,
+                                      SERVICE_FIELD,
+                                      RELATED_DIR_LAYER_ID,
+                                      RELATED_FIELD,
+                                      URL,
+                                      URL_PARAMS
+        ) VALUES (
+                     #{id},#{type},#{name},#{serviceDirLayerId},#{serviceField},#{relatedDirLayerId},#{relatedField},#{url},#{urlParams}
+                 )
+    </insert>
+
+    <!--修改图层属性关联关系-->
+    <update id="update">
+        UPDATE AG_LAYER_RELATED
+        <set>
+            TYPE = #{type},
+            <if test="name != null">
+                NAME = #{name},
+            </if>
+            <if test="serviceDirLayerId != null">
+                SERVICE_DIR_LAYER_ID = #{serviceDirLayerId},
+            </if>
+            <if test="serviceField != null">
+                SERVICE_FIELD = #{serviceField},
+            </if>
+            <if test="relatedDirLayerId != null">
+                RELATED_DIR_LAYER_ID = #{relatedDirLayerId},
+            </if>
+            <if test="relatedField != null">
+                RELATED_FIELD = #{relatedField},
+            </if>
+            <if test="url != null">
+                URL = #{url},
+            </if>
+            <if test="urlParams != null">
+                URL_PARAMS = #{urlParams}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--根据id删除图层属性关联关系-->
+    <delete id="delete">
+        DELETE FROM AG_LAYER_RELATED
+        WHERE
+            id = #{id}
+    </delete>
+    <!--根据id批量删除图层-->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM AG_LAYER_RELATED
+        WHERE
+        id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <select id="getByServiceDirLayerIdAndRelatedDirLayerId" resultMap="resultMapForAgLayerRelated">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_LAYER_RELATED
+        WHERE SERVICE_DIR_LAYER_ID = #{serviceDirLayerId} AND RELATED_DIR_LAYER_ID = #{relatedDirLayerId}
+    </select>
+</mapper>

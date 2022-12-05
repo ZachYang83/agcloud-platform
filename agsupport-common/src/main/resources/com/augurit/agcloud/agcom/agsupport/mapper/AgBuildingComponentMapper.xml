@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBuildingComponentMapper">
+
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgBuildingComponent">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="TABLE_CODE" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="LARGE_CODE" jdbcType="VARCHAR" property="largeCode"/>
+        <result column="MEDIUM_CODE" jdbcType="VARCHAR" property="mediumCode"/>
+        <result column="SMALL_CODE" jdbcType="VARCHAR" property="smallCode"/>
+        <result column="DETAIL_CODE" jdbcType="VARCHAR" property="detailCode"/>
+        <result column="CHINESE_NAME" jdbcType="VARCHAR" property="chineseName"/>
+        <result column="ENGLISH_NAME" jdbcType="VARCHAR" property="englishName"/>
+        <result column="TYPE" jdbcType="VARCHAR" property="type"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <!-- <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+                type="com.augurit.agcloud.agcom.agsupport.domain.AgBuildingComponent">
+         <result column="CONFIG_VALUE" jdbcType="VARCHAR" property="configValue"/>
+     </resultMap>-->
+
+    <sql id="Base_Column_List">
+        ID, TABLE_CODE, LARGE_CODE, MEDIUM_CODE,SMALL_CODE,DETAIL_CODE,CHINESE_NAME,ENGLISH_NAME,TYPE, CREATE_TIME, MODIFY_TIME, REMARK
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_BUILDING_COMPONENT
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 物理删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+       delete from AG_BUILDING_COMPONENT
+       where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <!-- 物理删除 批量删除 -->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from AG_BUILDING_COMPONENT
+        where ID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 逻辑删除 -->
+    <!--<update id="deleteByPrimaryKey" parameterType="java.lang.String">
+        update AG_BUILDING_COMPONENT
+        set IS_DELETE = '1',
+        MODIFY_TIME = CURRENT_TIMESTAMP
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>-->
+
+    <!-- 逻辑删除 批量删除 -->
+    <!--<update id="deleteByIds" parameterType="java.lang.String">
+        update AG_BUILDING_COMPONENT
+        set IS_DELETE = '1',
+        MODIFY_TIME = CURRENT_TIMESTAMP
+        where ID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>-->
+
+    <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBuildingComponent">
+        insert into AG_BUILDING_COMPONENT (ID, TABLE_CODE, LARGE_CODE, MEDIUM_CODE,SMALL_CODE,DETAIL_CODE,CHINESE_NAME,ENGLISH_NAME,TYPE, CREATE_TIME, MODIFY_TIME, REMARK)
+        values (#{id,jdbcType=VARCHAR}, #{tableCode,jdbcType=VARCHAR}, #{largeCode,jdbcType=VARCHAR}, #{mediumCode,jdbcType=VARCHAR}, #{smallCode,jdbcType=VARCHAR}, #{detailCode,jdbcType=VARCHAR},#{chineseName,jdbcType=VARCHAR},
+          #{englishName,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBuildingComponent">
+        insert into AG_BUILDING_COMPONENT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="tableCode != null and tableCode != '' ">
+                TABLE_CODE,
+            </if>
+            <if test="largeCode != null and largeCode != '' ">
+                LARGE_CODE,
+            </if>
+            <if test="mediumCode != null and mediumCode != '' ">
+                MEDIUM_CODE,
+            </if>
+            <if test="smallCode != null and smallCode != '' ">
+                SMALL_CODE,
+            </if>
+            <if test="detailCode != null and detailCode != '' ">
+                DETAIL_CODE,
+            </if>
+            <if test="chineseName != null">
+                CHINESE_NAME,
+            </if>
+            <if test="englishName != null and englishName != '' ">
+                ENGLISH_NAME,
+            </if>
+            <if test="type != null">
+                TYPE,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="tableCode != null">
+                #{tableCode,jdbcType=VARCHAR},
+            </if>
+            <if test="largeCode != null">
+                #{largeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mediumCode != null">
+                #{mediumCode,jdbcType=VARCHAR},
+            </if>
+            <if test="smallCode != null">
+                #{smallCode,jdbcType=VARCHAR},
+            </if>
+            <if test="detailCode != null">
+                #{detailCode,jdbcType=VARCHAR},
+            </if>
+            <if test="chineseName != null">
+                #{chineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null">
+                #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBuildingComponent">
+        update AG_BUILDING_COMPONENT
+        <set>
+            <if test="tableCode != null and tableCode != ''">
+                TABLE_CODE = #{tableCode,jdbcType=VARCHAR},
+            </if>
+            <if test="largeCode != null and largeCode != ''">
+                LARGE_CODE = #{largeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mediumCode != null and mediumCode != ''">
+                MEDIUM_CODE = #{mediumCode,jdbcType=VARCHAR},
+            </if>
+            <if test="smallCode != null and smallCode != ''">
+                SMALL_CODE = #{smallCode,jdbcType=VARCHAR},
+            </if>
+            <if test="detailCode != null and detailCode != ''">
+                DETAIL_CODE = #{detailCode,jdbcType=VARCHAR},
+            </if>
+            <if test="chineseName != null and chineseName != ''">
+                CHINESE_NAME = #{chineseName,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null and englishName != ''">
+                ENGLISH_NAME = #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null and type != ''">
+                TYPE = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBuildingComponent">
+    update AG_BUILDING_COMPONENT
+    set
+      TABLE_CODE = #{tableCode,jdbcType=VARCHAR},
+      LARGE_CODE = #{largeCode,jdbcType=VARCHAR},
+      MEDIUM_CODE = #{mediumCode,jdbcType=VARCHAR},
+      SMALL_CODE = #{smallCode,jdbcType=VARCHAR},
+      DETAIL_CODE = #{detailCode,jdbcType=VARCHAR},
+      CHINESE_NAME = #{chineseName,jdbcType=VARCHAR},
+      ENGLISH_NAME = #{englishName,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+    <!--按条件查询-->
+    <select id="findList" resultMap="BaseResultMap">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from AG_BUILDING_COMPONENT
+        where 1 = 1
+        <if test="name != null">
+            AND (CHINESE_NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%') OR ENGLISH_NAME LIKE CONCAT(CONCAT('%',
+            TRIM(#{name})), '%'))
+        </if>
+        order by TYPE ASC,CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+
+    <!--<select id="findByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_BUILDING_COMPONENT
+        where IMG_ID = #{imgId,jdbcType=VARCHAR}
+    </select>-->
+
+    <!--根据前端条件参数查询对象 (rest使用 ：API接口)-->
+    <!--<select id="findByParam" resultMap="BaseResultMap" parameterType="map">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from AG_BUILDING_COMPONENT
+        where 1 = 1
+        <foreach collection="map" index="key" item="value">
+            <if test="#{key} != null">
+                AND ${key} LIKE CONCAT(CONCAT('%', TRIM(#{value})), '%')
+            </if>
+        </foreach>
+    </select>-->
+
+    <!--根据前端条件参数查询对象 (rest使用 ：API接口)-->
+    <select id="findByParam" resultMap="BaseResultMap">
+        select distinct
+        <include refid="Base_Column_List"/>
+        from AG_BUILDING_COMPONENT
+        where 1 = 1
+        <if test="name != null and name != '' ">
+            AND (CHINESE_NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%') OR ENGLISH_NAME LIKE CONCAT(CONCAT('%',
+            TRIM(#{name})), '%'))
+        </if>
+        <if test="tableCode != null and tableCode != ''">
+            AND TABLE_CODE = #{tableCode}
+        </if>
+        <if test="largeCode != null and largeCode != ''">
+            AND LARGE_CODE = #{largeCode}
+        </if>
+        <if test="mediumCode != null and mediumCode != ''">
+            AND MEDIUM_CODE = #{mediumCode}
+        </if>
+        <if test="smallCode != null and smallCode != ''">
+            AND SMALL_CODE = #{smallCode}
+        </if>
+        <if test="detailCode != null and detailCode != ''">
+            AND DETAIL_CODE = #{detailCode}
+        </if>
+        order by CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+
+    <!-- MySQL下批量保存，可以foreach遍历 mysql支持values(),(),()语法 -->
+    <!-- 批量保存构件对象 (根据是否有值部分插入字段不可用) -->
+    <!--<insert id="insertListSelective">
+        INSERT INTO AG_BUILDING_COMPONENT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != '' ">
+                ID,
+            </if>
+            <if test="tableCode != null and tableCode != '' ">
+                TABLE_CODE,
+            </if>
+            <if test="largeCode != null and largeCode != '' ">
+                LARGE_CODE,
+            </if>
+            <if test="mediumCode != null and mediumCode != '' ">
+                MEDIUM_CODE,
+            </if>
+            <if test="smallCode != null and smallCode != '' ">
+                SMALL_CODE,
+            </if>
+            <if test="detailCode != null and detailCode != '' ">
+                DETAIL_CODE,
+            </if>
+            <if test="chineseName != null and chineseName != ''">
+                CHINESE_NAME,
+            </if>
+            <if test="englishName != null and englishName != '' ">
+                ENGLISH_NAME,
+            </if>
+            <if test="type != null and type != ''">
+                TYPE,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME,
+            </if>
+            <if test="remark != null  and remark != ''">
+                REMARK,
+            </if>
+        </trim>
+        VALUES
+        <foreach collection="bcList" item="bc" separator=",">
+            <trim prefix="  (" suffix=")" suffixOverrides=",">
+                <if test="id != null  and id != '' ">
+                    #{bc.id,jdbcType=VARCHAR},
+                </if>
+                <if test="tableCode != null and tableCode != '' ">
+                    #{bc.tableCode,jdbcType=VARCHAR},
+                </if>
+                <if test="largeCode != null and largeCode != '' ">
+                    #{bc.largeCode,jdbcType=VARCHAR},
+                </if>
+                <if test="mediumCode != null and mediumCode != '' ">
+                    #{bc.mediumCode,jdbcType=VARCHAR},
+                </if>
+                <if test="smallCode != null and smallCode != '' ">
+                    #{bc.smallCode,jdbcType=VARCHAR},
+                </if>
+                <if test="detailCode != null and detailCode != '' ">
+                    #{bc.detailCode,jdbcType=VARCHAR},
+                </if>
+                <if test="chineseName != null and chineseName != ''">
+                    #{bc.chineseName,jdbcType=VARCHAR},
+                </if>
+                <if test="englishName != null and englishName != '' ">
+                    #{bc.englishName,jdbcType=VARCHAR},
+                </if>
+                <if test="type != null and type != ''">
+                    #{bc.type,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    #{bc.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="modifyTime != null">
+                    #{bc.modifyTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="remark != null  and remark != ''">
+                    #{bc.remark,jdbcType=VARCHAR},
+                </if>
+            </trim>
+        </foreach>
+    </insert>-->
+
+    <!-- MySQL下批量保存，可以foreach遍历 mysql支持values(),(),()语法 -->
+    <!-- 批量保存构件对象  -->
+    <insert id="insertList">
+        INSERT INTO AG_BUILDING_COMPONENT
+        (ID, TABLE_CODE, LARGE_CODE, MEDIUM_CODE,SMALL_CODE,DETAIL_CODE,CHINESE_NAME,ENGLISH_NAME,TYPE, CREATE_TIME, MODIFY_TIME, REMARK)
+        VALUES
+        <foreach collection="bcList" item="bc" separator=",">
+            (#{bc.id,jdbcType=VARCHAR}, #{bc.tableCode,jdbcType=VARCHAR}, #{bc.largeCode,jdbcType=VARCHAR}, #{bc.mediumCode,jdbcType=VARCHAR}, #{bc.smallCode,jdbcType=VARCHAR}, #{bc.detailCode,jdbcType=VARCHAR},#{bc.chineseName,jdbcType=VARCHAR},
+            #{bc.englishName,jdbcType=VARCHAR},#{bc.type,jdbcType=VARCHAR},#{bc.createTime,jdbcType=TIMESTAMP},#{bc.modifyTime,jdbcType=TIMESTAMP},#{bc.remark,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+</mapper>

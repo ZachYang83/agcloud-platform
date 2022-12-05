@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgTagMapper">
+
+
+    <sql id="columns_AgTagLayer">
+        <choose>
+            <when test="_databaseId == 'postgresql'">
+                string_agg(w.id, ',') as id,
+                w.layerId layerId,
+                string_agg(w.tagName, ',') as tagName,
+                w.name "name",
+                string_agg(w.tagCatalogId, ',') as tagCatalogId,
+                string_agg(w.tagId, ',') as tagId,
+                w.xpath xpath
+            </when>
+            <otherwise>
+                WM_CONCAT(w.id) as id,
+                w.layerId layerId,
+                WM_CONCAT(w.tagName) as tagName,
+                w.name name,
+                WM_CONCAT(w.tagCatalogId) as tagCatalogId,
+                WM_CONCAT(w.tagId) as tagId,
+                w.xpath xpath
+            </otherwise>
+        </choose>
+
+    </sql>
+
+
+    <insert id="addTagCatalog" parameterType="AgTagCatalog">
+        INSERT INTO
+        AG_TAGCATALOG(id, name, isParent)
+        VALUES (#{id}, #{name},'true')
+    </insert>
+
+    <insert id="addTag" parameterType="AgTag">
+        INSERT INTO
+        AG_TAG(id, name, catalogId, sort,isParent)
+        VALUES (#{id}, #{name}, #{catalogId}, #{sort},'false')
+    </insert>
+
+    <select id="getAllTagCatalogs" resultType="AgTagCatalog">
+        SELECT *
+        FROM AG_TAGCATALOG a
+    </select>
+
+    <select id="getAllTags" resultType="AgTag">
+        SELECT *
+        FROM AG_TAG a
+    </select>
+
+    <select id="getTagById" resultType="AgTag">
+        SELECT *
+        FROM AG_TAG a
+        WHERE a.id = #{id}
+    </select>
+
+
+    <delete id="deleteTagCatalog">
+        BEGIN
+        DELETE
+        FROM AG_TAGLAYER
+        WHERE tagId in (
+        SELECT DISTINCT t.id FROM AG_TAG t WHERE t.catalogId = #{id}
+        );
+        DELETE
+        FROM AG_TAGCATALOG
+        WHERE id = #{id};
+        DELETE
+        FROM AG_TAG
+        WHERE catalogId = #{id};
+        END;
+    </delete>
+
+    <delete id="deleteTag">
+        BEGIN
+        DELETE
+        FROM AG_TAG
+        WHERE id = #{id};
+        DELETE
+        FROM AG_TAGLAYER
+        WHERE tagId = #{id};
+        END;
+    </delete>
+
+    <!-- 根据图层id批量删除-->
+    <delete id="deleteTagBatch">
+        DELETE
+        FROM
+        AG_TAGLAYER
+        WHERE
+        layerId IN
+        <foreach collection="layerIds" item="layerId" open="(" separator="," close=")">
+            #{layerId}
+        </foreach>
+    </delete>
+
+    <update id="updateTag" parameterType="AgTag">
+        UPDATE AG_TAG
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateTagCatalog" parameterType="AgTagCatalog">
+        UPDATE AG_TAGCATALOG
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+
+
+    <select id="getTagCatalogById" resultType="AgTagCatalog">
+        SELECT * FROM AG_TAGCATALOG
+        WHERE id = #{id}
+    </select>
+
+    <select id="getAllTagByCatalogId" resultType="AgTag">
+        SELECT * FROM AG_TAG
+        WHERE catalogId = #{id}
+    </select>
+
+    <select id="getOpenLayerwithoutTag" resultType="AgLayer">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        w1.*, ROW_NUMBER() OVER (PARTITION BY w1.ID ORDER BY W1.ID) AS row_num
+        FROM(
+
+        SELECT t.id, t.name, t.name_cn nameCn, r.xpath dirPath FROM
+        AG_LAYER t LEFT JOIN AG_DIR_LAYER d ON t.id=d.LAYER_ID LEFT JOIN AG_DIR r ON d.dir_id = r.id
+        WHERE
+        t.IS_PROXY = '1'
+        AND
+        t.IS_EXTERNAL = '1'
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(serviceName)">
+            AND (t.NAME_CN LIKE CONCAT(CONCAT('%', #{serviceName}), '%') OR t.name like CONCAT(CONCAT('%', #{serviceName}), '%'))
+        </if>
+
+        AND t.id not in (
+        SELECT DISTINCT a.layerId
+        FROM AG_TAGLAYER a
+        WHERE a.tagId = #{tagId}
+        )
+        ORDER BY t.id DESC
+        ) w1
+        ) b1
+        WHERE
+        B1.row_num = 1
+    </select>
+
+    <insert id="insertTagLayer" parameterType="java.util.List">
+        INSERT INTO AG_TAGLAYER
+        (id,tagId, layerId)
+        SELECT  A.*
+        FROM(
+        <foreach collection="list" item="item" index="index" separator="UNION ALL">
+            SELECT
+            #{item.id,jdbcType=VARCHAR} id,
+            #{item.tagId,jdbcType=VARCHAR} tagId,
+            #{item.layerId,jdbcType=VARCHAR} layerId
+            <if test="'${_databaseId}' != 'postgresql'">
+                FROM dual
+            </if>
+
+        </foreach>
+        )A
+    </insert>
+
+    <select id="getOpenLayerwithTag" resultType="AgTagLayer">
+        SELECT *
+        FROM (SELECT
+        <include refid="columns_AgTagLayer"/>
+        FROM
+        (SELECT a.id, a.layerId, a.tagName, a.name, a.tagId, a.tagCatalogId , b.dir_id dirId, c.xpath
+
+        FROM (
+
+        SELECT
+        t1.id,
+        t1.layerId,
+        t2.name tagName,
+        <choose>
+            <when test="_databaseId == 'postgresql'">
+                t3.name_cn "name",
+            </when>
+            <otherwise>
+                t3.name_cn name,
+            </otherwise>
+        </choose>
+
+        t2.id tagId,
+        t2.catalogId tagCatalogId
+        FROM AG_TAGLAYER t1 LEFT JOIN AG_TAG t2 ON t1.tagId = t2.id
+        LEFT JOIN AG_LAYER t3
+        ON t1.layerId = t3.id
+        )a LEFT JOIN AG_DIR_LAYER b ON a.layerId = b.layer_Id
+        INNER JOIN AG_DIR c on c.id = b.dir_id) w
+
+        GROUP BY w.LAYERID,w.NAME,w.XPATH
+        ORDER BY w.layerId
+        ) q
+
+        WHERE 1=1
+        <choose>
+            <when test="@org.apache.commons.lang.StringUtils@isNotEmpty(tagId)">
+                AND q.tagId like CONCAT(CONCAT('%', #{tagId}), '%')
+            </when>
+            <when test="@org.apache.commons.lang.StringUtils@isNotEmpty(catalogId)">
+                AND q.tagCatalogId like CONCAT(CONCAT('%', #{catalogId}), '%')
+            </when>
+        </choose>
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(serviceName)">
+            AND q.name like CONCAT(CONCAT('%', #{serviceName}), '%')
+        </if>
+
+    </select>
+
+
+    <delete id="removeTayLayerByLayerIds" parameterType="java.lang.String">
+        DELETE FROM AG_TAGLAYER
+        WHERE layerId in
+        <foreach collection="layerIds" item="lid" open="(" close=")" separator=",">
+            #{lid}
+        </foreach>
+
+    </delete>
+
+    <select id="countTagLayerApplyNum" resultType="AgTagLayer">
+        SELECT t.LAYERID, t.CURRENTPROCESSSTATUS applyStatus, count(*) count
+        FROM AG_OPENMAP_APPLYITEM t
+        WHERE t.COMPLETED = '0'
+        GROUP BY t.LAYERID, t.CURRENTPROCESSSTATUS ORDER BY t.CURRENTPROCESSSTATUS
+    </select>
+
+    <select id="wetherCanDeleteTag" resultType="AgTagLayer">
+        SELECT t.LAYERID, t.CURRENTPROCESSSTATUS applyStatus, count(*) count
+        FROM AG_OPENMAP_APPLYITEM t
+        WHERE t.COMPLETED = '0'
+
+        <choose>
+            <when test="isTag  == '0'.toString()">
+                AND t.layerId in (
+                SELECT DISTINCT a.layerId FROM AG_TAGLAYER a
+                WHERE a.tagId
+                in (
+                SELECT DISTINCT b.id FROM AG_TAG b WHERE b.catalogId = #{id}
+                )
+                )
+            </when>
+            <otherwise>
+                AND t.layerId in (
+                SELECT DISTINCT a.layerId FROM AG_TAGLAYER a WHERE a.tagId = #{id}
+                )
+            </otherwise>
+        </choose>
+
+        GROUP BY t.LAYERID, t.CURRENTPROCESSSTATUS ORDER BY t.CURRENTPROCESSSTATUS
+    </select>
+
+</mapper>

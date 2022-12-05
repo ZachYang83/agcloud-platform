@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgMaterialsComponentCustomMapper" >
+
+  <sql id="Base_Column_List" >
+    m.id, m.objectid, m.name, m.version, m.infotype, m.profession, m.level, m.catagory, m.familyname, m.familytype,
+    m.materialid, m.elementattributes, m.categorypath, m.geometry, m.topologyelements, m.boundingbox,
+    m.texture, m.measure, m.vendor, m.single_price, m.table_name, m.create_time, m.modify_time, m.remark
+  </sql>
+  <sql id="sys_select_list" >
+    id, objectid, name, version, infotype, profession, level, catagory,
+    texture, measure, vendor, single_price, table_name, create_time, modify_time, remark, status, model_size,
+    component_code, component_code_name, specification
+  </sql>
+
+  <sql id="Base_Column_List3" >
+    m.id, m.objectid, m.name, m.version, m.infotype, m.profession, m.level, m.catagory,
+    m.texture, m.measure, m.vendor, m.single_price, m.table_name, m.create_time, m.modify_time, m.remark, m.status, m.model_size, m.specification
+  </sql>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <select id="selectByExample" resultType="AgMaterialsComponent" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="sys_select_list" />
+    from ag_materials_component
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectThumb" resultType="AgMaterialsComponentWithBLOBs" parameterType="String">
+    select thumb, thumb_file_name from ag_materials_component where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectGlb" resultType="AgMaterialsComponentWithBLOBs" parameterType="String">
+    select glb, glb_file_name from ag_materials_component where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="select" resultType="AgMaterialsComponent" >
+    select
+    <include refid="Base_Column_List3"></include>
+    from ag_materials_component m
+    where m.status != 1
+    <if test="catagory != null" >
+      and m.catagory = #{catagory,jdbcType=VARCHAR}
+    </if>
+    <if test="specification != null and specification != ''" >
+      and m.specification like concat(concat('%', TRIM(#{specification})), '%')
+    </if>
+    <if test="name != null and name !=''" >
+      and m.name like concat(concat('%', TRIM(#{name})), '%')
+    </if>
+    <if test="componentCode != null and componentCode != '' " >
+      and m.component_code like concat(concat('%', TRIM(#{componentCode})), '%')
+    </if>
+    <if test="componentCodeName != null  and componentCodeName != '' " >
+      and m.component_code_name like concat(concat('%', TRIM(#{componentCodeName})), '%')
+    </if>
+    <if test="orderBy != null" >
+      order by m.${orderBy}
+    </if>
+  </select>
+
+
+  <select id="unionSelect" resultType="AgMaterialsComponent" >
+    select distinct
+    <include refid="Base_Column_List3"></include>
+    from ag_materials_component m left join ag_permission per on m.id = per.source_id
+    where per.type = '2' and m.status != 1
+    <if test="catagory != null" >
+      and m.catagory = #{catagory,jdbcType=VARCHAR}
+    </if>
+    <if test="specification != null and specification != ''" >
+      and m.specification like concat(concat('%', TRIM(#{specification})), '%')
+    </if>
+    <if test="permisions != null" >
+      and per.code in
+      <foreach collection="permisions" item="code" index="index" open="(" close=")" separator=",">
+        #{code}
+      </foreach>
+    </if>
+    <if test="name != null and name !=''" >
+      and m.name like concat(concat('%', TRIM(#{name})), '%')
+    </if>
+    <if test="componentCode != null and componentCode != '' " >
+      and m.component_code like concat(concat('%', TRIM(#{componentCode})), '%')
+    </if>
+    <if test="componentCodeName != null  and componentCodeName != '' " >
+      and m.component_code_name like concat(concat('%', TRIM(#{componentCodeName})), '%')
+    </if>
+    <if test="orderBy != null" >
+      order by m.${orderBy}
+    </if>
+  </select>
+
+  <select id="sql" resultType="AgMaterialsComponentWithBLOBs" parameterType="String">
+    ${_parameter}
+  </select>
+
+</mapper>

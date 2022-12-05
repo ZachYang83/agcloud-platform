@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.syslog.mapper.CommonSysLogMapper" >
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.syslog.domain.CommonSysLog" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="LOGIN_NAME" property="loginName"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="IP_ADDRESS" property="ipAddress"/>
+        <result column="BROWSER" property="browser" />
+        <result column="SYS_NAME" property="sysName"/>
+        <result column="FUNC_NAME" property="funcName"/>
+        <result column="OPER_RESULT" property="operResult"/>
+        <result column="OPER_DATE" property="operDate"/>
+        <result column="EXCEPTION_MESSAGE" property="exceptionMessage"/>
+        <result column="REMARK" property="remark"/>
+        <result column="TYPE" property="type"/>
+        <result column="EXTEND_DATA" property="extendData"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID, LOGIN_NAME, USER_NAME, IP_ADDRESS, BROWSER, SYS_NAME, FUNC_NAME, OPER_RESULT,OPER_DATE,EXCEPTION_MESSAGE,REMARK,EXTEND_DATA,TYPE
+    </sql>
+    <insert id="save" parameterType="com.augurit.agcloud.agcom.syslog.domain.CommonSysLog">
+        INSERT INTO AG_SYS_LOG(ID,LOGIN_NAME,USER_NAME,IP_ADDRESS,BROWSER,SYS_NAME,FUNC_NAME,OPER_RESULT,OPER_DATE,EXCEPTION_MESSAGE,REMARK,EXTEND_DATA,TYPE)
+        VALUES (#{id},#{loginName},#{userName},#{ipAddress},#{browser},#{sysName},#{funcName},
+        #{operResult},#{operDate,jdbcType=TIMESTAMP},#{exceptionMessage},#{remark},#{extendData},#{type})
+    </insert>
+</mapper>

@@ -1,0 +1,1716 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimModelMapper">
+
+    <sql id="allColumns">
+        ID id,
+        NAME as name,
+        NAME_CN nameCn,
+        URL url,
+        LAYER_TYPE layerType,
+        FEATURE_TYPE featureType,
+        ADD_FLAG addFlag,
+        LAYER_TABLE layerTable,
+        PARAM_ID paramId,
+        IS_PROXY isProxy,
+        PROXY_URL proxyUrl,
+        VECTOR_LAYER_ID vectorLayerId,
+        EXTENT extent,
+        DATA as data,
+        METADATA_ID metadataId,
+        IS_EXTERNAL isExternal,
+        VISIBLE_MINZOOM visibleMinZoom,
+        VISIBLE_MAXZOOM visibleMaxZoom,
+        specular as specular,
+        base_color as baseColor,
+        isSelfPoPup as isSelfPoPup,
+        selfPoPupContent as selfPoPupContent
+    </sql>
+
+    <sql id="all_Columns">
+        a.ID id,
+        NAME as name,
+        NAME_CN nameCn,
+        URL url,
+        b.ID dirLayerId,
+        LAYER_TYPE layerType,
+        FEATURE_TYPE featureType,
+        a.ADD_FLAG addFlag,
+        LAYER_TABLE layerTable,
+        PARAM_ID paramId,
+        IS_PROXY isProxy,
+        PROXY_URL proxyUrl,
+        VECTOR_LAYER_ID vectorLayerId,
+        EXTENT extent,
+        DATA as data,
+        METADATA_ID metadataId,
+         IS_EXTERNAL isExternal,
+         VISIBLE_MINZOOM visibleMinZoom,
+        VISIBLE_MAXZOOM visibleMaxZoom,
+        specular as specular,
+        base_color as baseColor,
+        isSelfPoPup as isSelfPoPup,
+        selfPoPupContent as selfPoPupContent
+    </sql>
+
+    <!--查询所有代理地址包含 arcgis/rest的图层-->
+    <select id="getAllAgentUrl" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer t
+        WHERE
+        t.is_proxy='1' AND t.url LIKE '%arcgis/rest%'
+    </select>
+
+    <!--分页查询所有图层-->
+    <select id="findList" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        <where>
+            1 = 1
+            <if test="name != null">
+                AND name like CONCAT(CONCAT('%',TRIM(#{name})),'%')
+            </if>
+            <if test="isVector != null and isVector == '1'.toString()">
+                AND layer_type like '01%'
+            </if>
+        </where>
+    </select>
+
+    <!--分页查询所有图层-->
+    <select id="findAll" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+    </select>
+
+    <!--分页查询指定目录包含的图层-->
+    <select id="findListByXpath" resultType="AgLayer">
+        SELECT
+        t1.id id,
+        t1.name as name,
+        t1.name_cn nameCn,
+        t1.url url,
+        t1.layer_type layerType,
+        t1.feature_type featureType,
+        t1.add_flag addFlag,
+        t1.layer_table layerTable,
+        t1.param_id paramId,
+        t1.is_proxy isProxy,
+        t1.proxy_url proxyUrl,
+        t1.vector_layer_id vectorLayerId,
+        t1.data as data,
+        t1.extent extent,
+        t1.dir_layer_id dirLayerId,
+        t1.dir_path dirPath,
+        t1.metadata_id metadataId,
+        t1.base_color baseColor,
+        t1.specular specular,
+        t1.isSelfPoPup as isSelfPoPup,
+        t1.selfPoPupContent as selfPoPupContent,
+        t2.author_count authorCount
+        FROM
+        (
+        SELECT
+        c.id AS dir_layer_id,
+        c.xpath AS dir_path,
+        c.order_nm,
+        c.dir_order,
+        t.*
+        FROM
+        ag_layer t,
+        (
+        SELECT
+        a.*, b.xpath,
+        b.order_nm AS dir_order
+        FROM
+        ag_bim_layer a,
+        (
+        SELECT
+        *
+        FROM
+        ag_bim d
+        WHERE
+        d.xpath = #{xpath}
+        <if test="isContain == '1'.toString()">
+            OR d.xpath LIKE CONCAT(#{xpath},'/%')
+        </if>
+        ) b
+        WHERE
+        b.id = a.dir_id
+        <if test="isBaseMap == '1'.toString()">
+            AND a.id IN (
+            SELECT
+            dir_layer_id
+            FROM
+            ag_user_bim
+            WHERE
+            is_base_map = #{isBaseMap}
+            AND
+            user_id IN (
+            SELECT
+            id
+            FROM
+            ag_user
+            WHERE id = #{userId}
+            )
+            )
+        </if>
+        ) c
+        WHERE
+        c.layer_id = t.id
+        <if test="agLayer.name != null">
+            AND t.name like CONCAT(CONCAT('%', TRIM(#{agLayer.name})),'%')
+        </if>
+        <if test="agLayer.isVector != null and agLayer.isVector == '1'.toString()">
+            AND t.layer_type like '01%'
+        </if>
+        ) t1,
+        (
+        SELECT
+        e.id,
+        count(f.user_id) AS author_count
+        FROM
+        ag_bim_layer e
+        LEFT JOIN ag_user_bim f ON e.id = f.dir_layer_id
+        GROUP BY
+        e.id
+        ) t2
+        WHERE
+        t1.dir_layer_id = t2.id
+        ORDER BY
+        t1.dir_order,t1.order_nm
+    </select>
+    <select id="findListByXpathUsers" resultType="AgLayer">
+        SELECT
+        t1.id id,
+        t1.name as name,
+        t1.name_cn nameCn,
+        t1.url url,
+        t1.layer_type layerType,
+        t1.feature_type featureType,
+        t1.add_flag addFlag,
+        t1.layer_table layerTable,
+        t1.param_id paramId,
+        t1.is_proxy isProxy,
+        t1.proxy_url proxyUrl,
+        t1.vector_layer_id vectorLayerId,
+        t1.data as data,
+        t1.extent extent,
+        t1.dir_layer_id dirLayerId,
+        t1.dir_path dirPath,
+        t1.metadata_id metadataId,
+        t1.visible_minzoom visibleMinZoom,
+        t1.visible_maxzoom visibleMaxZoom,
+        t1.base_color baseColor,
+        t1.specular specular,
+        t1.isSelfPoPup as isSelfPoPup,
+        t1.selfPoPupContent as selfPoPupContent,
+        t2.author_count authorCount
+        FROM
+        (
+        SELECT
+        c.id AS dir_layer_id,
+        c.xpath AS dir_path,
+        c.order_nm,
+        c.dir_order,
+        t.*
+        FROM
+        ag_layer t,
+        (
+        SELECT
+        a.*, b.xpath,
+        b.order_nm AS dir_order
+        FROM
+        ag_bim_layer a,
+        (
+        SELECT
+        *
+        FROM
+        ag_bim d
+        WHERE
+        d.xpath = #{xpath}
+        <if test="isContain == '1'.toString()">
+            OR d.xpath LIKE CONCAT(#{xpath},'/%')
+        </if>
+        ) b
+        WHERE
+        b.id = a.dir_id
+        <if test="isBaseMap == '1'.toString()">
+            AND a.id IN (
+            SELECT
+            dir_layer_id
+            FROM
+            ag_user_bim
+            WHERE
+            is_base_map = #{isBaseMap}
+            AND
+            user_id IN
+            <foreach collection="userList" item="user" separator="," open="(" close=")">
+                #{user.id}
+            </foreach>
+            )
+        </if>
+        ) c
+        WHERE
+        c.layer_id = t.id
+        <if test="agLayer.name != null">
+            AND t.name like CONCAT(CONCAT('%', TRIM(#{agLayer.name})),'%')
+        </if>
+        <if test="agLayer.isVector != null and agLayer.isVector == '1'.toString()">
+            AND t.layer_type like '01%'
+        </if>
+        ) t1,
+        (
+        SELECT
+        e.id,
+        count(f.user_id) AS author_count
+        FROM
+        ag_bim_layer e
+        LEFT JOIN ag_user_bim f ON e.id = f.dir_layer_id
+        GROUP BY
+        e.id
+        ) t2
+        WHERE
+        t1.dir_layer_id = t2.id
+        ORDER BY
+        t1.dir_order,t1.order_nm
+    </select>
+
+    <!--按用户id获取图层-->
+    <select id="findListByUserId" resultType="AgLayer">
+
+ SELECT t4.*, t4.xpath AS dirPath     FROM
+(SELECT  * FROM
+(SELECT c.*,f.ID as userLayerId FROM (
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data "data",
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.visible_minzoom visibleMinZoom,
+            t.visible_maxzoom visibleMaxZoom,
+            t.base_color baseColor,
+            t.specular specular,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM
+            ag_layer t,
+            (
+                SELECT
+                    *
+                FROM
+                    ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+                            ag_user_bim
+                        WHERE
+                           user_id = #{userId}
+                    )
+            ) a
+        WHERE
+            a.layer_id = t.id
+        ORDER BY
+            a.order_nm ) c LEFT JOIN  ag_user_bim f on dirLayerId = f.DIR_LAYER_ID AND f.USER_ID =#{userId})
+        t3  LEFT JOIN ag_bim d on dirId = d.ID
+        )t4
+
+    </select>
+
+
+    <!--- 按用户id获取矢量图层  -->
+    <select id="findPageByUserId" resultType="AgLayer">
+
+        SELECT t4.*, t4.xpath AS dirPath     FROM
+        (SELECT  * FROM
+        (SELECT c.*,f.ID as userLayerId FROM (
+        SELECT
+        t.id id,
+        t.name name,
+        t.name_cn nameCn,
+        t.url url,
+        t.layer_type layerType,
+        t.feature_type featureType,
+        t.add_flag addFlag,
+        t.layer_table layerTable,
+        t.param_id paramId,
+        t.is_proxy isProxy,
+        t.proxy_url proxyUrl,
+        t.vector_layer_id vectorLayerId,
+        t.data data,
+        t.extent extent,
+        t.metadata_id metadataId,
+        t.visible_minzoom visibleMinZoom,
+        t.visible_maxzoom visibleMaxZoom,
+        t.base_color baseColor,
+        t.specular specular,
+        t.isSelfPoPup as isSelfPoPup,
+        t.selfPoPupContent as selfPoPupContent,
+        a.dir_id dirId,
+        a.id dirLayerId
+        FROM
+        ag_layer t,
+        (
+        SELECT
+        *
+        FROM
+        ag_bim_layer
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_layer_id)
+        FROM
+        ag_user_bim
+        WHERE
+        user_id = #{userId}
+        )
+        ) a
+        WHERE
+        a.layer_id = t.id
+        ORDER BY
+        a.order_nm ) c LEFT JOIN  ag_user_bim f on dirLayerId = f.DIR_LAYER_ID AND f.USER_ID =#{userId})
+        t3  LEFT JOIN ag_bim d on dirId = d.ID
+        )t4 where layerType='010001'
+
+    </select>
+
+    <!--按用户id和名称获取图层-->
+    <select id="findListByUserIdAndAgLayer" resultType="AgLayer">
+        SELECT *   FROM
+        (SELECT  t3.*,d.`name` as dirName,d.xpath dirPath FROM
+        (SELECT c.*,f.ID as userLayerId FROM (
+        SELECT
+        t.id id,
+        t.name as name,
+        t.name_cn nameCn,
+        t.url url,
+        t.layer_type layerType,
+        t.feature_type featureType,
+        t.add_flag addFlag,
+        t.layer_table layerTable,
+        t.param_id paramId,
+        t.is_proxy isProxy,
+        t.proxy_url proxyUrl,
+        t.vector_layer_id vectorLayerId,
+        t.data as data,
+        t.extent extent,
+        t.metadata_id metadataId,
+        t.visible_minzoom visibleMinZoom,
+        t.visible_maxzoom visibleMaxZoom,
+        t.base_color baseColor,
+        t.specular specular,
+        t.isSelfPoPup as isSelfPoPup,
+        t.selfPoPupContent as selfPoPupContent,
+        a.dir_id dirId,
+        a.id dirLayerId
+        FROM
+        ag_layer t,
+        (
+        SELECT
+        *
+        FROM
+        ag_bim_layer
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_layer_id)
+        FROM
+        ag_user_bim
+        WHERE
+        user_id = #{userId}
+        )
+        ) a
+        WHERE
+        a.layer_id = t.id
+        ORDER BY
+        a.order_nm ) c LEFT JOIN  ag_user_bim f on dirLayerId = f.DIR_LAYER_ID AND f.USER_ID =#{userId})
+        t3  LEFT JOIN ag_bim d on dirId = d.ID
+        <if test="name != null">
+            where  t3.name like CONCAT(CONCAT('%', TRIM(#{name})),'%')
+        </if>
+        )t4
+
+    </select>
+
+
+    <select id="findListByUsers" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.visible_minzoom visibleMinZoom,
+            t.visible_maxzoom visibleMaxZoom,
+            t.base_color baseColor,
+            t.specular specular,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM
+            ag_layer t,
+            (
+                SELECT
+                    *
+                FROM
+        ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+        ag_user_bim
+                        WHERE
+                            user_id IN
+                            <foreach collection="userList" item="user" separator="," open="(" close=")">
+                                #{user.id}
+                            </foreach>
+                    )
+            ) a
+        WHERE
+            a.layer_id = t.id
+        ORDER BY
+            a.order_nm
+    </select>
+
+    <!--按用户id获取底图-->
+    <select id="findBaseLayerByUserId" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.base_color baseColor,
+            t.specular specular,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM
+            ag_layer t,
+            (
+                SELECT
+                    *
+                FROM
+                    ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+                            ag_user_bim
+                        WHERE
+                            is_base_map = '1'
+                        AND user_id = #{userId}
+                    )
+            ) a
+        WHERE
+            a.layer_id = t.id
+        ORDER BY
+            a.order_nm
+    </select>
+    <select id="findBaseLayerByUsers" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.base_color baseColor,
+            t.specular specular,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM
+            ag_layer t,
+            (
+                SELECT
+                    *
+                FROM
+        ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+        ag_user_bim
+                        WHERE
+                            is_base_map = '1'
+                        AND user_id IN
+                        <foreach collection="roleList" item="role" separator="," open="(" close=")">
+                            #{user.id}
+                        </foreach>
+                    )
+            ) a
+        WHERE
+            a.layer_id = t.id
+        ORDER BY
+            a.order_nm
+    </select>
+
+    <!--按用户id、图层目录获取图层-->
+    <select id="findListByUserIdAndXpath" resultType="AgLayer">
+        SELECT
+            t1.id id,
+            t1.NAME as name,
+            t1.name_cn nameCn,
+            t1.url url,
+            t1.layer_type layerType,
+            t1.feature_type featureType,
+            t1.add_flag addFlag,
+            t1.layer_table layerTable,
+            t1.param_id paramId,
+            t1.is_proxy isProxy,
+            t1.proxy_url proxyUrl,
+            t1.vector_layer_id vectorLayerId,
+            t1.data as data,
+            t1.extent extent,
+            t1.dir_layer_id dirLayerId,
+            t1.dir_path dirPath,
+            t1.base_color baseColor,
+            t1.specular specular,
+            t1.metadata_id metadataId,
+            t1.isSelfPoPup as isSelfPoPup,
+            t1.selfPoPupContent as selfPoPupContent,
+            t2.author_count authorCount
+        FROM
+            (
+                SELECT
+                    c.id AS dir_layer_id,
+                    c.xpath AS dir_path,
+                    c.order_nm,
+                    c.dir_order,
+                    t.*
+                FROM
+                    ag_layer t,
+                    (
+                        SELECT
+                            a.*, b.xpath,
+                            b.order_nm AS dir_order
+                        FROM
+                            ag_bim_layer a,
+                            (
+                                SELECT
+                                    *
+                                FROM
+                                    ag_bim d
+                                WHERE
+                                    d.xpath LIKE CONCAT(#{xpath}, '/%')
+                            ) b
+                        WHERE
+                            b.id = a.dir_id
+                        AND a.id IN (
+                            SELECT
+                                dir_layer_id
+                            FROM
+                                ag_user_bim
+                            WHERE
+                                user_id = #{userId}
+                        )
+                    ) c
+                WHERE
+                    c.layer_id = t.id
+            ) t1,
+            (
+                SELECT
+                    e.id,
+                    count(f.user_id) AS author_count
+                FROM
+                    ag_bim_layer e
+                LEFT JOIN ag_user_bim f ON e.id = f.dir_layer_id
+                GROUP BY
+                    e.id
+            ) t2
+        WHERE
+            t1.dir_layer_id = t2.id
+        ORDER BY
+            t1.dir_order,
+            t1.order_nm
+    </select>
+    <select id="findListByUsersAndXpath" resultType="AgLayer">
+        SELECT
+            t1.id id,
+            t1.NAME as name,
+            t1.name_cn nameCn,
+            t1.url url,
+            t1.layer_type layerType,
+            t1.feature_type featureType,
+            t1.add_flag addFlag,
+            t1.layer_table layerTable,
+            t1.param_id paramId,
+            t1.is_proxy isProxy,
+            t1.proxy_url proxyUrl,
+            t1.vector_layer_id vectorLayerId,
+            t1.data as data,
+            t1.extent extent,
+            t1.dir_layer_id dirLayerId,
+            t1.dir_path dirPath,
+            t1.metadata_id metadataId,
+            t1.base_color baseColor,
+            t1.specular specular,
+            t1.isSelfPoPup as isSelfPoPup,
+            t1.selfPoPupContent as selfPoPupContent,
+            t2.author_count authorCount
+        FROM
+            (
+                SELECT
+                    c.id AS dir_layer_id,
+                    c.xpath AS dir_path,
+                    c.order_nm,
+                    c.dir_order,
+                    t.*
+                FROM
+                    ag_layer t,
+                    (
+                        SELECT
+                            a.*, b.xpath,
+                            b.order_nm AS dir_order
+                        FROM
+        ag_bim_layer a,
+                            (
+                                SELECT
+                                    *
+                                FROM
+        ag_bim d
+                                WHERE
+                                    d.xpath LIKE CONCAT(#{xpath}, '/%')
+                            ) b
+                        WHERE
+                            b.id = a.dir_id
+                        AND a.id IN (
+                            SELECT
+                                dir_layer_id
+                            FROM
+        ag_user_bim
+                            WHERE
+                                user_id IN
+                                <foreach collection="userList" item="user" separator="," open="(" close=")">
+                                    #{user.id}
+                                </foreach>
+                        )
+                    ) c
+                WHERE
+                    c.layer_id = t.id
+            ) t1,
+            (
+                SELECT
+                    e.id,
+                    count(f.user_id) AS author_count
+                FROM
+        ag_bim_layer e
+                LEFT JOIN ag_user_bim f ON e.id = f.dir_layer_id
+                GROUP BY
+                    e.id
+            ) t2
+        WHERE
+            t1.dir_layer_id = t2.id
+        ORDER BY
+            t1.dir_order,
+            t1.order_nm
+    </select>
+
+    <!--按用户id,要素类型获取图层-->
+    <select id="findListByUserIdAndFeatureType" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.base_color baseColor,
+            t.specular specular,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM
+            ag_layer t,
+            (
+                SELECT
+                    *
+                FROM
+                    ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+                            ag_user_bim
+                        WHERE
+                            user_id = #{userId}
+                    )
+            ) a
+        WHERE
+            a.layer_id = t.id
+        AND
+            t.feature_type = #{featureType}
+        ORDER BY
+            a.order_nm
+    </select>
+    <select id="findListByUsersAndFeatureType" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.base_color baseColor,
+            t.specular specular,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM
+            ag_layer t,
+            (
+                SELECT
+                    *
+                FROM
+        ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+        ag_user_bim
+                        WHERE
+                            user_id IN
+                            <foreach collection="userList" item="user" separator="," open="(" close=")">
+                                #{user.id}
+                            </foreach>
+                    )
+            ) a
+        WHERE
+            a.layer_id = t.id
+        AND
+            t.feature_type = #{featureType}
+        ORDER BY
+            a.order_nm
+    </select>
+
+    <!--查询所有矢量图层-->
+    <select id="findVectorList" resultType="AgLayer">
+        SELECT
+            a.id id,
+            a.name as name,
+            a.name_cn nameCn,
+            a.url url,
+            a.layer_type layerType,
+            a.feature_type featureType,
+            a.add_flag addFlag,
+            a.layer_table layerTable,
+            a.param_id paramId,
+            a.is_proxy isProxy,
+            a.proxy_url proxyUrl,
+            a.vector_layer_id vectorLayerId,
+            a.data as data,
+            a.extent extent,
+            a.dir_id dirId,
+            a.dir_layer_id dirLayerId,
+            a.metadata_id metadataId,
+            a.isSelfPoPup as isSelfPoPup,
+            a.selfPoPupContent as selfPoPupContent,
+            ad.xpath dirPath
+        FROM
+            ag_bim ad,
+            (
+                SELECT
+                    adl.dir_id,
+                    adl.id dir_layer_id,
+                    adl.order_nm,
+                    al.*
+                FROM
+                    ag_bim_layer adl,
+                    ag_layer al
+                WHERE
+                    adl.layer_id = al.id
+                AND al.layer_type = '010001'
+            ) a
+        WHERE
+            ad.id = a.dir_id
+        ORDER BY
+            a.order_nm
+    </select>
+
+    <select id="findListByDirLayer" resultType="AgLayer">
+        SELECT
+            a.id id,
+            a.name as name,
+            a.name_cn nameCn,
+            a.url url,
+            a.layer_type layerType,
+            a.feature_type featureType,
+            a.add_flag addFlag,
+            a.layer_table layerTable,
+            a.param_id paramId,
+            a.is_proxy isProxy,
+            a.proxy_url proxyUrl,
+            a.vector_layer_id vectorLayerId,
+            a.data as data,
+            a.extent extent,
+            a.dir_id dirId,
+            a.dir_layer_id dirLayerId,
+            a.metadata_id metadataId,
+            a.isSelfPoPup as isSelfPoPup,
+            a.selfPoPupContent as selfPoPupContent,
+            ad.xpath dirPath
+        FROM
+            ag_bim ad,
+            (
+                SELECT
+                    adl.dir_id,
+                    adl.id dir_layer_id,
+                    adl.order_nm,
+                    al.*
+                FROM
+                    ag_bim_layer adl,
+                    ag_layer al
+                WHERE
+                    adl.layer_id = al.id
+            ) a
+        WHERE
+            ad.id = a.dir_id
+        ORDER BY
+            a.order_nm
+    </select>
+
+    <!--通用服务-按条件查询服务-->
+    <select id="findListByKeyWord" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        <where>
+            1 = 1
+            <choose>
+                <when test="type != null and type != ''">
+                    AND layer_type LIKE #{type}
+                </when>
+                <otherwise>
+                    AND (
+                    layer_type LIKE '03____'
+                    OR layer_type LIKE '04____'
+                    OR layer_type LIKE '05____'
+                    OR layer_type LIKE '020202'
+                    )
+                </otherwise>
+            </choose>
+            <if test="keyWord != null">
+                AND name LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+            </if>
+            <if test="year != null and year != ''">
+                AND metadata_id IN (
+                SELECT
+                id
+                FROM
+                ag_metadata
+                WHERE
+                <choose>
+                    <when test="_databaseId == 'oracle'">
+                        to_char(create_time, 'YYYY') = #{year}
+                    </when>
+                    <when test="_databaseId == 'mysql'">
+                        date_format(create_time, '%Y') = #{year}
+                    </when>
+                    <when test="_databaseId == 'postgresql'">
+                        to_char(create_time, 'YYYY') = #{year}
+                    </when>
+                </choose>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="findListByXpathAndLayerName" resultType="AgLayer">
+        SELECT
+        al.id id,
+        al.name as name,
+        al.name_cn nameCn,
+        al.url url,
+        al.layer_type layerType,
+        al.feature_type featureType,
+        al.add_flag addFlag,
+        al.layer_table layerTable,
+        al.param_id paramId,
+        al.is_proxy isProxy,
+        al.proxy_url proxyUrl,
+        a1.base_color baseColor,
+        a1.specular specular,
+        a1.isSelfPoPup as isSelfPoPup,
+        a1.selfPoPupContent as selfPoPupContent,
+        al.vector_layer_id vectorLayerId,
+        al.data as data,
+        al.extent extent,
+        al.metadata_id metadataId
+        FROM
+            (
+                SELECT DISTINCT
+                    adl.LAYER_ID
+                FROM
+                    ag_bim ad,
+                    ag_bim_layer adl,
+                    ag_user_bim arl
+                WHERE
+                    adl.id = arl.DIR_LAYER_ID
+                AND ad.ID = adl.DIR_ID
+                AND arl.USER_ID = #{userId}
+                AND ad.XPATH like CONCAT(CONCAT('%', #{xpath}), '%') ESCAPE '*'
+            ) t,
+            AG_LAYER al
+        WHERE
+            t.layer_ID = al.ID
+        AND al.NAME like CONCAT(CONCAT('%', #{name}), '%') ESCAPE '*'
+    </select>
+    <select id="findListByXpathAndLayerNameUsers" resultType="AgLayer">
+        SELECT
+        al.id id,
+        al.name as name,
+        al.name_cn nameCn,
+        al.url url,
+        al.layer_type layerType,
+        al.feature_type featureType,
+        al.add_flag addFlag,
+        al.layer_table layerTable,
+        al.param_id paramId,
+        al.is_proxy isProxy,
+        al.proxy_url proxyUrl,
+        a1.base_color baseColor,
+        a1.specular specular,
+        al.vector_layer_id vectorLayerId,
+        a1.isSelfPoPup as isSelfPoPup,
+        a1.selfPoPupContent as selfPoPupContent,
+        al.data as data,
+        al.extent extent,
+        al.metadata_id metadataId
+        FROM
+            (
+                SELECT DISTINCT
+                    adl.LAYER_ID
+                FROM
+                    ag_bim ad,
+                    ag_bim_layer adl,
+                    ag_user_bim arl
+                WHERE
+                    adl.id = arl.DIR_LAYER_ID
+                AND ad.ID = adl.DIR_ID
+                AND arl.USER_ID = #{userId}
+                AND ad.XPATH like CONCAT(CONCAT('%', #{xpath}), '%') ESCAPE '*'
+            ) t,
+            AG_LAYER al
+        WHERE
+            t.layer_ID = al.ID
+        AND al.NAME like CONCAT(CONCAT('%', #{name}), '%') ESCAPE '*'
+    </select>
+    <select id="findListByDirNameAndLayerName" resultType="AgLayer">
+        SELECT
+            al.id id,
+            al.name as name,
+            al.name_cn nameCn,
+            al.url url,
+            al.layer_type layerType,
+            al.feature_type featureType,
+            al.add_flag addFlag,
+            al.layer_table layerTable,
+            al.param_id paramId,
+            al.is_proxy isProxy,
+            al.proxy_url proxyUrl,
+            a1.base_color baseColor,
+            a1.specular specular,
+            al.vector_layer_id vectorLayerId,
+            a1.isSelfPoPup as isSelfPoPup,
+            a1.selfPoPupContent as selfPoPupContent,
+            al.data as data,
+            al.extent extent,
+            al.metadata_id metadataId
+        FROM
+            (
+                SELECT DISTINCT
+                    adl.LAYER_ID
+                FROM
+                    ag_bim ad,
+                    ag_bim_layer adl,
+                    ag_user_bim arl
+                WHERE
+                    adl.id = arl.DIR_LAYER_ID
+                AND ad.ID = adl.DIR_ID
+                AND arl.USER_ID = #{userId}
+                AND ADL.DIR_ID IN (
+                    SELECT
+                        ID
+                    FROM
+                        ag_bim
+                    WHERE
+                        NAME = #{dirName}
+                )
+            ) t,
+            AG_LAYER al
+        WHERE
+            t.layer_ID = al.ID
+        AND al.NAME like CONCAT(CONCAT('%', #{layerName}), '%') ESCAPE '*'
+    </select>
+    <select id="findListByDirNameAndLayerNameUsers" resultType="AgLayer">
+        SELECT
+            al.id id,
+            al.name as name,
+            al.name_cn nameCn,
+            al.url url,
+            al.layer_type layerType,
+            al.feature_type featureType,
+            al.add_flag addFlag,
+            al.layer_table layerTable,
+            al.param_id paramId,
+            al.is_proxy isProxy,
+            al.proxy_url proxyUrl,
+            al.vector_layer_id vectorLayerId,
+            al.data as data,
+            al.extent extent,
+            a1.base_color baseColor,
+            a1.specular specular,
+            a1.isSelfPoPup as isSelfPoPup,
+            a1.selfPoPupContent as selfPoPupContent,
+            al.metadata_id metadataId
+        FROM
+            (
+                SELECT DISTINCT
+                    adl.LAYER_ID
+                FROM
+                    ag_bim ad,
+                    ag_bim_layer adl,
+                    ag_user_bim arl
+                WHERE
+                    adl.id = arl.DIR_LAYER_ID
+                AND ad.ID = adl.DIR_ID
+                AND arl.USER_ID = #{userId}
+                AND ADL.DIR_ID IN (
+                    SELECT
+                        ID
+                    FROM
+                        ag_bim
+                    WHERE
+                        NAME = #{dirName}
+                )
+            ) t,
+            AG_LAYER al
+        WHERE
+            t.layer_ID = al.ID
+        AND al.NAME like CONCAT(CONCAT('%', #{layerName}), '%') ESCAPE '*'
+    </select>
+
+    <!--根据id获取图层-->
+    <select id="findByLayerId" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        WHERE
+        id = #{layerId}
+    </select>
+
+    <!--根据id获取图层-->
+    <select id="findByDirLayerId" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        WHERE
+        id = (SELECT
+        layer_id
+        FROM ag_bim_layer
+        WHERE
+        id = #{dirLayerId})
+    </select>
+    <!--根据id获取图层-->
+    <select id="findByDLidAndUid" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.base_color baseColor,
+            t.specular specular,
+            t.extent extent,
+            t.metadata_id metadataId,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId
+        FROM ag_layer t,
+        ( SELECT * FROM ag_bim_layer
+            WHERE id IN (
+                SELECT DISTINCT(dir_layer_id) FROM ag_user_bim
+                    WHERE user_id #{userId}
+            )
+        ) a
+        WHERE t.id = a.layer_id AND a.id = #{dirLayerId}
+    </select>
+    <select id="findByDLidAndUsers" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name as name,
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data as data,
+            t.extent extent,
+            t.base_color baseColor,
+            t.specular specular,
+            t.metadata_id metadataId,
+            t.isSelfPoPup as isSelfPoPup,
+            t.selfPoPupContent as selfPoPupContent,
+            a.dir_id dirId
+        FROM ag_layer t,
+        ( SELECT * FROM ag_bim_layer
+            WHERE id IN (
+                SELECT DISTINCT(dir_layer_id) FROM ag_user_bim
+                    WHERE user_id IN
+                    <foreach collection="userList" item="user" separator="," open="(" close=")">
+                        #{user.id}
+                    </foreach>
+            )
+        ) a
+        WHERE t.id = a.layer_id AND a.id = #{dirLayerId}
+    </select>
+
+    <!--根据url和layertable获取图层-->
+    <select id="findByUrl" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        WHERE
+        layer_table = #{layerTable}
+        <if test="url != null">
+            AND url = #{url}
+        </if>
+    </select>
+
+    <!--根据url获取图层-->
+    <select id="findLayerByUrl" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        WHERE
+        url = #{url}
+    </select>
+
+    <!--根据别名获取图层-->
+    <select id="findByNameCn" resultType="AgLayer">
+        SELECT
+        <include refid="all_Columns"/>
+        FROM ag_layer a,ag_bim_layer b
+        WHERE
+        a.name_cn = #{nameCn}
+        AND a.id = b.layer_id
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                AND rownum = 1
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT 1
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT 1
+            </when>
+        </choose>
+    </select>
+
+    <!--保存图层-->
+    <insert id="save">
+        INSERT INTO ag_layer (
+          id,name,name_cn,url,layer_type,feature_type,add_flag,layer_table,param_id,is_proxy,proxy_url,vector_layer_id,data,extent,metadata_id,is_external,visible_minzoom,visible_maxzoom,specular,base_color
+        ) VALUES (
+          #{id},#{name},#{nameCn},#{url},#{layerType},#{featureType},#{addFlag},#{layerTable},#{paramId},#{isProxy},#{proxyUrl},#{vectorLayerId},#{data},#{extent},#{metadataId},#{isExternal},#{visibleMinZoom},#{visibleMaxZoom},#{specular},#{baseColor}
+        )
+    </insert>
+
+    <!--修改图层-->
+    <update id="update">
+        UPDATE ag_layer
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="nameCn != null">
+                name_cn = #{nameCn},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="layerType != null">
+                layer_type = #{layerType},
+            </if>
+            <if test="featureType != null">
+                feature_type = #{featureType},
+            </if>
+            <if test="addFlag != null">
+                add_flag = #{addFlag},
+            </if>
+            <if test="layerTable != null">
+                layer_table = #{layerTable},
+            </if>
+            <if test="paramId != null">
+                param_id = #{paramId},
+            </if>
+            <if test="isProxy != null">
+                is_proxy = #{isProxy},
+            </if>
+            <if test="proxyUrl != null">
+                proxy_url = #{proxyUrl},
+            </if>
+            <if test="vectorLayerId != null">
+                vector_layer_id = #{vectorLayerId},
+            </if>
+            <if test="data != null">
+                data = #{data},
+            </if>
+            <if test="extent != null">
+                extent = #{extent},
+            </if>
+            <if test="metadataId != null">
+                metadata_id = #{metadataId},
+            </if>
+            <if test="isExternal != null">
+                is_external = #{isExternal},
+            </if>
+                base_color = #{baseColor},
+                specular = #{specular},
+                isSelfPoPup = #{isSelfPoPup},
+                selfPoPupContent = #{selfPoPupContent},
+            <!--<if test="visibleMinZoom != null">-->
+                visible_minzoom = #{visibleMinZoom},
+            <!--</if>-->
+            <!--<if test="visibleMinZoom != null">-->
+                visible_maxzoom = #{visibleMaxZoom}
+            <!--</if>-->
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--根据id删除图层-->
+    <delete id="delete">
+        DELETE FROM ag_layer
+        WHERE
+        id = #{id}
+    </delete>
+    <!--根据id批量删除图层-->
+    <delete id="deleteLayerBatch" parameterType="java.util.List">
+        DELETE FROM ag_layer
+        WHERE
+        id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <!--插入共享的预览KEY-->
+    <insert id="putPreviewKey">
+        INSERT INTO ag_redis_share (
+          ID,SHARE_KEY,VALUE
+        ) VALUES (
+          #{id},#{shareKey},#{value}
+        )
+    </insert>
+    <!--获取共享key-->
+    <select id="getPreviewKey" resultType="AgShare">
+        SELECT
+          t.ID id,t.SHARE_KEY shareKey,t.VALUE "value"
+        FROM ag_redis_share t
+        WHERE
+        t.SHARE_KEY = #{shareKey}
+    </select>
+    <!--更新共享key-->
+    <update id="updatePreviewKey">
+        UPDATE ag_redis_share
+        <set>
+            <if test="shareKey != null">
+                SHARE_KEY = #{shareKey},
+            </if>
+            <if test="value != null">
+                VALUE = #{value}
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+    <!--按ids查询图层-->
+    <select id="findListByLayerIds" resultType="AgLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer
+        WHERE
+        id IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 2018-03-15 新增-->
+    <!--按用户id和图层类型获取图层-->
+    <select id="findListByUserIdAndType" resultType="AgLayer">
+        SELECT
+            T.id id,
+            T.name as name,
+            T.name_cn nameCn,
+            T.layer_table layerTable,
+            T.vector_layer_id vectorLayerId,
+            T.data as data,
+            A.id dirLayerId
+        FROM
+            ag_layer T,
+            (
+                SELECT
+                    *
+                FROM
+                    ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+                            ag_user_bim
+                        WHERE
+                            user_id = #{userId}
+                    )
+            ) A
+        WHERE
+            A.layer_id = T.id
+        AND T.layer_type = #{type}
+        ORDER BY
+            A.order_nm
+    </select>
+    <select id="findListByUsersAndType" resultType="AgLayer">
+        SELECT
+            T.id id,
+            T.name as name,
+            T.name_cn nameCn,
+            T.layer_table layerTable,
+            T.vector_layer_id vectorLayerId,
+            T.data as data,
+            A.id dirLayerId
+        FROM
+            ag_layer T,
+            (
+                SELECT
+                    *
+                FROM
+                    ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+                            ag_user_bim
+                        WHERE
+                            user_id = #{user.id}
+                    )
+            ) A
+        WHERE
+            A.layer_id = T.id
+        AND T.layer_type = #{type}
+        ORDER BY
+            A.order_nm
+    </select>
+    <!--按关联矢量图层类型过滤图层-->
+    <select id="filterByFeatureType" resultType="boolean">
+        <![CDATA[
+
+              select
+                  COUNT(b.ID)
+              from ag_bim_layer a,ag_layer b
+			  where
+			      a.layer_id = b.id and a.id = #{vectorLayerId} and b.feature_type = #{featureType}
+
+        ]]>
+    </select>
+    <!--找出属性表关联的矢量图层的featureType-->
+    <select id="getVectorLayerFeatureType" resultType="String">
+        select
+        b.feature_type
+        from ag_bim_layer a,ag_layer b
+        where
+        a.layer_id = b.id and a.id = #{vectorLayerId}
+    </select>
+    <!--按用户id和图层类型获取图层-->
+    <select id="findEditableListByUserIdAndType" resultType="AgLayer">
+        SELECT
+            T.id id,
+            T.name as name,
+            T.name_cn nameCn,
+            T.layer_table layerTable,
+            T.vector_layer_id vectorLayerId,
+            T.data as data,
+            A.id dirLayerId
+        FROM
+            ag_layer T,
+            (
+                SELECT
+                    *
+                FROM
+                    ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+                            ag_user_bim
+                        WHERE
+                            user_id = #{userId}
+                        AND EDITABLE = '1'
+                    )
+            ) A
+        WHERE
+            A.layer_id = T.id
+        AND T.layer_type = #{type}
+        ORDER BY
+            A.order_nm
+    </select>
+    <select id="findEditableListByUsersAndType" resultType="AgLayer">
+        SELECT
+            T.id id,
+            T.name as name,
+            T.name_cn nameCn,
+            T.layer_table layerTable,
+            T.vector_layer_id vectorLayerId,
+            T.data as data,
+            A.id dirLayerId
+        FROM
+            ag_layer T,
+            (
+                SELECT
+                    *
+                FROM
+        ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+        ag_user_bim
+                        WHERE
+                            user_id IN
+                            <foreach collection="userList" item="user" separator="," open="(" close=")">
+                                #{user.id}
+                            </foreach>
+                        AND EDITABLE = '1'
+                    )
+            ) A
+        WHERE
+            A.layer_id = T.id
+        AND T.layer_type = #{type}
+        ORDER BY
+            A.order_nm
+    </select>
+    <select id="findLayerBylayerTableAndUserId" resultType="AgLayer">
+        SELECT
+            T.id id,
+            T.name as name,
+            T.name_cn nameCn,
+            T.url url,
+            T.layer_type layerType,
+            T.feature_type featureType,
+            T.add_flag addFlag,
+            T.layer_table layerTable,
+            T.param_id paramId,
+            T.is_proxy isProxy,
+            T.proxy_url proxyUrl,
+            T.vector_layer_id vectorLayerId,
+            T.data as data,
+            T.extent extent,
+            T.metadata_id metadataId,
+            A.dir_id dirId,
+            A.id dirLayerId
+        FROM
+            ag_layer T,
+            (
+                SELECT
+                    *
+                FROM
+        ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+        ag_user_bim
+                        WHERE
+                            user_id = #{userId}
+                    )
+            ) A
+        WHERE
+            A.layer_id = T.id
+        AND T.layer_table = #{layerTable}
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                AND rownum = 1
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT 1
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT 1
+            </when>
+        </choose>
+    </select>
+    <select id="findLayerBylayerTableAndUsers" resultType="AgLayer">
+        SELECT
+            T.id id,
+            T.name as name,
+            T.name_cn nameCn,
+            T.url url,
+            T.layer_type layerType,
+            T.feature_type featureType,
+            T.add_flag addFlag,
+            T.layer_table layerTable,
+            T.param_id paramId,
+            T.is_proxy isProxy,
+            T.proxy_url proxyUrl,
+            T.vector_layer_id vectorLayerId,
+            T.DATA as data,
+            T.extent extent,
+            T.metadata_id metadataId,
+            A.dir_id dirId,
+            A.id dirLayerId
+        FROM
+            ag_layer T,
+            (
+                SELECT
+                    *
+                FROM
+        ag_bim_layer
+                WHERE
+                    id IN (
+                        SELECT DISTINCT
+                            (dir_layer_id)
+                        FROM
+        ag_user_bim
+                        WHERE
+                            user_id IN
+                            <foreach collection="userList" item="user" separator="," open="(" close=")">
+                                #{user.id}
+                            </foreach>
+                    )
+            ) A
+        WHERE
+            A.layer_id = T.id
+        AND T.layer_table = #{layerTable}
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                AND rownum = 1
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT 1
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT 1
+            </when>
+        </choose>
+    </select>
+    <select id="findVectorLayer" resultType="AgLayer">
+        SELECT
+        t.name name,
+        t.name_cn nameCn,
+        t.layer_table layerTable,
+        t.data data,
+        t.FEATURE_TYPE featureType,
+        t.ID id
+        FROM
+        ag_layer t
+        WHERE
+        t.layer_type = '010001'
+    </select>
+    <select id="findUserlayerCount" resultType="integer">
+        select  count(DISTINCT dir_layer_id) from
+        (select dir_layer_id from ag_user_bim where user_id=#{userId}) t3,
+        (select t1.id projectdir_layer_id,t1.layer_id,t2.name,t2.projectName,t2.user_id from ag_projectdir_layer t1,
+        (select d.user_id,d.name projectName,c.id id,c.name from ag_projectdir c,
+        (select a.user_id,b.name FROM ag_user_project a,ag_projectdir b where a.user_id=#{userId} and a.project_id=b.id) d
+        where c.xpath LIKE CONCAT(CONCAT('/',d.name),'%')
+        ) t2
+        where t1.projectdir_id = t2.id) t4
+        where t3.dir_layer_id = t4.layer_id
+    </select>
+</mapper>

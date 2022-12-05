@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgHouseCustomMapper" >
+
+  <sql id="Base_Column_List" >
+    re.id, re.source_name, re.store_full_path, re.suffix, re.size, re.type, re.category_id, re.create_time, re.modify_time,
+    re.remark, re.old_name, re.hourse_name, re.homestead_area, re.floor_area, re.covered_area, re.cost_estimates,
+    re.source_id, re.user_id,re.table_name,re.thumb,re.structure_type, re.status
+  </sql>
+
+
+  <select id="select" resultType="AgHouse" >
+    select
+    <include refid="Base_Column_List"></include>
+    from ag_house re
+    where re.status != 1
+    <if test="isShow != null" >
+      and re.is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+
+    <if test="hourseName != null" >
+      and re.hourse_name like concat(concat('%', TRIM(#{hourseName})), '%')
+    </if>
+    <if test="orderBy != null" >
+      order by re.${orderBy}
+    </if>
+  </select>
+
+
+  <select id="unionSelect" resultType="AgHouse" >
+    select distinct
+    <include refid="Base_Column_List"></include>
+    from ag_house re left join ag_permission per on re.id = per.source_id
+    where per.type = '3' and re.status != 1
+    <if test="isShow != null" >
+      and re.is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+    <if test="permisions != null" >
+      and per.code in
+      <foreach collection="permisions" item="code" index="index" open="(" close=")" separator=",">
+        #{code}
+      </foreach>
+    </if>
+    <if test="hourseName != null" >
+      and re.hourse_name like concat(concat('%', TRIM(#{hourseName})), '%')
+    </if>
+    <if test="orderBy != null" >
+      order by re.${orderBy}
+    </if>
+  </select>
+
+  <select id="sql" resultType="AgHouse" parameterType="String">
+    ${_parameter}
+  </select>
+</mapper>

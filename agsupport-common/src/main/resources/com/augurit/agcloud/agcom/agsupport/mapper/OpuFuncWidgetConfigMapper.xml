@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.OpuFuncWidgetConfigMapper">
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="FUNC_CODE" jdbcType="VARCHAR" property="funcCode" />
+    <result column="CONFIG_KEY" jdbcType="VARCHAR" property="configKey" />
+    <result column="CONFIG_TYPE" jdbcType="VARCHAR" property="configType" />
+    <result column="IS_ACTIVE" jdbcType="VARCHAR" property="isActive" />
+    <result column="FUNC_INVOKE_URL" jdbcType="VARCHAR" property="funcInvokeUrl" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    <result column="CONFIG_VALUE" jdbcType="VARCHAR" property="configValue" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, FUNC_CODE, CONFIG_KEY, CONFIG_TYPE, IS_ACTIVE, FUNC_INVOKE_URL
+  </sql>
+  <sql id="Blob_Column_List">
+    CONFIG_VALUE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPU_FUNC_WIDGET_CONFIG
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from OPU_FUNC_WIDGET_CONFIG
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    insert into OPU_FUNC_WIDGET_CONFIG (ID, FUNC_CODE, CONFIG_KEY, 
+      CONFIG_TYPE, IS_ACTIVE,
+      CONFIG_VALUE,FUNC_INVOKE_URL)
+    values (#{id,jdbcType=VARCHAR}, #{funcCode,jdbcType=VARCHAR}, #{configKey,jdbcType=VARCHAR}, 
+      #{configType,jdbcType=VARCHAR}, #{isActive,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR},#{funcInvokeUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    insert into OPU_FUNC_WIDGET_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="funcCode != null">
+        FUNC_CODE,
+      </if>
+      <if test="configKey != null">
+        CONFIG_KEY,
+      </if>
+      <if test="configType != null">
+        CONFIG_TYPE,
+      </if>
+      <if test="isActive != null">
+        IS_ACTIVE,
+      </if>
+      <if test="configValue != null">
+        CONFIG_VALUE,
+      </if>
+      <if test="funcInvokeUrl != null">
+        FUNC_INVOKE_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="funcCode != null">
+        #{funcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="configKey != null">
+        #{configKey,jdbcType=VARCHAR},
+      </if>
+      <if test="configType != null">
+        #{configType,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null">
+        #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="funcInvokeUrl != null">
+        #{funcInvokeUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    update OPU_FUNC_WIDGET_CONFIG
+    <set>
+      <if test="funcCode != null">
+        FUNC_CODE = #{funcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="configKey != null">
+        CONFIG_KEY = #{configKey,jdbcType=VARCHAR},
+      </if>
+      <if test="configType != null">
+        CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        IS_ACTIVE = #{isActive,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null">
+        CONFIG_VALUE = #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="funcInvokeUrl != null">
+        FUNC_INVOKE_URL = #{funcInvokeUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    update OPU_FUNC_WIDGET_CONFIG
+    set FUNC_CODE = #{funcCode,jdbcType=VARCHAR},
+      CONFIG_KEY = #{configKey,jdbcType=VARCHAR},
+      CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+      IS_ACTIVE = #{isActive,jdbcType=VARCHAR},
+      CONFIG_VALUE = #{configValue,jdbcType=VARCHAR},
+      FUNC_INVOKE_URL = #{funcInvokeUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.OpuFuncWidgetConfig">
+    update OPU_FUNC_WIDGET_CONFIG
+    set FUNC_CODE = #{funcCode,jdbcType=VARCHAR},
+      CONFIG_KEY = #{configKey,jdbcType=VARCHAR},
+      CONFIG_TYPE = #{configType,jdbcType=VARCHAR},
+      IS_ACTIVE = #{isActive,jdbcType=VARCHAR},
+      FUNC_INVOKE_URL = #{funcInvokeUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <!--按条件查询-->
+  <select id="findList" resultType="com.augurit.agcloud.opus.common.domain.OpuRsFunc">
+    select  t.func_id funcId,
+            t.app_soft_id appSoftId,
+            t.func_code funcCode,
+            t.func_name funcName,
+            t.is_active_func isActiveFunc,
+            t.func_invoke_url funcInvokeUrl
+    from OPU_RS_FUNC t
+    where t.func_type='widget'
+    and t.func_deleted='0'
+    <if test="name != null">
+      AND t.FUNC_NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+    </if>
+    order by t.modify_time desc, t.create_time desc
+  </select>
+
+
+  <!--获取配置数据-->
+  <select id="getConfigData" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPU_FUNC_WIDGET_CONFIG
+    WHERE 1=1
+    <if test="funcCode != null">
+      AND func_code = #{funcCode}
+    </if>
+    order by config_key
+  </select>
+
+  <select id="searchByParams" parameterType="OpuFuncWidgetConfig" resultMap="ResultMapWithBLOBs">
+      select
+      <include refid="Base_Column_List" />
+      ,
+      <include refid="Blob_Column_List" />
+      from OPU_FUNC_WIDGET_CONFIG
+      where 1=1
+      <if test="funcCode != null">
+         and FUNC_CODE = #{funcCode}
+      </if>
+      <if test="configKey != null">
+          and CONFIG_KEY = #{configKey}
+      </if>
+  </select>
+
+
+  <select id="getAllConfigDataForRest"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPU_FUNC_WIDGET_CONFIG
+    where is_active='1'
+    <if test="funcCode != null">
+      and FUNC_CODE = #{funcCode}
+    </if>
+    <if test="configKey != null">
+      and CONFIG_KEY = #{configKey}
+    </if>
+  </select>
+
+
+  <select id="getConfigDataByKey"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPU_FUNC_WIDGET_CONFIG
+    where 1 = 1
+    <if test="funcCode != null">
+      and FUNC_CODE = #{funcCode}
+    </if>
+    <if test="configKey != null">
+      and CONFIG_KEY = #{configKey}
+    </if>
+    <if test="funcInvokeUrl != null">
+      and FUNC_INVOKE_URL = #{funcInvokeUrl}
+    </if>
+  </select>
+
+  <select id="getConfigListByUrlOrCode"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from OPU_FUNC_WIDGET_CONFIG
+    where 1 = 1
+    <if test="funcInvokeUrl != null">
+      and FUNC_INVOKE_URL = #{funcInvokeUrl}
+    </if>
+    <if test="funcCode != null">
+      and FUNC_CODE = #{funcCode}
+    </if>
+    order by config_key
+  </select>
+
+</mapper>

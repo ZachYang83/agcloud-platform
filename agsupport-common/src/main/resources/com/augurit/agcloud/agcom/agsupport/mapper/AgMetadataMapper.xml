@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--created by caip-->
+<!--0 一些前置信息配置 -->
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgMetadataMapper">
+    <!--1 返回所有字段的SQL字句 -->
+    <sql id="allColumns">
+        ID  id,
+        OWNER  "owner",
+        CREATE_TIME createTime,
+        PICTURE picture,
+        ILLUSTRATION illustration
+    </sql>
+
+    <!--2 根据主键ID查询单个实体 -->
+    <select id="getAgMetadataById" resultType="AgMetadata">
+        select
+        <include refid="allColumns"/>
+        from AG_METADATA
+        where ID = #{id}
+    </select>
+
+    <!--获取服务创建年份-->
+    <select id="getYears" resultType="java.lang.String">
+        SELECT DISTINCT
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    to_char(t.CREATE_TIME, 'YYYY')
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    date_format(t.CREATE_TIME, '%Y')
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    to_char(t.CREATE_TIME, 'YYYY')
+                </when>
+            </choose>
+        FROM
+            ag_metadata t
+        ORDER BY
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    to_char(t.CREATE_TIME, 'YYYY')
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    date_format(t.CREATE_TIME, '%Y')
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    to_char(t.CREATE_TIME, 'YYYY')
+                </when>
+            </choose>
+            DESC
+    </select>
+
+    <!--5 新增实体对象 -->
+    <insert id="insertAgMetadata" parameterType="AgMetadata">
+        insert into AG_METADATA (
+        ID,OWNER,CREATE_TIME,PICTURE,ILLUSTRATION
+        )  values  (
+        #{id},#{owner},#{createTime},#{picture},#{illustration}
+        )
+    </insert>
+    <!--6 修改实体对象 -->
+    <update id="updateAgMetadata" parameterType="AgMetadata">
+        update AG_METADATA
+        <set>
+            <if test="id != null">
+                ID = #{id},
+            </if>
+            <if test="owner != null">
+                OWNER = #{owner},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime},
+            </if>
+            <if test="picture != null">
+                PICTURE = #{picture},
+            </if>
+            <if test="illustration != null">
+                ILLUSTRATION = #{illustration}
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+    <!--7 删除实体对象,根据主键ID -->
+    <delete id="deleteAgMetadata">
+        delete from AG_METADATA
+        where ID = #{id}
+    </delete>
+
+</mapper>

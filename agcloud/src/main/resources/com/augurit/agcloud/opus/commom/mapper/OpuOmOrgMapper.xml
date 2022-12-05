@@ -1,0 +1,912 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.opus.common.mapper.OpuOmOrgMapper" >
+
+    <!-- 查询过滤条件,没有被逻辑删除的机构 -->
+    <sql id="filter" >
+        AND org.ORG_DELETED &lt;&gt; '1'
+    </sql>
+
+    <!-- 机构所有字段 -->
+    <sql id="AllColumns" >
+        ORG_ID  as orgId,
+        ORG_CODE as orgCode,
+        ORG_NAME as orgName,
+        ORG_SHORT_NAME1 as orgShortName1,
+        ORG_SHORT_NAME2 as orgShortName2,
+        PARENT_ORG_ID as parentOrgId,
+        ORG_LEVEL as orgLevel,
+        ORG_SEQ as orgSeq,
+        ORG_SORT_NO as orgSortNo,
+        IS_PUBLIC as isPublic,
+        ORG_PROPERTY as orgProperty,
+        IS_INNER_CATEGORY_EXPAND as isInnerCategoryExpand,
+        IS_ACTIVE as isActive,
+        IS_LEAF as isLeaf,
+        SUB_UNIT_COUNT as subUnitCount,
+        SUB_DEPT_COUNT as subDeptCount,
+        SUB_GROUP_COUNT as subGroupCount,
+        SUB_POS_COUNT as subPosCount,
+        SUB_USER_COUNT as subUserCount,
+        ORG_TYPE as orgType,
+        ORG_NATURE as orgNature,
+        ORG_RANK as orgRank,
+        UNIT_GB_TYPE as unitGbType,
+        UNIT_GB_CODE as unitGbCode,
+        UNIT_GB_SYS_CODE as unitGbSysCode,
+        ORG_FUNDS_FORM as orgFundsForm,
+        ORG_FOUND_TIME as orgFoundTime,
+        ORG_LINK_MAN as orgLinkMan,
+        ORG_LINK_TEL as orgLinkTel,
+        ORG_ZIP_CODE as orgZipCode,
+        ORG_EMAIL as orgEmail,
+        ORG_TEL as orgTel,
+        ORG_ADDRESS as orgAddress,
+        ORG_WEBSITE as orgWebsite,
+        ORG_WEIBO as orgWeibo,
+        ORG_APPROVAL_NUMBER as orgApprovalNumber,
+        ORG_FUNC as orgFunc,
+        ORG_DELETED as orgDeleted,
+        CREATER as creater,
+        CREATE_TIME as createTime,
+        MODIFIER as modifier,
+        MODIFY_TIME as modifyTime,
+        IS_TOP_ORG as isTopOrg
+    </sql>
+
+    <!-- 组织所有字段 -->
+    <sql id="AllOrgColumns" >
+        org.ORG_ID  as orgId,
+        org.ORG_CODE as orgCode,
+        org.ORG_NAME as orgName,
+        org.ORG_SHORT_NAME1 as orgShortName1,
+        org.ORG_SHORT_NAME2 as orgShortName2,
+        org.PARENT_ORG_ID as parentOrgId,
+        org.ORG_LEVEL as orgLevel,
+        org.ORG_SEQ as orgSeq,
+        org.ORG_SORT_NO as orgSortNo,
+        org.IS_PUBLIC as isPublic,
+        org.ORG_PROPERTY as orgProperty,
+        org.IS_INNER_CATEGORY_EXPAND as isInnerCategoryExpand,
+        org.IS_ACTIVE as isActive,
+        org.IS_LEAF as isLeaf,
+        org.SUB_UNIT_COUNT as subUnitCount,
+        org.SUB_DEPT_COUNT as subDeptCount,
+        org.SUB_GROUP_COUNT as subGroupCount,
+        org.SUB_POS_COUNT as subPosCount,
+        org.SUB_USER_COUNT as subUserCount,
+        org.ORG_TYPE as orgType,
+        org.ORG_NATURE as orgNature,
+        org.ORG_RANK as orgRank,
+        org.UNIT_GB_TYPE as unitGbType,
+        org.UNIT_GB_CODE as unitGbCode,
+        org.UNIT_GB_SYS_CODE as unitGbSysCode,
+        org.ORG_FUNDS_FORM as orgFundsForm,
+        org.ORG_FOUND_TIME as orgFoundTime,
+        org.ORG_LINK_MAN as orgLinkMan,
+        org.ORG_LINK_TEL as orgLinkTel,
+        org.ORG_ZIP_CODE as orgZipCode,
+        org.ORG_EMAIL as orgEmail,
+        org.ORG_TEL as orgTel,
+        org.ORG_ADDRESS as orgAddress,
+        org.ORG_WEBSITE as orgWebsite,
+        org.ORG_WEIBO as orgWeibo,
+        org.ORG_APPROVAL_NUMBER as orgApprovalNumber,
+        org.ORG_FUNC as orgFunc,
+        org.ORG_DELETED as orgDeleted,
+        org.CREATER as creater,
+        org.CREATE_TIME as createTime,
+        org.MODIFIER as modifier,
+        org.MODIFY_TIME as modifyTime,
+        org.IS_TOP_ORG as isTopOrg
+    </sql>
+
+    <sql id="orgColumns" >
+        org.ORG_ID  as orgId,
+        org.ORG_CODE as orgCode,
+        org.ORG_NAME as orgName,
+        org.ORG_SHORT_NAME1 as orgShortName1,
+        org.ORG_SHORT_NAME2 as orgShortName2,
+        org.PARENT_ORG_ID as parentOrgId,
+        org.ORG_LEVEL as orgLevel,
+        org.ORG_SEQ as orgSeq,
+        org.ORG_SORT_NO as orgSortNo,
+        org.IS_PUBLIC as isPublic,
+        org.ORG_PROPERTY as orgProperty,
+        org.IS_INNER_CATEGORY_EXPAND as isInnerCategoryExpand,
+        org.IS_ACTIVE as isActive,
+        org.IS_LEAF as isLeaf,
+        org.SUB_UNIT_COUNT as subUnitCount,
+        org.SUB_DEPT_COUNT as subDeptCount,
+        org.SUB_GROUP_COUNT as subGroupCount,
+        org.SUB_POS_COUNT as subPosCount,
+        org.SUB_USER_COUNT as subUserCount,
+        org.ORG_TYPE as orgType,
+        org.ORG_NATURE as orgNature,
+        org.ORG_RANK as orgRank,
+        org.UNIT_GB_TYPE as unitGbType,
+        org.UNIT_GB_CODE as unitGbCode,
+        org.UNIT_GB_SYS_CODE as unitGbSysCode,
+        org.ORG_FUNDS_FORM as orgFundsForm,
+        org.ORG_FOUND_TIME as orgFoundTime,
+        org.ORG_LINK_MAN as orgLinkMan,
+        org.ORG_LINK_TEL as orgLinkTel,
+        org.ORG_ZIP_CODE as orgZipCode,
+        org.ORG_EMAIL as orgEmail,
+        org.ORG_TEL as orgTel,
+        org.ORG_ADDRESS as orgAddress,
+        org.ORG_WEBSITE as orgWebsite,
+        org.ORG_WEIBO as orgWeibo,
+        org.ORG_APPROVAL_NUMBER as orgApprovalNumber,
+        org.ORG_FUNC as orgFunc,
+        org.ORG_DELETED as orgDeleted,
+        org.CREATER as creater,
+        org.CREATE_TIME as createTime,
+        org.MODIFIER as modifier,
+        org.MODIFY_TIME as modifyTime,
+        org.IS_TOP_ORG as isTopOrg
+    </sql>
+
+    <!-- 添加组织  -->
+    <insert id="insertOrg" parameterType="OpuOmOrg" >
+        insert into OPU_OM_ORG (
+        ORG_ID,
+        ORG_CODE,
+        ORG_NAME,
+        ORG_SHORT_NAME1,
+        ORG_SHORT_NAME2,
+        PARENT_ORG_ID,
+        ORG_LEVEL,
+        ORG_SEQ,
+        ORG_SORT_NO,
+        IS_PUBLIC,
+        ORG_PROPERTY,
+        IS_ACTIVE,
+        IS_LEAF,
+        SUB_UNIT_COUNT,
+        SUB_DEPT_COUNT,
+        SUB_GROUP_COUNT,
+        SUB_POS_COUNT,
+        SUB_USER_COUNT,
+        ORG_TYPE,
+        ORG_NATURE,
+        ORG_RANK,
+        UNIT_GB_TYPE,
+        UNIT_GB_CODE,
+        UNIT_GB_SYS_CODE,
+        ORG_FUNDS_FORM,
+        ORG_FOUND_TIME,
+        ORG_LINK_MAN,
+        ORG_LINK_TEL,
+        ORG_ZIP_CODE,
+        ORG_EMAIL,
+        ORG_TEL,
+        ORG_ADDRESS,
+        ORG_WEBSITE,
+        ORG_WEIBO,
+        ORG_APPROVAL_NUMBER,
+        ORG_FUNC,
+        ORG_DELETED,
+        CREATER,
+        CREATE_TIME,
+        MODIFIER,
+        MODIFY_TIME,
+        IS_TOP_ORG,
+        REGION_ID
+        )
+        values (
+        #{orgId},
+        #{orgCode},
+        #{orgName},
+        #{orgShortName1},
+        #{orgShortName2},
+        #{parentOrgId},
+        #{orgLevel,jdbcType=DECIMAL},
+        #{orgSeq},
+        #{orgSortNo,jdbcType=DECIMAL},
+        #{isPublic,jdbcType=CHAR},
+        #{orgProperty,jdbcType=CHAR},
+        #{isActive,jdbcType=CHAR},
+        #{isLeaf,jdbcType=CHAR},
+        #{subUnitCount,jdbcType=DECIMAL},
+        #{subDeptCount,jdbcType=DECIMAL},
+        #{subGroupCount,jdbcType=DECIMAL},
+        #{subPosCount,jdbcType=DECIMAL},
+        #{subUserCount,jdbcType=DECIMAL},
+        #{orgType},
+        #{orgNature},
+        #{orgRank},
+        #{unitGbType},
+        #{unitGbCode},
+        #{unitGbSysCode},
+        #{orgFundsForm},
+        #{orgFoundTime,jdbcType=TIMESTAMP},
+        #{orgLinkMan},
+        #{orgLinkTel},
+        #{orgZipCode},
+        #{orgEmail},
+        #{orgTel},
+        #{orgAddress},
+        #{orgWebsite},
+        #{orgWeibo},
+        #{orgApprovalNumber},
+        #{orgFunc},
+        #{orgDeleted,jdbcType=CHAR},
+        #{creater},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{modifier},
+        #{modifyTime,jdbcType=TIMESTAMP},
+        #{isTopOrg,jdbcType=CHAR},
+        #{regionId}
+        )
+    </insert>
+
+    <!-- 修改组织  -->
+    <update id="updateOrg" parameterType="OpuOmOrg" >
+        update OPU_OM_ORG
+        <set >
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode},
+            </if>
+            <if test="orgName != null" >
+                ORG_NAME = #{orgName},
+            </if>
+            <if test="orgShortName1 != null" >
+                ORG_SHORT_NAME1 = #{orgShortName1},
+            </if>
+            <if test="orgShortName2 != null" >
+                ORG_SHORT_NAME2 = #{orgShortName2},
+            </if>
+            <if test="parentOrgId != null" >
+                PARENT_ORG_ID = #{parentOrgId},
+            </if>
+            <if test="orgLevel != null" >
+                ORG_LEVEL = #{orgLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="orgSeq != null" >
+                ORG_SEQ = #{orgSeq},
+            </if>
+            <if test="orgSortNo != null" >
+                ORG_SORT_NO = #{orgSortNo,jdbcType=DECIMAL},
+            </if>
+            <if test="isPublic != null" >
+                IS_PUBLIC = #{isPublic,jdbcType=CHAR},
+            </if>
+            <if test="orgProperty != null" >
+                ORG_PROPERTY = #{orgProperty,jdbcType=CHAR},
+            </if>
+            <if test="isActive != null" >
+                IS_ACTIVE = #{isActive,jdbcType=CHAR},
+            </if>
+            <if test="isLeaf != null" >
+                IS_LEAF = #{isLeaf,jdbcType=CHAR},
+            </if>
+            <if test="subUnitCount != null" >
+                SUB_UNIT_COUNT = #{subUnitCount,jdbcType=DECIMAL},
+            </if>
+            <if test="subDeptCount != null" >
+                SUB_DEPT_COUNT = #{subDeptCount,jdbcType=DECIMAL},
+            </if>
+            <if test="subGroupCount != null" >
+                SUB_GROUP_COUNT = #{subGroupCount,jdbcType=DECIMAL},
+            </if>
+            <if test="subPosCount != null" >
+                SUB_POS_COUNT = #{subPosCount,jdbcType=DECIMAL},
+            </if>
+            <if test="subUserCount != null" >
+                SUB_USER_COUNT = #{subUserCount,jdbcType=DECIMAL},
+            </if>
+            <if test="orgType != null" >
+                ORG_TYPE = #{orgType},
+            </if>
+            <if test="orgNature != null" >
+                ORG_NATURE = #{orgNature},
+            </if>
+            <if test="orgRank != null" >
+                ORG_RANK = #{orgRank},
+            </if>
+            <if test="unitGbType != null" >
+                UNIT_GB_TYPE = #{unitGbType},
+            </if>
+            <if test="unitGbCode != null" >
+                UNIT_GB_CODE = #{unitGbCode},
+            </if>
+            <if test="unitGbSysCode != null" >
+                UNIT_GB_SYS_CODE = #{unitGbSysCode},
+            </if>
+            <if test="orgFundsForm != null" >
+                ORG_FUNDS_FORM = #{orgFundsForm},
+            </if>
+            <if test="orgFoundTime != null" >
+                ORG_FOUND_TIME = #{orgFoundTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgLinkMan != null" >
+                ORG_LINK_MAN = #{orgLinkMan},
+            </if>
+            <if test="orgLinkTel != null" >
+                ORG_LINK_TEL = #{orgLinkTel},
+            </if>
+            <if test="orgZipCode != null" >
+                ORG_ZIP_CODE = #{orgZipCode},
+            </if>
+            <if test="orgEmail != null" >
+                ORG_EMAIL = #{orgEmail},
+            </if>
+            <if test="orgTel != null" >
+                ORG_TEL = #{orgTel},
+            </if>
+            <if test="orgAddress != null" >
+                ORG_ADDRESS = #{orgAddress},
+            </if>
+            <if test="orgWebsite != null" >
+                ORG_WEBSITE = #{orgWebsite},
+            </if>
+            <if test="orgWeibo != null" >
+                ORG_WEIBO = #{orgWeibo},
+            </if>
+            <if test="orgApprovalNumber != null" >
+                ORG_APPROVAL_NUMBER = #{orgApprovalNumber},
+            </if>
+            <if test="orgFunc != null" >
+                ORG_FUNC = #{orgFunc},
+            </if>
+            <if test="orgDeleted != null" >
+                ORG_DELETED = #{orgDeleted,jdbcType=CHAR},
+            </if>
+            <if test="creater != null" >
+                CREATER = #{creater},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null" >
+                MODIFIER = #{modifier},
+            </if>
+            <if test="modifyTime != null" >
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isTopOrg != null" >
+                IS_TOP_ORG = #{isTopOrg,jdbcType=CHAR},
+            </if>
+            <if test="regionId != null" >
+                REGION_ID = #{regionId},
+            </if>
+        </set>
+        where ORG_ID = #{orgId}
+    </update>
+
+
+    <!-- 修改单位总数（加一）  -->
+    <update id="updateAddOneSubUnitCount" parameterType="string" >
+        update OPU_OM_ORG
+        set SUB_UNIT_COUNT = (SUB_UNIT_COUNT+1)
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId"  open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改部门总数（加一）  -->
+    <update id="updateAddOneSubDeptCount" parameterType="string" >
+        update OPU_OM_ORG
+        set SUB_DEPT_COUNT = (SUB_DEPT_COUNT+1)
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId"  open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改工作组总数（加一）  -->
+    <update id="updateAddOneSubGroupCount" parameterType="string" >
+        update OPU_OM_ORG
+        set SUB_GROUP_COUNT = (SUB_GROUP_COUNT+1)
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改子组织（单位或部门或工作组）总数（加）  -->
+    <update id="updateAddSubOrgCount">
+        update OPU_OM_ORG
+        <set >
+            <if test="addCount != null" >
+                <choose>
+                    <when test='orgProperty == "u"'>
+                        SUB_UNIT_COUNT = (SUB_UNIT_COUNT + #{addCount})
+                    </when>
+                    <when test='orgProperty == "d"'>
+                        SUB_DEPT_COUNT = (SUB_DEPT_COUNT + #{addCount})
+                    </when>
+                    <when test='orgProperty == "g"'>
+                        SUB_GROUP_COUNT = (SUB_GROUP_COUNT + #{addCount})
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+            <if test="addCount == null" >
+                <choose>
+                    <when test='orgProperty == "u"'>
+                        SUB_UNIT_COUNT = (SUB_UNIT_COUNT + 1)
+                    </when>
+                    <when test='orgProperty == "d"'>
+                        SUB_DEPT_COUNT = (SUB_DEPT_COUNT + 1)
+                    </when>
+                    <when test='orgProperty == "g"'>
+                        SUB_GROUP_COUNT = (SUB_GROUP_COUNT + 1)
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+        </set>
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改单位总数（减一）  -->
+    <update id="updateMinusOneSubUnitCount" parameterType="string" >
+        update OPU_OM_ORG
+        set SUB_UNIT_COUNT = (SUB_UNIT_COUNT-1)
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId"  open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改部门总数（减一）  -->
+    <update id="updateMinusOneSubDeptCount" parameterType="string" >
+        update OPU_OM_ORG
+        set SUB_DEPT_COUNT = (SUB_DEPT_COUNT-1)
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId"  open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改工作组总数（减一）  -->
+    <update id="updateMinusOneSubGroupCount" parameterType="string" >
+        update OPU_OM_ORG
+        set SUB_GROUP_COUNT = (SUB_GROUP_COUNT-1)
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 修改子组织（单位或部门或工作组）总数（减）  -->
+    <update id="updateMinusSubOrgCount">
+        update OPU_OM_ORG
+        <set >
+            <if test="minusCount != null" >
+                <choose>
+                    <when test='orgProperty == "u"'>
+                        SUB_UNIT_COUNT = (SUB_UNIT_COUNT - #{minusCount})
+                    </when>
+                    <when test='orgProperty == "d"'>
+                        SUB_DEPT_COUNT = (SUB_DEPT_COUNT - #{minusCount})
+                    </when>
+                    <when test='orgProperty == "g"'>
+                        SUB_GROUP_COUNT = (SUB_GROUP_COUNT - #{minusCount})
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+            <if test="minusCount == null" >
+                <choose>
+                    <when test='orgProperty == "u"'>
+                        SUB_UNIT_COUNT = (SUB_UNIT_COUNT - 1)
+                    </when>
+                    <when test='orgProperty == "d"'>
+                        SUB_DEPT_COUNT = (SUB_DEPT_COUNT - 1)
+                    </when>
+                    <when test='orgProperty == "g"'>
+                        SUB_GROUP_COUNT = (SUB_GROUP_COUNT - 1)
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+        </set>
+        where ORG_ID in
+        <foreach collection="orgIds" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+
+    <!-- 根据主键获取机构对象 -->
+    <select id="getOrg" resultType="OpuOmOrg" parameterType="string" >
+        select
+        <include refid="orgColumns" />,
+        region.REGION_ID regionId,
+        region.REGION_NAME regionName
+        from OPU_OM_ORG org
+        left join BSC_DIC_REGION region on org.REGION_ID = region.REGION_ID
+        where
+        org.ORG_ID = #{orgId}
+        AND org.ORG_DELETED = '0'
+    </select>
+
+    <!-- 根据主键获取机构对象 -->
+    <select id="getActiveOrg" resultType="OpuOmOrg" parameterType="string" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_ORG org
+        where
+        org.ORG_ID = #{orgId} and org.IS_ACTIVE ='1' and org.ORG_ID!= '-1' and org.ORG_DELETED = '0'
+    </select>
+
+    <!-- 查询机构 -->
+    <select id="listOpuOmOrg" resultType="OpuOmOrg" >
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        <where>
+            <if test="orgId != null and orgId !=''"  >
+                AND org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+            </if>
+            <if test="orgCode != null and orgCode !=''"  >
+                AND ORG_CODE like CONCAT (CONCAT('%',#{orgCode}), '%')
+            </if>
+            <if test="orgName != null and orgName !=''" >
+                AND  ORG_NAME like CONCAT (CONCAT('%',#{orgName}), '%')
+            </if>
+            <if test="orgProperty != null and orgProperty !=''" >
+                AND ORG_PROPERTY = #{orgProperty}
+            </if>
+            <if test="orgRank != null and orgRank !=''" >
+                AND ORG_RANK = #{orgRank}
+            </if>
+            <if test="isActive != null and isActive !=''" >
+                AND IS_ACTIVE = #{isActive}
+            </if>
+            <if test="isTopOrg != null and isTopOrg !=''" >
+                AND IS_TOP_ORG = #{isTopOrg}
+            </if>
+            <if test="parentOrgId != null and parentOrgId !=''" >
+                AND PARENT_ORG_ID = #{parentOrgId}
+            </if>
+            <if test="keyword!=null and keyword!=''">
+                AND (
+                ORG_NAME LIKE CONCAT (CONCAT('%',#{keyword}), '%') OR
+                ORG_CODE LIKE CONCAT (CONCAT('%',#{keyword}), '%')
+                )
+            </if>
+            AND  ORG_DELETED='0'
+            AND  ORG_ID != '-1'
+        </where>
+        ORDER BY CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+    <select id="listCloudSoftNotRelTopOrg" resultType="OpuOmOrg" >
+        select
+        <include refid="AllColumns"/>
+        from  OPU_OM_ORG org
+        where ORG_DELETED = '0'
+        and ORG_ID != '-1'
+        and IS_TOP_ORG = '1'
+        and ORG_ID not in (
+        select ORG_ID from AGX_RS_CLOUD_SOFT_ORG
+        where CLOUD_SOFT_ID = #{cloudSoftId}
+        )
+        order by CREATE_TIME desc,MODIFY_TIME desc
+    </select>
+
+    <select id="listCloudSoftRelTopOrg" resultType="OpuOmOrg" >
+        select
+            org.ORG_ID  as orgId,
+            org.ORG_CODE as orgCode,
+            org.ORG_NAME as orgName,
+            softOrg.SOFT_ORG_ID as softOrgId
+        from  OPU_OM_ORG org,AGX_RS_CLOUD_SOFT_ORG softOrg
+        where org.ORG_ID = softOrg.ORG_ID
+          and org.ORG_DELETED = '0'
+          and org.ORG_ID != '-1'
+          and org.IS_TOP_ORG = '1'
+          and softOrg.CLOUD_SOFT_ID = #{cloudSoftId}
+        order by org.CREATE_TIME desc,org.MODIFY_TIME desc
+    </select>
+
+    <!-- 查询机构 -->
+    <select id="listOpuOmOrgByAllProp" resultType="OpuOmOrg" >
+        select
+        <include refid="AllOrgColumns" />
+        from OPU_OM_ORG org
+        <where>
+            <if test="orgId != null and orgId !=''"  >
+                AND org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+            </if>
+            <if test="orgCode != null and orgCode !=''"  >
+                AND org.ORG_CODE = #{orgCode}
+            </if>
+            <if test="orgName != null and orgName !=''" >
+                AND  org.ORG_NAME like CONCAT (CONCAT('%',#{orgName}), '%')
+            </if>
+            <if test="orgShortName1 != null and orgShortName1 !=''"  >
+                AND org.ORG_SHORT_NAME1 = #{orgShortName1}
+            </if>
+            <if test="orgShortName2 != null and orgShortName2 !=''"  >
+                AND org.ORG_SHORT_NAME2 = #{orgShortName2}
+            </if>
+            <if test="parentOrgId != null and parentOrgId !=''" >
+                AND  org.PARENT_ORG_ID = #{parentOrgId}
+            </if>
+            <if test="orgLevel != null and orgLevel !=''"  >
+                AND org.ORG_LEVEL = #{orgLevel}
+            </if>
+            <if test="orgSeq != null and orgSeq !=''"  >
+                AND org.ORG_SEQ = #{orgSeq}
+            </if>
+            <if test="orgProperty != null and orgProperty !=''" >
+                AND  org.ORG_PROPERTY = #{orgProperty}
+            </if>
+            <if test="orgType != null and orgType !=''"  >
+                AND org.ORG_TYPE = #{orgType}
+            </if>
+            <if test="orgNature != null and orgNature !=''"  >
+                AND org.ORG_NATURE = #{orgNature}
+            </if>
+            <if test="orgRank != null and orgRank !=''" >
+                AND  org.ORG_RANK = #{orgRank}
+            </if>
+            <if test="unitGbType != null and unitGbType !=''"  >
+                AND org.UNIT_GB_TYPE = #{unitGbType}
+            </if>
+            <if test="unitGbCode != null and unitGbCode !=''"  >
+                AND org.UNIT_GB_CODE = #{unitGbCode}
+            </if>
+            <if test="unitGbSysCode != null and unitGbSysCode !=''" >
+                AND  org.UNIT_GB_SYS_CODE = #{unitGbSysCode}
+            </if>
+            <if test="isActive != null and isActive !=''" >
+                AND org.IS_ACTIVE = #{isActive}
+            </if>
+            <if test="isTopOrg != null and isTopOrg !=''" >
+                AND org.IS_TOP_ORG = #{isTopOrg}
+            </if>
+            and  ORG_DELETED='0'
+            and  ORG_ID != '-1'
+        </where>
+        order by CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+    <select id="listOpuOmUserOrgByUserId" resultType="OpuOmOrg" parameterType="string">
+        select
+        <include refid="AllOrgColumns" />
+        from opu_om_org org,OPU_OM_USER_ORG oouo
+        where org.org_id = oouo.org_id
+        and oouo.USER_ID = #{userId}
+        and org.ORG_DELETED = '0'
+        and  org.IS_ACTIVE ='1'
+    </select>
+
+
+    <!-- 根据名称模糊查询组织 -->
+    <select id="getOMOrgsByOrgName" resultType="OpuOmOrg" >
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        WHERE  org.ORG_NAME like CONCAT(CONCAT('%', #{orgName}), '%')
+        <if test="orgId != null and orgId !=''"  >
+            AND org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+        </if>
+        and org.ORG_DELETED = '0'
+        order by org.ORG_CODE DESC
+    </select>
+
+    <!--根据组织id查询子组织-->
+    <select id="getChildOrgsByParentOrgId" resultType="OpuOmOrg">
+        select <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        where org.PARENT_ORG_ID= #{parentOrgId}  and org.ORG_DELETED='0' ORDER BY ORG_SORT_NO
+    </select>
+
+    <!--根据组织id查询启用状态的子组织-->
+    <select id="getChildActiveOrgsByParentOrgId" resultType="OpuOmOrg">
+        select <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        where org.PARENT_ORG_ID= #{parentOrgId} and org.IS_ACTIVE ='1' and org.ORG_DELETED='0' ORDER BY ORG_SORT_NO
+    </select>
+
+    <!--根据条件查询启用状态的子组织-->
+    <select id="getAllChildActiveOrgs" resultType="OpuOmOrg">
+        select <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        where  org.PARENT_ORG_ID= #{parentOrgId}
+        <if test="orgProperty != null and orgProperty !=''" >
+            and org.ORG_PROPERTY = #{orgProperty}
+        </if>
+        and org.IS_ACTIVE ='1'
+        and org.ORG_DELETED='0'
+        ORDER BY ORG_SORT_NO
+    </select>
+
+    <!--  根据id获取所有的子组织包括自己 -->
+    <select id="listSelfAndAllChildOrgsByOrgId" resultType="OpuOmOrg">
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        where
+        org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+        and org.ORG_DELETED='0'
+        order by org.ORG_SORT_NO
+    </select>
+
+    <!--  根据主键获取所有的父组织名称 -->
+    <select id="getOrgNameByOrgIds" resultType="OpuOmOrg">
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG
+        WHERE ORG_ID IN
+        <foreach collection="orgIds" item="id" index="index"
+                 separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        AND IS_ACTIVE='1'AND ORG_DELETED='0'
+        order by ORG_LEVEL asc, ORG_SORT_NO asc
+    </select>
+
+    <!--  根据id获取所有的子组织 -->
+    <select id="getAllChildOrgsByOrgId" resultType="OpuOmOrg">
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_ORG org
+        where org.ORG_SEQ like CONCAT (CONCAT('%.',#{id}), '.%')
+        and  org.ORG_ID != #{id}
+        and org.ORG_DELETED='0'
+        order by org.ORG_SORT_NO
+    </select>
+
+    <select id="listAllActiveAndNormalOrgs" resultType="OpuOmOrg">
+        select DISTINCT
+        <include refid="AllColumns" />
+        from OPU_OM_ORG
+        WHERE ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+        and ORG_DELETED='0'  AND IS_ACTIVE = '1'
+    </select>
+
+    <!-- 根据父组织id查询组织下的最大排序号-->
+    <select id="getOrgMaxSortNoByParentOrgId" resultType="int" parameterType="string" >
+        select  max(ORG_SORT_NO) from OPU_OM_ORG org  where  org.PARENT_ORG_ID = #{orgId}  and org.ORG_DELETED='0'
+    </select>
+
+    <!-- 根据父组织id查询组织下的最小排序号-->
+    <select id="getOrgMinSortNoByParentOrgId" resultType="int" parameterType="string" >
+        select  MIN(ORG_SORT_NO) from OPU_OM_ORG org  where  org.PARENT_ORG_ID = #{orgId}  and org.ORG_DELETED='0'
+    </select>
+
+    <!-- 根据父组织主键获取所有子组织主键集合,通过模糊查询排列顺序编号orgSeq -->
+    <select id="getAllChildOrgIdsByParentOrgId" resultType="string" parameterType="string">
+        select
+        ORG_ID as ID
+        from
+        OPU_OM_ORG org
+        where
+        org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+        and org.ORG_ID !=#{orgId}
+        and org.ORG_DELETED = '0'
+        order by org.PARENT_ORG_ID,org.ORG_SORT_NO
+    </select>
+
+
+    <!-- 删除机构 -->
+    <update id="deleteOrg" parameterType="string" >
+        update OPU_OM_ORG
+        <set >
+            ORG_DELETED='1'
+        </set>
+        where ORG_ID = #{orgId}
+    </update>
+
+    <!--删除组织后，修改其他组织排序值sortNo-->
+    <update id="updateSortForDelete">
+            update OPU_OM_ORG set ORG_SORT_NO = (ORG_SORT_NO-1)  where PARENT_ORG_ID =#{orgId} and ORG_SORT_NO &gt; to_number(#{orgSortNo},'9999999999999999999')
+    </update>
+
+    <update id="sort" parameterType="java.lang.String">
+        update OPU_OM_ORG set
+        ORG_SORT_NO =
+        <foreach collection="orgIds" item="id" index="index"
+                 separator=" " open="case org_id" close="end">
+            when #{id} then
+            <choose>
+                <when test="start != null">
+                    ( #{index,jdbcType=INTEGER}+#{start,jdbcType=INTEGER} )
+                </when>
+                <otherwise>
+                    #{index}
+                </otherwise>
+            </choose>
+        </foreach>
+        where org_id in
+        <foreach collection="orgIds" item="id" index="index"
+                 separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getDistrict" resultType="OpuOmOrg">
+        SELECT
+        <include refid="AllColumns"/>
+        FROM OPU_OM_ORG
+        WHERE ORG_TYPE='2' or ORG_TYPE='3'
+    </select>
+    <!-- 查询机构 -->
+    <select id="listOpuOmOrgByOrgTypeAndOrgId" resultType="OpuOmOrg" >
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        <where>
+            <if test="orgTypes != null and orgTypes.length>0">
+                AND org.org_type IN
+                <foreach collection="orgTypes" item="orgType" open="(" close=")" separator=",">
+                    #{orgType}
+                </foreach>
+            </if>
+            <if test="orgIds != null and orgIds.length>0">
+                AND org.org_id IN
+                <foreach collection="orgIds" item="orgId" open="(" close=")" separator=",">
+                    #{orgId}
+                </foreach>
+            </if>
+            and  ORG_DELETED='0'
+            and  ORG_ID != '-1'
+        </where>
+        order by org_type
+    </select>
+    <!-- 查询机构 -->
+    <select id="listOpuOmOrgByOrgType" resultType="OpuOmOrg" >
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG org
+        <where>
+            <if test="orgType != null and orgType !=''"  >
+                AND org.org_type = #{orgType}
+            </if>
+            and  ORG_DELETED='0'
+            and  ORG_ID != '-1'
+        </where>
+        order by org_type
+    </select>
+    <!-- 查询机构ID -->
+    <select id="listOpuOmOrgIdByUserId" resultType="string" >
+        select
+        org_id
+        from OPU_OM_ORG
+        <where>
+            <if test="orgTypes != null and orgTypes.length>0">
+                AND org.org_type IN
+                <foreach collection="orgTypes" item="orgType" open="(" close=")" separator=",">
+                    #{orgType}
+                </foreach>
+            </if>
+        </where>
+        start with org_id in (select org_id from OPU_OM_USER_ORG where user_id = #{userId})  connect by prior parent_org_id=org_id
+    </select>
+
+    <select id="listOpuOmOrgByUserId" resultType="OpuOmOrg">
+        select
+        <include refid="AllColumns" />
+        from OPU_OM_ORG
+        start with org_id in (select org_id from OPU_OM_USER_ORG where user_id = #{userId})  connect by prior parent_org_id=org_id
+    </select>
+
+    <select id="listBelongOrgByUserId" resultType="OpuOmOrg">
+        select
+        <include refid="AllOrgColumns" />
+        from OPU_OM_USER_ORG oouo, opu_om_org  org
+        where oouo.user_id = #{userId} and oouo.org_id = org.org_id and org.org_deleted='0'
+    </select>
+
+    <!-- 根据主键获取机构对象 -->
+    <select id="getActiveOrgByOrgCode" resultType="OpuOmOrg" parameterType="string" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_ORG org
+        where
+        org.ORG_CODE = #{orgCode} and org.IS_ACTIVE ='1' and org.ORG_ID!= '-1' and org.ORG_DELETED = '0'
+    </select>
+</mapper>

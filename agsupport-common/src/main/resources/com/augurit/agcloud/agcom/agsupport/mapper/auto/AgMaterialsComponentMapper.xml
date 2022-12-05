@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.AgMaterialsComponentMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponent" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="objectid" property="objectid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="BIGINT" />
+    <result column="infotype" property="infotype" jdbcType="VARCHAR" />
+    <result column="profession" property="profession" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="catagory" property="catagory" jdbcType="VARCHAR" />
+    <result column="familyname" property="familyname" jdbcType="VARCHAR" />
+    <result column="familytype" property="familytype" jdbcType="VARCHAR" />
+    <result column="materialid" property="materialid" jdbcType="VARCHAR" />
+    <result column="elementattributes" property="elementattributes" jdbcType="VARCHAR" />
+    <result column="categorypath" property="categorypath" jdbcType="VARCHAR" />
+    <result column="geometry" property="geometry" jdbcType="VARCHAR" />
+    <result column="topologyelements" property="topologyelements" jdbcType="VARCHAR" />
+    <result column="boundingbox" property="boundingbox" jdbcType="VARCHAR" />
+    <result column="texture" property="texture" jdbcType="VARCHAR" />
+    <result column="measure" property="measure" jdbcType="VARCHAR" />
+    <result column="vendor" property="vendor" jdbcType="VARCHAR" />
+    <result column="single_price" property="singlePrice" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="thumb_file_name" property="thumbFileName" jdbcType="VARCHAR" />
+    <result column="glb_file_name" property="glbFileName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="model_size" property="modelSize" jdbcType="VARCHAR" />
+    <result column="component_code" property="componentCode" jdbcType="VARCHAR" />
+    <result column="component_code_name" property="componentCodeName" jdbcType="VARCHAR" />
+    <result column="specification" property="specification" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentWithBLOBs" extends="BaseResultMap" >
+    <result column="glb" property="glb" jdbcType="BINARY" />
+    <result column="thumb" property="thumb" jdbcType="BINARY" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, objectid, name, version, infotype, profession, level, catagory, familyname, familytype, 
+    materialid, elementattributes, categorypath, geometry, topologyelements, boundingbox, 
+    texture, measure, vendor, single_price, table_name, create_time, modify_time, remark, 
+    thumb_file_name, glb_file_name, status, model_size, component_code, component_code_name, 
+    specification
+  </sql>
+  <sql id="Blob_Column_List" >
+    glb, thumb
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ag_materials_component
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ag_materials_component
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ag_materials_component
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ag_materials_component
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentExample" >
+    delete from ag_materials_component
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentWithBLOBs" >
+    insert into ag_materials_component (id, objectid, name, 
+      version, infotype, profession, 
+      level, catagory, familyname, 
+      familytype, materialid, elementattributes, 
+      categorypath, geometry, topologyelements, 
+      boundingbox, texture, measure, 
+      vendor, single_price, table_name, 
+      create_time, modify_time, remark, 
+      thumb_file_name, glb_file_name, status, 
+      model_size, component_code, component_code_name, 
+      specification, glb, thumb
+      )
+    values (#{id,jdbcType=VARCHAR}, #{objectid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{version,jdbcType=BIGINT}, #{infotype,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{catagory,jdbcType=VARCHAR}, #{familyname,jdbcType=VARCHAR}, 
+      #{familytype,jdbcType=VARCHAR}, #{materialid,jdbcType=VARCHAR}, #{elementattributes,jdbcType=VARCHAR}, 
+      #{categorypath,jdbcType=VARCHAR}, #{geometry,jdbcType=VARCHAR}, #{topologyelements,jdbcType=VARCHAR}, 
+      #{boundingbox,jdbcType=VARCHAR}, #{texture,jdbcType=VARCHAR}, #{measure,jdbcType=VARCHAR}, 
+      #{vendor,jdbcType=VARCHAR}, #{singlePrice,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+      #{thumbFileName,jdbcType=VARCHAR}, #{glbFileName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{modelSize,jdbcType=VARCHAR}, #{componentCode,jdbcType=VARCHAR}, #{componentCodeName,jdbcType=VARCHAR}, 
+      #{specification,jdbcType=VARCHAR}, #{glb,jdbcType=BINARY}, #{thumb,jdbcType=BINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentWithBLOBs" >
+    insert into ag_materials_component
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="objectid != null" >
+        objectid,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="infotype != null" >
+        infotype,
+      </if>
+      <if test="profession != null" >
+        profession,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="catagory != null" >
+        catagory,
+      </if>
+      <if test="familyname != null" >
+        familyname,
+      </if>
+      <if test="familytype != null" >
+        familytype,
+      </if>
+      <if test="materialid != null" >
+        materialid,
+      </if>
+      <if test="elementattributes != null" >
+        elementattributes,
+      </if>
+      <if test="categorypath != null" >
+        categorypath,
+      </if>
+      <if test="geometry != null" >
+        geometry,
+      </if>
+      <if test="topologyelements != null" >
+        topologyelements,
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox,
+      </if>
+      <if test="texture != null" >
+        texture,
+      </if>
+      <if test="measure != null" >
+        measure,
+      </if>
+      <if test="vendor != null" >
+        vendor,
+      </if>
+      <if test="singlePrice != null" >
+        single_price,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="thumbFileName != null" >
+        thumb_file_name,
+      </if>
+      <if test="glbFileName != null" >
+        glb_file_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="modelSize != null" >
+        model_size,
+      </if>
+      <if test="componentCode != null" >
+        component_code,
+      </if>
+      <if test="componentCodeName != null" >
+        component_code_name,
+      </if>
+      <if test="specification != null" >
+        specification,
+      </if>
+      <if test="glb != null" >
+        glb,
+      </if>
+      <if test="thumb != null" >
+        thumb,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="objectid != null" >
+        #{objectid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="infotype != null" >
+        #{infotype,jdbcType=VARCHAR},
+      </if>
+      <if test="profession != null" >
+        #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="catagory != null" >
+        #{catagory,jdbcType=VARCHAR},
+      </if>
+      <if test="familyname != null" >
+        #{familyname,jdbcType=VARCHAR},
+      </if>
+      <if test="familytype != null" >
+        #{familytype,jdbcType=VARCHAR},
+      </if>
+      <if test="materialid != null" >
+        #{materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="elementattributes != null" >
+        #{elementattributes,jdbcType=VARCHAR},
+      </if>
+      <if test="categorypath != null" >
+        #{categorypath,jdbcType=VARCHAR},
+      </if>
+      <if test="geometry != null" >
+        #{geometry,jdbcType=VARCHAR},
+      </if>
+      <if test="topologyelements != null" >
+        #{topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        #{boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="measure != null" >
+        #{measure,jdbcType=VARCHAR},
+      </if>
+      <if test="vendor != null" >
+        #{vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="singlePrice != null" >
+        #{singlePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbFileName != null" >
+        #{thumbFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="glbFileName != null" >
+        #{glbFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="modelSize != null" >
+        #{modelSize,jdbcType=VARCHAR},
+      </if>
+      <if test="componentCode != null" >
+        #{componentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="componentCodeName != null" >
+        #{componentCodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null" >
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="glb != null" >
+        #{glb,jdbcType=BINARY},
+      </if>
+      <if test="thumb != null" >
+        #{thumb,jdbcType=BINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentExample" resultType="java.lang.Integer" >
+    select count(*) from ag_materials_component
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ag_materials_component
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.objectid != null" >
+        objectid = #{record.objectid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=BIGINT},
+      </if>
+      <if test="record.infotype != null" >
+        infotype = #{record.infotype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profession != null" >
+        profession = #{record.profession,jdbcType=VARCHAR},
+      </if>
+      <if test="record.level != null" >
+        level = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.catagory != null" >
+        catagory = #{record.catagory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.familyname != null" >
+        familyname = #{record.familyname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.familytype != null" >
+        familytype = #{record.familytype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materialid != null" >
+        materialid = #{record.materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.elementattributes != null" >
+        elementattributes = #{record.elementattributes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categorypath != null" >
+        categorypath = #{record.categorypath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.geometry != null" >
+        geometry = #{record.geometry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topologyelements != null" >
+        topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boundingbox != null" >
+        boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="record.texture != null" >
+        texture = #{record.texture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.measure != null" >
+        measure = #{record.measure,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vendor != null" >
+        vendor = #{record.vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.singlePrice != null" >
+        single_price = #{record.singlePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tableName != null" >
+        table_name = #{record.tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbFileName != null" >
+        thumb_file_name = #{record.thumbFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.glbFileName != null" >
+        glb_file_name = #{record.glbFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.modelSize != null" >
+        model_size = #{record.modelSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.componentCode != null" >
+        component_code = #{record.componentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.componentCodeName != null" >
+        component_code_name = #{record.componentCodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.specification != null" >
+        specification = #{record.specification,jdbcType=VARCHAR},
+      </if>
+      <if test="record.glb != null" >
+        glb = #{record.glb,jdbcType=BINARY},
+      </if>
+      <if test="record.thumb != null" >
+        thumb = #{record.thumb,jdbcType=BINARY},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ag_materials_component
+    set id = #{record.id,jdbcType=VARCHAR},
+      objectid = #{record.objectid,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=BIGINT},
+      infotype = #{record.infotype,jdbcType=VARCHAR},
+      profession = #{record.profession,jdbcType=VARCHAR},
+      level = #{record.level,jdbcType=VARCHAR},
+      catagory = #{record.catagory,jdbcType=VARCHAR},
+      familyname = #{record.familyname,jdbcType=VARCHAR},
+      familytype = #{record.familytype,jdbcType=VARCHAR},
+      materialid = #{record.materialid,jdbcType=VARCHAR},
+      elementattributes = #{record.elementattributes,jdbcType=VARCHAR},
+      categorypath = #{record.categorypath,jdbcType=VARCHAR},
+      geometry = #{record.geometry,jdbcType=VARCHAR},
+      topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+      boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      texture = #{record.texture,jdbcType=VARCHAR},
+      measure = #{record.measure,jdbcType=VARCHAR},
+      vendor = #{record.vendor,jdbcType=VARCHAR},
+      single_price = #{record.singlePrice,jdbcType=VARCHAR},
+      table_name = #{record.tableName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      thumb_file_name = #{record.thumbFileName,jdbcType=VARCHAR},
+      glb_file_name = #{record.glbFileName,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      model_size = #{record.modelSize,jdbcType=VARCHAR},
+      component_code = #{record.componentCode,jdbcType=VARCHAR},
+      component_code_name = #{record.componentCodeName,jdbcType=VARCHAR},
+      specification = #{record.specification,jdbcType=VARCHAR},
+      glb = #{record.glb,jdbcType=BINARY},
+      thumb = #{record.thumb,jdbcType=BINARY}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ag_materials_component
+    set id = #{record.id,jdbcType=VARCHAR},
+      objectid = #{record.objectid,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=BIGINT},
+      infotype = #{record.infotype,jdbcType=VARCHAR},
+      profession = #{record.profession,jdbcType=VARCHAR},
+      level = #{record.level,jdbcType=VARCHAR},
+      catagory = #{record.catagory,jdbcType=VARCHAR},
+      familyname = #{record.familyname,jdbcType=VARCHAR},
+      familytype = #{record.familytype,jdbcType=VARCHAR},
+      materialid = #{record.materialid,jdbcType=VARCHAR},
+      elementattributes = #{record.elementattributes,jdbcType=VARCHAR},
+      categorypath = #{record.categorypath,jdbcType=VARCHAR},
+      geometry = #{record.geometry,jdbcType=VARCHAR},
+      topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+      boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      texture = #{record.texture,jdbcType=VARCHAR},
+      measure = #{record.measure,jdbcType=VARCHAR},
+      vendor = #{record.vendor,jdbcType=VARCHAR},
+      single_price = #{record.singlePrice,jdbcType=VARCHAR},
+      table_name = #{record.tableName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      thumb_file_name = #{record.thumbFileName,jdbcType=VARCHAR},
+      glb_file_name = #{record.glbFileName,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      model_size = #{record.modelSize,jdbcType=VARCHAR},
+      component_code = #{record.componentCode,jdbcType=VARCHAR},
+      component_code_name = #{record.componentCodeName,jdbcType=VARCHAR},
+      specification = #{record.specification,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentWithBLOBs" >
+    update ag_materials_component
+    <set >
+      <if test="objectid != null" >
+        objectid = #{objectid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="infotype != null" >
+        infotype = #{infotype,jdbcType=VARCHAR},
+      </if>
+      <if test="profession != null" >
+        profession = #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="catagory != null" >
+        catagory = #{catagory,jdbcType=VARCHAR},
+      </if>
+      <if test="familyname != null" >
+        familyname = #{familyname,jdbcType=VARCHAR},
+      </if>
+      <if test="familytype != null" >
+        familytype = #{familytype,jdbcType=VARCHAR},
+      </if>
+      <if test="materialid != null" >
+        materialid = #{materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="elementattributes != null" >
+        elementattributes = #{elementattributes,jdbcType=VARCHAR},
+      </if>
+      <if test="categorypath != null" >
+        categorypath = #{categorypath,jdbcType=VARCHAR},
+      </if>
+      <if test="geometry != null" >
+        geometry = #{geometry,jdbcType=VARCHAR},
+      </if>
+      <if test="topologyelements != null" >
+        topologyelements = #{topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="texture != null" >
+        texture = #{texture,jdbcType=VARCHAR},
+      </if>
+      <if test="measure != null" >
+        measure = #{measure,jdbcType=VARCHAR},
+      </if>
+      <if test="vendor != null" >
+        vendor = #{vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="singlePrice != null" >
+        single_price = #{singlePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbFileName != null" >
+        thumb_file_name = #{thumbFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="glbFileName != null" >
+        glb_file_name = #{glbFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="modelSize != null" >
+        model_size = #{modelSize,jdbcType=VARCHAR},
+      </if>
+      <if test="componentCode != null" >
+        component_code = #{componentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="componentCodeName != null" >
+        component_code_name = #{componentCodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null" >
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="glb != null" >
+        glb = #{glb,jdbcType=BINARY},
+      </if>
+      <if test="thumb != null" >
+        thumb = #{thumb,jdbcType=BINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponentWithBLOBs" >
+    update ag_materials_component
+    set objectid = #{objectid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      version = #{version,jdbcType=BIGINT},
+      infotype = #{infotype,jdbcType=VARCHAR},
+      profession = #{profession,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      catagory = #{catagory,jdbcType=VARCHAR},
+      familyname = #{familyname,jdbcType=VARCHAR},
+      familytype = #{familytype,jdbcType=VARCHAR},
+      materialid = #{materialid,jdbcType=VARCHAR},
+      elementattributes = #{elementattributes,jdbcType=VARCHAR},
+      categorypath = #{categorypath,jdbcType=VARCHAR},
+      geometry = #{geometry,jdbcType=VARCHAR},
+      topologyelements = #{topologyelements,jdbcType=VARCHAR},
+      boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      texture = #{texture,jdbcType=VARCHAR},
+      measure = #{measure,jdbcType=VARCHAR},
+      vendor = #{vendor,jdbcType=VARCHAR},
+      single_price = #{singlePrice,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      thumb_file_name = #{thumbFileName,jdbcType=VARCHAR},
+      glb_file_name = #{glbFileName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      model_size = #{modelSize,jdbcType=VARCHAR},
+      component_code = #{componentCode,jdbcType=VARCHAR},
+      component_code_name = #{componentCodeName,jdbcType=VARCHAR},
+      specification = #{specification,jdbcType=VARCHAR},
+      glb = #{glb,jdbcType=BINARY},
+      thumb = #{thumb,jdbcType=BINARY}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgMaterialsComponent" >
+    update ag_materials_component
+    set objectid = #{objectid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      version = #{version,jdbcType=BIGINT},
+      infotype = #{infotype,jdbcType=VARCHAR},
+      profession = #{profession,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      catagory = #{catagory,jdbcType=VARCHAR},
+      familyname = #{familyname,jdbcType=VARCHAR},
+      familytype = #{familytype,jdbcType=VARCHAR},
+      materialid = #{materialid,jdbcType=VARCHAR},
+      elementattributes = #{elementattributes,jdbcType=VARCHAR},
+      categorypath = #{categorypath,jdbcType=VARCHAR},
+      geometry = #{geometry,jdbcType=VARCHAR},
+      topologyelements = #{topologyelements,jdbcType=VARCHAR},
+      boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      texture = #{texture,jdbcType=VARCHAR},
+      measure = #{measure,jdbcType=VARCHAR},
+      vendor = #{vendor,jdbcType=VARCHAR},
+      single_price = #{singlePrice,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      thumb_file_name = #{thumbFileName,jdbcType=VARCHAR},
+      glb_file_name = #{glbFileName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      model_size = #{modelSize,jdbcType=VARCHAR},
+      component_code = #{componentCode,jdbcType=VARCHAR},
+      component_code_name = #{componentCodeName,jdbcType=VARCHAR},
+      specification = #{specification,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

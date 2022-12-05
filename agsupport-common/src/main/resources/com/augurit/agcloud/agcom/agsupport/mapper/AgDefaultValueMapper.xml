@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgDefaultValueMapper">
+    <sql id="allColumns">
+         ID id,
+        KEY as key,
+        DEFAULT_VALUE defaultValue,
+        REMARK remark
+    </sql>
+
+    <select id="findByKey" resultType="AgDefaultValue">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_DEFAULT_VALUE t
+        WHERE KEY = #{key}
+    </select>
+
+    <insert id="save">
+         INSERT
+        INTO AG_DEFAULT_VALUE (
+        ID,KEY,DEFAULT_VALUE,REMARK
+        ) VALUES (
+        #{id},#{key},#{defaultValue},#{remark}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE AG_DEFAULT_VALUE
+        <set>
+            <if test="key != null">
+                KEY = #{key},
+            </if>
+            <if test="defaultValue != null">
+                DEFAULT_VALUE = #{defaultValue},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark}
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+
+</mapper>

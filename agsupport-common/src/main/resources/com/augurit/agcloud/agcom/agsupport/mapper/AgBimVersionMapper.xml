@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimVersionMapper">
+    <sql id="allColumns">
+         ID id,
+         PK_ID pkId,
+         CHANGE_VERSION changeVersion,
+         CHANGE_NAME changeName,
+         CHANGE_PEOPLE changePeople,
+         CHANGE_TYPE changeType,
+         CHANGE_STATUS changeStatus,
+         CHANGE_MSG changeMsg,
+         IS_CURRENT isCurrent,
+         BIM_PATH bimPath,
+         BIM_EXTENSION bimExtension,
+         BIM_LENGTH bimLength,
+         BIM_URL bimUrl,
+         CHANGE_TIME changeTime,
+         BIM_MD5 bimMd5,
+         file_name fileName
+    </sql>
+
+    <!--根据id获取数据-->
+    <select id="getById" resultType="AgBimVersion" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION WHERE ID = #{id}
+    </select>
+
+    <!--根据id获取数据-->
+    <select id="getInUseByPkId" resultType="AgBimVersion" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION WHERE PK_ID = #{pkId} AND IS_CURRENT = 'IN_USE'
+    </select>
+
+    <!--根据id获取数据-->
+    <select id="getByMd5" resultType="AgBimVersion" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION WHERE BIM_MD5 = #{md5}
+    </select>
+
+    <!--获取所有数据-->
+    <select id="getAll" resultType="AgBimVersion">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION
+    </select>
+
+    <!--获取一个模型bimFile的最新版本-->
+    <select id="getLatestChangeVersion" resultType="AgBimVersion">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION WHERE PK_ID = #{pkId}
+        AND CHANGE_VERSION = (SELECT MAX(CHANGE_VERSION) FROM AG_BIM_VERSION WHERE PK_ID = #{pkId} )
+    </select>
+
+    <!--根据id删除一条数据-->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM AG_BIM_VERSION WHERE ID = #{id}
+    </delete>
+
+    <!--将某一模型下面的所有版本设为未使用-->
+    <update id="setAllNotUse" parameterType="java.lang.String">
+        UPDATE AG_BIM_VERSION SET IS_CURRENT = 'NOT_USE' WHERE PK_ID = #{pkId} AND IS_CURRENT = 'IN_USE'
+    </update>
+
+    <!--删除更多数据-->
+    <delete id="deleteMany">
+        DELETE FROM AG_BIM_VERSION
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--删除更多数据-->
+    <delete id="deleteByPkId">
+        DELETE FROM AG_BIM_VERSION
+        WHERE
+        PK_ID IN
+        <foreach collection="pkId" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--添加一条数据-->
+    <insert id="add" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimVersion">
+        INSERT INTO AG_BIM_VERSION
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="pkId != null">
+                pk_id,
+            </if>
+            <if test="changeVersion != null">
+                change_version,
+            </if>
+            <if test="changeName != null">
+                change_name,
+            </if>
+            <if test="changePeople != null">
+                change_people,
+            </if>
+            <if test="changeType != null">
+                change_type,
+            </if>
+            <if test="changeStatus != null">
+                change_status,
+            </if>
+            <if test="changeMsg != null">
+                change_msg,
+            </if>
+            <if test="isCurrent != null">
+                is_current,
+            </if>
+            <if test="bimPath != null">
+                bim_path,
+            </if>
+            <if test="bimExtension != null">
+                bim_extension,
+            </if>
+            <if test="bimLength != null">
+                bim_length,
+            </if>
+            <if test="bimUrl != null">
+                bim_url,
+            </if>
+            <if test="changeTime != null">
+                change_time,
+            </if>
+            <if test="bimMd5 != null">
+                bim_md5,
+            </if>
+            <if test="fileName != null">
+                file_name
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="pkId != null">
+                #{pkId},
+            </if>
+            <if test="changeVersion != null">
+                #{changeVersion},
+            </if>
+            <if test="changeName != null">
+                #{changeName},
+            </if>
+            <if test="changePeople != null">
+                #{changePeople},
+            </if>
+            <if test="changeType != null">
+                #{changeType},
+            </if>
+            <if test="changeStatus != null">
+                #{changeStatus},
+            </if>
+            <if test="changeMsg != null">
+                #{changeMsg},
+            </if>
+            <if test="isCurrent != null">
+                #{isCurrent},
+            </if>
+            <if test="bimPath != null">
+                #{bimPath},
+            </if>
+            <if test="bimExtension != null">
+                #{bimExtension},
+            </if>
+            <if test="bimLength != null">
+                #{bimLength},
+            </if>
+            <if test="bimUrl != null">
+                #{bimUrl},
+            </if>
+            <if test="changeTime != null">
+                #{changeTime},
+            </if>
+            <if test="bimMd5 != null">
+                #{bimMd5},
+            </if>
+            <if test="fileName != null">
+                #{fileName},
+            </if>
+        </trim>
+    </insert>
+
+    <!--编辑一条数据-->
+    <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimVersion">
+        UPDATE AG_BIM_VERSION
+        <set>
+            <if test="null != changeVersion">
+                CHANGE_VERSION = #{changeVersion},
+            </if>
+            <if test="null != changeName">
+                CHANGE_NAME = #{changeName},
+            </if>
+            <if test="null != changePeople">
+                CHANGE_PEOPLE = #{changePeople},
+            </if>
+            <if test="null != changeType">
+                CHANGE_TYPE = #{changeType},
+            </if>
+            <if test="null != changeStatus">
+                CHANGE_STATUS = #{changeStatus},
+            </if>
+            <if test="null != changeMsg">
+                CHANGE_MSG = #{changeMsg},
+            </if>
+            <if test="null != isCurrent">
+                IS_CURRENT = #{isCurrent},
+            </if>
+            <if test="null != bimPath">
+                BIM_PATH = #{bimPath},
+            </if>
+            <if test="null != bimExtension">
+                BIM_EXTENSION = #{bimExtension},
+            </if>
+            <if test="null != bimLength">
+                BIM_LENGTH = #{bimLength},
+            </if>
+            <if test="null != bimUrl">
+                BIM_URL = #{bimUrl},
+            </if>
+            <if test="null != changeTime">
+                CHANGE_TIME = #{changeTime},
+            </if>
+            <if test="null != bimMd5">
+                BIM_MD5 = #{bimMd5},
+            </if>
+            <if test="null != fileName">
+                file_name = #{fileName},
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+
+    <!--特殊条件And分页查询-->
+    <select id="getByAndKeyWords" resultType="AgBimVersion">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION
+        WHERE
+        1 = 1
+        <if test="null != changeVersion">
+            AND CHANGE_VERSION = #{changeVersion}
+        </if>
+        <if test="null != changeName">
+            AND CHANGE_NAME = #{changeName}
+        </if>
+        <if test="null != changePeople">
+            AND CHANGE_PEOPLE = #{changePeople}
+        </if>
+    </select>
+
+    <!--特殊条件Or分页查询-->
+    <select id="getByOrKeyWords" resultType="AgBimVersion">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION
+        <where>
+            <if test="null != keyword">
+                (CHANGE_VERSION LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%')
+                OR CHANGE_NAME LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%')
+                OR CHANGE_PEOPLE LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%'))
+            </if>
+            <if test="null != pkId">
+                AND PK_ID = #{pkId}
+            </if>
+        </where>
+        ORDER BY CHANGE_VERSION DESC
+    </select>
+
+    <!--获取更多数据-->
+    <select id="getByIds" resultType="AgBimVersion">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 根据类型编码获取所有已启用子项，将放入缓存所以只取必要的一些字段 -->
+    <select id="getChangeTypeList" resultType="com.augurit.agcloud.bsc.domain.BscDicCodeItem" parameterType="string">
+        select
+            item.ITEM_CODE itemCode,item.ITEM_NAME itemName,item.SORT_NO sortNo,item.ITEM_ID itemId
+        from
+            BSC_DIC_CODE_ITEM item,bsc_dic_code_type type
+        where
+            item.TYPE_ID=type.TYPE_ID and item.IS_ACTIVE = '1' and type.TYPE_CODE = #{typeCode} AND type.ORG_ID = #{orgId}
+        order by
+            SORT_NO
+    </select>
+
+    <select id="findMaxVersion" resultType="String">
+        select max(change_version) from  ag_bim_version where pk_id = #{bimId}
+    </select>
+
+</mapper>

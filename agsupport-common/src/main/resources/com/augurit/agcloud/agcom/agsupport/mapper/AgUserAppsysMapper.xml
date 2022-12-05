@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--created by Administrator    2017-08-10 16:23:02 -->
+<!--0 一些前置信息配置 -->
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgUserAppsysMapper" >
+<!--1 返回所有字段的SQL字句 -->
+ <sql id="allColumns">
+    ID  id,
+    USER_ID  userId,
+    APP_ID  appId,
+    PAGE_VIEW pageView,
+    APP_PASSWORD appPassword,
+    APP_USER_NAME appUserName
+ </sql>
+
+    <!--
+        <sql id="allColumnsAgOtherAppsys" >
+            APP_ID  appId,
+            APP_NAME  appName,
+            APP_NAME_CN  appNameCn,
+            STATUS  status,
+            MEMO  memo
+        </sql>
+    -->
+
+      <!--2 根据主键ID查询单个实体 -->
+<select id="getAgUserAppsysById" resultType="AgUserAppsys" >
+    select
+    <include refid="allColumns"/>
+    from    ag_user_appsys
+    where    id = #{id}
+</select>
+
+    <!--2 根据  用户id 获取 此用户的第3方系统   -->
+    <select id="getAgOtherAppsysByUserid" resultType="AgOtherAppsys" >
+        select
+          o.APP_ID  appSysId,
+          o.APP_NAME  appName,
+          o.APP_NAME_CN  appCNName,
+          o.STATUS status,
+          o.LOGIN_URL  appLoginUrl,
+          o.APP_URL  appUrl,
+          o.PUB_USER_NAME  publicUserName,
+          o.PUB_PASSWORD publicPwd,
+          o.MEMO memo
+        from  ag_user_appsys u, ag_other_appsys o
+        where  u.APP_ID=o.APP_ID and u.USER_ID = #{id}
+    </select>
+
+    <!--2 根据  第3方系统id 获取 所有的用户   -->
+    <select id="getAgUserByAgOtherAppsysId" resultType="AgUser" >
+        select
+        u.ID id,
+        u.LOGIN_NAME loginName,
+        u.USER_NAME userName
+        from ag_user u
+        where ID in
+         (select user_id from ag_user_appsys where APP_ID= = #{id})
+    </select>
+
+
+
+
+<!--3 根据条件查询实体list -->
+    <select id="listAgUserAppsys" resultType="AgUserAppsys" >
+      select
+        <include refid="allColumns"/>
+        from   ag_user_appsys
+      <where>
+        <if test="id != null" >
+            AND    ID = #{id}
+        </if>
+        <if test="userId != null" >
+            AND    USER_ID = #{userId}
+        </if>
+        <if test="appId != null">
+            AND    APP_ID = #{appId}
+        </if>
+       </where>
+    </select>
+<!--4 根据条件查询实体list,返回分页对象 -->
+
+<!--5 新增实体对象 -->
+<insert id="insertAgUserAppsys" parameterType="AgUserAppsys" >
+    insert into ag_user_appsys (
+        ID, USER_ID, APP_ID, APP_PASSWORD, PAGE_VIEW, APP_USER_NAME
+    )  values  (
+       #{id}, #{userId}, #{appId}, #{appPassword}, #{pageView}, #{appUserName}
+    )
+</insert>
+
+<!--6 修改实体对象 -->
+<update id="updateAgUserAppsys" parameterType="AgUserAppsys" >
+    update ag_user_appsys
+    <set >
+        <if test="userId != null" >
+            USER_ID = #{userId},
+        </if>
+        <if test="appId != null" >
+            APP_ID = #{appId},
+        </if>
+        <if test="appPassword != null" >
+            APP_PASSWORD = #{appPassword},
+        </if>
+        <if test="pageView != null" >
+            PAGE_VIEW = #{pageView},
+        </if>
+        <if test="appUserName != null" >
+            APP_USER_NAME = #{appUserName}
+        </if>
+    </set>
+    where ID = #{id}
+</update>
+
+<!--7 删除实体对象,根据主键ID -->
+    <delete id="deleteAgUserAppsys">
+        delete from   ag_user_appsys
+        where ID = #{id}
+    </delete>
+
+    <!--9 删除实体对象,根据 用户ID, 和应用系统id -->
+    <delete id="deleteAgUserAppsysByUserid">
+        delete from ag_user_appsys
+        where USER_ID = #{id} and APP_ID = #{idappsys}
+    </delete>
+
+    <!--<delete id="deleteAgUserAppsysByUserIdAndAppId">
+        delete from ag_user_appsys a,ag_user u
+        where a.USER_ID = u.ID and APP_ID = #{appId}
+    </delete>-->
+
+
+</mapper>

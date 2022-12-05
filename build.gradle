@@ -1,0 +1,201 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+        flowableVersion = '6.3.0'
+        agcloudVersion = '5.0.0'
+        isDeployment = project.hasProperty('deployment')
+
+        distDir = "/opt/cim/agcloud"
+        jenkinsWorkspace ="/root/.jenkins/workspace"
+
+        agsupport_jar_path = "$rootDir/agsupport/build/libs/agcloud-agcom-agsupport-5.0.0.jar"
+        agsupport_ui_jar_path = "$jenkinsWorkspace/agsupport-ui/build/libs/agcloud-agcom-agsupport-ui-5.0.0.jar"
+        agsupport_bim_jar_path = "$rootDir/agsupport-bim/build/libs/agcloud-agcom-agsupport-bim-5.0.0.jar"
+        agsupport_bim_ui_jar_path = "$jenkinsWorkspace/agsupport-bim-ui/build/libs/agcloud-agcom-agsupport-bim-ui-5.0.0.jar"
+        agcloud_version = "5.0.0"
+        agcloud_lib_path = "$rootDir/agcloud/src/main/resources/lib"
+        agcloud_jar_path = "$distDir/agcloud-${agcloud_version}.jar"
+        agcloud_backup_path = "$distDir/backup"
+    }
+    repositories {
+        //agcloud 公网正式仓库
+//        maven { url 'http://106.52.77.101:8081/repository/agcloud/' }
+//        maven { url 'http://106.53.46.46:8081/repository/agcloud-public/' }
+        // 万科云 局域网私服仓库
+        maven { url 'http://192.168.3.204:8081/repository/agcloud-public/' }
+        //agcloud 公网测试仓库
+        //maven { url 'http://39.107.139.174:8081/repository/agcloud-public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+group 'com.augurit.agcloud.agcom'
+version '5.0.0'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+
+    ext {
+        springCloudVersion = 'Finchley.RELEASE'
+        flowableVersion = '6.3.0'
+        agcloudVersion = '5.0.0'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+
+        //agcloud 公网正式仓库
+//        maven { url 'http://106.52.77.101:8081/repository/agcloud/' }
+//        maven { url 'http://106.53.46.46:8081/repository/agcloud-public/' }
+        // 万科云 局域网私服仓库
+        maven { url 'http://192.168.3.204:8081/repository/agcloud-public/' }
+        //agcloud 公网测试仓库
+        //maven { url 'http://39.107.139.174:8081/repository/agcloud-public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenLocal()
+    }
+
+    dependencies {
+        //agcloud-framework
+        compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+        compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.1')
+        compile('org.slf4j:log4j-over-slf4j:1.7.25')
+        compile('com.github.pagehelper:pagehelper:5.1.2')
+        compile('com.alibaba:fastjson:1.2.41')
+        compile('org.apache.commons:commons-lang3:3.7')
+        compile('com.belerweb:pinyin4j:2.5.1')
+        compile('javax.servlet:jstl:1.2')
+        compile('javax.servlet.jsp:jsp-api:2.2')
+        compile('commons-fileupload:commons-fileupload:1.3.1')
+        compile('commons-net:commons-net:3.3')
+        compile('com.alibaba:druid:1.1.9')
+        compile('io.springfox:springfox-swagger-ui:2.9.2')
+        compile('io.springfox:springfox-swagger2:2.9.2')
+        //compile('de.codecentric:spring-boot-admin-starter-client:1.4.6')
+        compile('org.springframework.cloud:spring-cloud-starter-oauth2')
+        compile ('io.jsonwebtoken:jjwt:0.7.0')
+        compile ('ognl:ognl:3.2.10')
+
+        //agcloud-bsc
+        compile('org.springframework.data:spring-data-redis:2.0.8.RELEASE')
+        compile('redis.clients:jedis:2.9.0')
+        compile('org.apache.poi:poi:3.10-FINAL')
+        compile('org.apache.poi:poi-ooxml:3.10-FINAL')
+        compile('org.apache.ant:ant:1.10.1')
+        compile('commons-io:commons-io:2.5')
+        compile('commons-codec:commons-codec:1.9')
+        compile('commons-lang:commons-lang:2.6')
+        compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+
+        //agcloud-opus-common
+        compile("org.aspectj:aspectjweaver:1.8.13")
+        compile('com.janeluo:ikanalyzer:2012_u6')
+        compile('commons-codec:commons-codec:1.9')
+        compile('commons-lang:commons-lang:2.6')
+        compile('commons-fileupload:commons-fileupload:1.3.1')
+        compile('jmagick:jmagick:6.2.4')
+        compile('org.json:json:20180130')
+        compile('cn.meddb:ueditor:20180110')
+        compile('org.springframework.boot:spring-boot-starter-freemarker:2.0.1.RELEASE')
+        compile('org.jsoup:jsoup:1.12.1')
+        compile('commons-net:commons-net:3.3')
+        compile('org.apache.httpcomponents:httpmime:4.5.5')
+
+        //agcloud-bpm
+        /*compile('org.flowable:flowable-spring-boot-starter-basic:6.3.0')*/
+        compile('com.fasterxml.uuid:java-uuid-generator:3.1.5')
+        compile('joda-time:joda-time:2.9.9')
+        compile('commons-collections:commons-collections:3.2.2')
+        compile('org.apache.httpcomponents:httpmime:4.5.5')
+        compile('org.tinyjee.jgraphx:jgraphx:1.10.4.1')
+        compile('de.odysseus.juel:juel-impl:2.2.7')
+
+        //agcloud-agcom
+        compile "com.augurit.agcloud:agcloud-bsc:${agcloudVersion}",{ changing = false }
+        compile "com.augurit.agcloud:agcloud-meta:${agcloudVersion}",{ changing = false }
+        compile "com.augurit.agcloud:agcloud-framework:${agcloudVersion}",{ changing = false }
+        compile "com.augurit.agcloud:agcloud-framework-ui:${agcloudVersion}",{ changing = false }
+
+        compile ("com.augurit.agcloud.agcom:ojdbc:6")
+        compile ("com.augurit.agcloud.agcom:agcom-cas-client-core:3.2.1")
+        //    compile ("cn.guoyukun.jdbc:db2jcc:1.4.2")
+        compile ("com.augurit.agcloud.agcom:dbutil:1")
+        compile('eu.bitwalker:UserAgentUtils:1.20')
+        compile('com.google.code.gson:gson:2.8.0')
+        compile('com.google.guava:guava:27.0.1-jre')
+        compile('com.google.zxing:core:3.3.0')
+        compile('com.googlecode.json-simple:json-simple:1.1.1')
+        compile('commons-dbcp:commons-dbcp:1.4')
+        compile('commons-httpclient:commons-httpclient:3.1')
+        compile('commons-net:commons-net:3.6')
+        compile('dom4j:dom4j:1.6.1')
+        compile('log4j:log4j:1.2.13')
+        compile('net.coobird:thumbnailator:0.4.8')
+        compile('net.sf.ezmorph:ezmorph:1.0.6')
+        compile('net.sf.json-lib:json-lib:2.4:jdk15')
+        compile('net.sourceforge.javacsv:javacsv:2.0')
+        compile('org.apache.httpcomponents:fluent-hc:4.5.6')
+        compile('org.apache.httpcomponents:httpclient:4.5.6')
+        compile('org.apache.httpcomponents:httpclient-cache:4.5.6')
+        compile('org.apache.httpcomponents:httpcore:4.4.9')
+        compile('org.apache.httpcomponents:httpmime:4.5.6')
+        compile('commons-pool:commons-pool:1.6')
+        compile('org.apache.poi:poi:3.15')
+        compile('org.apache.poi:poi-ooxml:3.15')
+        compile('org.apache.poi:poi-ooxml-schemas:3.15')
+        compile('org.apache.shiro:shiro-core:1.3.2')
+        compile('org.apache.xmlbeans:xmlbeans:2.6.0')
+        compile('org.jdom:jdom:1.1.3')
+        //compile('org.mongodb:mongo-java-driver:3.4.2')
+        compile('org.gdal:gdal:2.1.0')
+        compile('com.sun.jersey.contribs:jersey-spring:1.8')
+        compile('com.sun.jersey:jersey-core:1.8')
+        compile('com.thoughtworks.xstream:xstream:1.4.10')
+        compile('org.postgresql:postgresql:42.2.5')
+        compile('net.sf.geographiclib:GeographicLib-Java:1.44')
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.0.3.RELEASE'
+        compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+        compile('org.springframework.mobile:spring-mobile-device:1.1.4.RELEASE')
+        compile group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: '3.3.1'
+
+        // minio jar 包
+        compile 'io.minio:minio:7.0.2'
+        
+        compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+        compile fileTree(include: ['*.jar'], dir: 'lib')
+
+        /**
+         * 使用最新版本的Tomcat
+         * */
+        compile('org.springframework.boot:spring-boot-starter-web') {
+            exclude module: "spring-boot-starter-tomcat"
+        }
+        compile 'org.apache.tomcat.embed:tomcat-embed-core:9.0.31'
+        compile 'org.apache.tomcat.embed:tomcat-embed-el:9.0.31'
+        compile 'org.apache.tomcat.embed:tomcat-embed-logging-juli:+'
+        compile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.31'
+        //csv文件解析依赖
+        compile 'com.opencsv:opencsv:4.3.2'
+        //zip4j解压
+        compile 'net.lingala.zip4j:zip4j:2.6.2'
+
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+}

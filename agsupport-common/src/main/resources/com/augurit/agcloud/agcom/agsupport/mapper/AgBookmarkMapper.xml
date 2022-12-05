@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBookmarkMapper">
+
+    <sql id="allColumns">
+        ID id,
+        USER_ID userId,
+        DATA "data",
+        UPDATE_TIME updateTime
+    </sql>
+
+    <!--查询所有标注-->
+    <select id="findByUserId" resultType="AgBookmark">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bookmark
+        WHERE
+        user_id=#{userId} ORDER BY UPDATE_TIME DESC
+    </select>
+
+    <select id="findById" resultType="AgBookmark">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bookmark
+        WHERE
+        id=#{id}
+    </select>
+
+    <!--保存-->
+    <insert id="save">
+        INSERT INTO ag_bookmark (
+        ID,USER_ID,DATA,UPDATE_TIME
+        ) VALUES (
+        #{id},#{userId},#{data},#{updateTime}
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        UPDATE ag_bookmark
+        <set>
+            <if test="data != null">
+                DATA = #{data},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+        ag_bookmark
+        WHERE
+        id = #{id}
+    </delete>
+</mapper>

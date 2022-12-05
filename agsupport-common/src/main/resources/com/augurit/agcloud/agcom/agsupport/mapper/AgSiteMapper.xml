@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgSiteMapper">
+
+    <sql id="allColumns">
+        ID id,
+        SER_NAME serName,
+        SER_PASSWORD serPassword,
+        SER_IP serIp,
+        SER_PORT serPort,
+        SER_TYPE serType,
+        SER_ALIAS serAlias,
+        SER_RESTPORT serRestport
+    </sql>
+
+    <!--查询所有机构-->
+    <select id="getOrgserbyid" resultType="AgSite">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_site
+        WHERE
+        id = #{id}
+    </select>
+    <select id="getSite" resultType="AgSite">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_site
+        WHERE
+        ser_type=#{serType}
+        AND
+        ser_alias=#{serAlias}
+    </select>
+    <select id="getAllSite" resultType="AgSite">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_site
+    </select>
+    <!--修改机构-->
+    <update id="updateAgOrgs">
+        UPDATE  ag_site
+        <set>
+            <if test="serName != null">
+                ser_name = #{serName},
+            </if>
+            <if test="serPassword != null">
+                ser_password = #{serPassword},
+            </if>
+            <if test="serIp != null">
+                ser_ip = #{serIp},
+            </if>
+            <if test="serPort != null">
+                ser_port = #{serPort},
+            </if>
+            <if test="serType != null">
+                ser_type = #{serType},
+            </if>
+            <if test="serAlias != null">
+            ser_alias = #{serAlias},
+          </if>
+            <if test="serRestport != null">
+                ser_restport = #{serRestport}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+    <select id="getMaxid" resultType="java.lang.String">
+        SELECT
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                max(cast(id as INTEGER))
+            </when>
+            <when test="_databaseId == 'mysql'">
+                max(cast(id as SIGNED INTEGER))
+            </when>
+        </choose>
+        FROM
+         ag_site
+    </select>
+    <select id="getSiteName"  resultType="AgSite">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_site
+        WHERE
+        ser_type=#{serType}
+    </select>
+    <insert id="insetAgOrgs">
+        INSERT
+        INTO  ag_site (
+        id, ser_name, ser_password, ser_ip, ser_port, ser_type,  ser_alias,ser_restport
+        ) VALUES (
+        #{id}, #{serName}, #{serPassword}, #{serIp}, #{serPort}, #{serType}, #{serAlias},#{serRestport}
+        )
+    </insert>
+    <delete id="deleteOrgsById">
+        DELETE FROM ag_site
+        WHERE
+        id = #{id}
+    </delete>
+
+</mapper>

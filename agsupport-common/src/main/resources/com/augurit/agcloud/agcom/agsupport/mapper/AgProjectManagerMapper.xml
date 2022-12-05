@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgProjectManagerMapper">
+
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgProjectManager">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="TYPE" jdbcType="VARCHAR" property="type"/>
+        <result column="EXTEND_DATA" jdbcType="VARCHAR" property="extendData"/>
+        <result column="IS_DELETE" jdbcType="VARCHAR" property="isDelete"/>
+        <result column="CREATOR" jdbcType="VARCHAR" property="creator"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <!-- <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+                type="com.augurit.agcloud.agcom.agsupport.domain.AgProjectManager">
+         <result column="CONFIG_VALUE" jdbcType="VARCHAR" property="configValue"/>
+     </resultMap>-->
+
+    <sql id="Base_Column_List">
+        ID, NAME, TYPE, EXTEND_DATA, IS_DELETE, CREATOR, CREATE_TIME, MODIFY_TIME, REMARK
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROJECT_MANAGER
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 物理删除 -->
+ <!--   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from AG_PROJECT_MANAGER
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>-->
+    <!-- 物理删除 批量删除 -->
+    <!--<delete id="deleteByIds" parameterType="java.lang.String">
+        delete from AG_PROJECT_MANAGER
+        where ID in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>-->
+
+    <!-- 逻辑删除 -->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+        update AG_PROJECT_MANAGER
+        set IS_DELETE = '1',
+        MODIFY_TIME = CURRENT_TIMESTAMP
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 逻辑删除 批量删除 -->
+    <update id="deleteByIds" parameterType="java.lang.String">
+        update AG_PROJECT_MANAGER
+        set IS_DELETE = '1',
+        MODIFY_TIME = CURRENT_TIMESTAMP
+        where ID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProjectManager">
+        insert into AG_PROJECT_MANAGER (ID, NAME, TYPE, EXTEND_DATA, IS_DELETE, CREATOR, CREATE_TIME, MODIFY_TIME, REMARK)
+        values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+          #{extendData,jdbcType=VARCHAR}, #{isDelete,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProjectManager">
+        insert into AG_PROJECT_MANAGER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="type != null">
+                TYPE,
+            </if>
+            <if test="extendData != null">
+                EXTEND_DATA,
+            </if>
+            <if test="isDelete != null">
+                IS_DELETE,
+            </if>
+            <if test="creator != null">
+                CREATOR,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="extendData != null">
+                #{extendData,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProjectManager">
+        update AG_PROJECT_MANAGER
+        <set>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                TYPE = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="extendData != null">
+                EXTEND_DATA = #{extendData,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete != null">
+                IS_DELETE = #{isDelete,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                CREATOR = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProjectManager">
+    update AG_PROJECT_MANAGER
+    set NAME = #{name,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      EXTEND_DATA = #{extendData,jdbcType=VARCHAR},
+      IS_DELETE = #{isDelete,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+    <!--按条件查询（未删除的）-->
+    <select id="findList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROJECT_MANAGER
+        where 1 = 1
+        and IS_DELETE = '0'
+        <if test="name != null">
+            AND NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+        </if>
+        order by CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+    <!--按名称查询（未删除的）-->
+    <select id="findByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROJECT_MANAGER
+        where 1 = 1
+        and IS_DELETE = '0'
+        and NAME = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询所有工程记录（未删除）（rest接口使用）-->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROJECT_MANAGER
+        where 1 = 1
+        and IS_DELETE = '0'
+        order by CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+
+    <!--根据传递参数查询工程（未删除的）（rest）-->
+    <select id="findByParam" resultMap="BaseResultMap" parameterType="map">
+        select
+        EXTEND_DATA
+        from AG_PROJECT_MANAGER
+        where 1 = 1
+        and IS_DELETE = '0'
+        <foreach collection="map" index="key" item="value">
+            <if test="#{key} != null">
+                and ${key} = #{value,jdbcType=VARCHAR}
+            </if>
+        </foreach>
+        <!--<if test="name != null">
+            and NAME = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="id != null">
+            and id = #{id,jdbcType=VARCHAR}
+        </if>-->
+    </select>
+
+</mapper>

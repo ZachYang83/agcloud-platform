@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgDataSubjectMapper">
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgDataSubject">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="INTEGER"/>
+        <result column="XPATH" property="xpath" jdbcType="VARCHAR"/>
+        <result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, SUBJECT_NAME, PARENT_ID, ORDER_NO ,XPATH,SUBJECT_LEVEL
+  </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        where SUBJECT_NAME = #{name,jdbcType=VARCHAR}
+    </select>
+    <select id="findByXpath" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        where xpath = #{xpath} or xpath LIKE CONCAT(#{xpath},'/%')
+    </select>
+
+    <select id="findAllSubject" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        ORDER by ORDER_NO
+    </select>
+
+    <select id="findByLevel" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        where SUBJECT_LEVEL = #{level}
+    </select>
+
+    <select id="selectByParenIdAndName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        where  SUBJECT_NAME = #{name,jdbcType=VARCHAR} and PARENT_ID = #{parentId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_DATA_SUBJECT
+        WHERE id IN
+        <foreach collection="ids" separator="," item="id" open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete from AG_DATA_SUBJECT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="deletcByXpath" parameterType="java.lang.String">
+    delete from AG_DATA_SUBJECT
+    WHERE xpath = #{xpath}
+    OR xpath LIKE CONCAT(#{xpath},'%')
+  </delete>
+
+    <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgDataSubject">
+    insert into AG_DATA_SUBJECT (ID, SUBJECT_NAME, PARENT_ID, 
+      ORDER_NO,XPATH,SUBJECT_LEVEL)
+    values (#{id,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{orderNo,jdbcType=INTEGER},#{xpath,jdbcType=VARCHAR},#{subjectLevel,jdbcType=INTEGER})
+  </insert>
+    <update id="updateSubject" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgDataSubject">
+        update AG_DATA_SUBJECT
+        <set>
+            <if test="subjectName != null">
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                PARENT_ID = #{parentId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                ORDER_NO = #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="xpath != null">
+                XPATH = #{xpath,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectLevel != null">
+                SUBJECT_LEVEL = #{subjectLevel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSubjectBatch" parameterType="java.util.List">
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                BEGIN
+                <foreach collection="list" item="item" index="index" separator=";">
+                    update AG_DATA_SUBJECT
+                    <set>
+                        <if test="item.subjectName != null">
+                            SUBJECT_NAME = #{item.subjectName,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.parentId != null">
+                            PARENT_ID = #{item.parentId,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.orderNo != null">
+                            ORDER_NO = #{item.orderNo,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.xpath != null">
+                            XPATH = #{item.xpath,jdbcType=INTEGER},
+                        </if>
+                        <if test="item.subjectLevel != null">
+                            SUBJECT_LEVEL = #{item.subjectLevel,jdbcType=INTEGER},
+                        </if>
+                    </set>
+                    where ID = #{item.id,jdbcType=VARCHAR}
+                </foreach>
+                ;END;
+            </when>
+            <when test="_databaseId == 'mysql'">
+                <foreach collection="list" item="item" index="index" separator=";">
+                    update AG_DATA_SUBJECT
+                    <set>
+                        <if test="item.subjectName != null">
+                            SUBJECT_NAME = #{item.subjectName,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.parentId != null">
+                            PARENT_ID = #{item.parentId,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.orderNo != null">
+                            ORDER_NO = #{item.orderNo,jdbcType=INTEGER},
+                        </if>
+                        <if test="item.xpath != null">
+                            XPATH = #{item.xpath,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.subjectLevel != null">
+                            SUBJECT_LEVEL = #{item.subjectLevel,jdbcType=INTEGER},
+                        </if>
+                    </set>
+                    where ID = #{item.id,jdbcType=VARCHAR}
+                </foreach>
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                <foreach collection="list" item="item" index="index" separator=";">
+                    update AG_DATA_SUBJECT
+                    <set>
+                        <if test="item.subjectName != null">
+                            SUBJECT_NAME = #{item.subjectName,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.parentId != null">
+                            PARENT_ID = #{item.parentId,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.orderNo != null">
+                            ORDER_NO = #{item.orderNo,jdbcType=INTEGER},
+                        </if>
+                        <if test="item.xpath != null">
+                            XPATH = #{item.xpath,jdbcType=VARCHAR},
+                        </if>
+                        <if test="item.subjectLevel != null">
+                            SUBJECT_LEVEL = #{item.subjectLevel,jdbcType=INTEGER},
+                        </if>
+                    </set>
+                    where ID = #{item.id,jdbcType=VARCHAR}
+                </foreach>
+            </when>
+        </choose>
+
+    </update>
+</mapper>

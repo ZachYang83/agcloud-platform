@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgCountiesMapper">
+
+    <sql id="allColumns">
+        ID id,
+        TOWN_NAME townName,
+        XZQHDM_TOWN xzqhdmTown,
+        COUNTIES_NAME countiesName,
+        XZQHDM_COUNTIES xzqhdmCounties
+    </sql>
+
+    <!--按id查找-->
+    <select id="findCounties" resultType="AgCounties">
+        SELECT
+              DISTINCT XZQHDM_COUNTIES xzqhdmCounties,COUNTIES_NAME countiesName
+        FROM
+        AG_COUNTIES_NAME
+    </select>
+
+    <!--按条件查找-->
+    <select id="findTown" resultType="AgCounties">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        AG_COUNTIES_NAME
+        WHERE
+        XZQHDM_COUNTIES LIKE CONCAT(TRIM(#{xzqhdmCounties}), '%')
+    </select>
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgIndexConfigInfoMapper">
+    <sql id="allColumns">
+        ID id,
+        DBNAME dbname,
+        DATA_SOURCE_ID dataSourceId,
+        TABLE_NAME tableName,
+        TABLE_NAME_CN tableNameCn,
+        INDEX_NAME indexName,
+        DOC_NUMBER docNumber,
+        NODE_IP nodeIp,
+        INDEX_FIELD indexField ,
+        FIELD_TOTAL fieldTotal,
+        CREATE_TIME createTime,
+        UPDATA_TIME updataTime,
+        TABLE_TYPE tableType,
+        IS_WGS84 isWgs84,
+        COORDINATE_TYPE coordinateType,
+        LAYER_ID layerId,
+        NOT_ANALYSIS_WORD notAnalysisWord,
+        SHOW_FIELD showField
+    </sql>
+
+    <select id="findById" resultType="AgIndexConfigInfo">
+        SELECT
+        <include refid="allColumns"></include>
+        FROM ag_index_config_info t
+        WHERE id = #{id}
+    </select>
+
+    <!--分页查-->
+    <select id="findList" resultType="AgIndexConfigInfo">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_index_config_info t
+        <where>
+            1=1
+            AND (
+            <if test="indexName != null">
+                t.INDEX_NAME LIKE CONCAT(CONCAT('%', TRIM(#{indexName})), '%')
+            </if>
+            <if test="tableNameCn != null">
+               OR t.table_name_cn LIKE CONCAT(CONCAT('%', TRIM(#{tableNameCn})), '%')
+            </if>
+            <if test="dbname != null">
+               OR  t.DBNAME LIKE CONCAT(CONCAT('%', TRIM(#{dbname})), '%')
+            </if>
+            )
+        </where>
+        ORDER BY t.CREATE_TIME DESC
+    </select>
+
+    <!-- 保存 -->
+    <insert id="save">
+        INSERT
+        INTO ag_index_config_info
+        (id,dbname,data_source_id,table_name,table_name_cn,index_name,doc_number,node_ip,index_field,field_total,create_time,updata_time,table_type,is_wgs84,coordinate_type,layer_id,not_analysis_word,show_field)
+        VALUES (#{id},#{dbname},#{dataSourceId},#{tableName},#{tableNameCn},#{indexName},#{docNumber},#{nodeIp},#{indexField},#{fieldTotal},#{createTime},#{updataTime},#{tableType},#{isWgs84},#{coordinateType},#{layerId},#{notAnalysisWord},#{showField})
+    </insert>
+
+    <update id="update">
+        UPDATE ag_index_config_info
+        <set>
+            <if test="docNumber != null">
+                doc_number = #{docNumber},
+            </if>
+            <if test="updataTime != null">
+                updata_time = #{updataTime},
+            </if>
+            <if test="indexField !=null">
+                index_field = #{indexField},
+            </if>
+            <if test="notAnalysisWord !=null">
+                not_analysis_word = #{notAnalysisWord},
+            </if>
+            <if test="showField != null">
+                SHOW_FIELD = #{showField}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delById">
+        DELETE
+        FROM
+        ag_index_config_info
+        WHERE
+        id = #{id}
+    </delete>
+
+    <select id="findByIndexName" resultType="AgIndexConfigInfo">
+        SELECT
+        <include refid="allColumns"></include>
+        FROM ag_index_config_info t
+        WHERE  t.index_name= #{indexName}
+    </select>
+
+    <!--获取查询结果显示字段-->
+    <select id="getAllShowField" resultType="AgIndexConfigInfo">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_index_config_info
+    </select>
+
+    <!--修改显示字段-->
+    <update id="updateShowField">
+        UPDATE ag_index_config_info
+        <set>
+            <if test="showField != null">
+                SHOW_FIELD = #{showField}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+</mapper>

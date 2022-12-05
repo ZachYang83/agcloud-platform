@@ -1,0 +1,8 @@
+rootProject.name = 'agcloud-platform'
+include 'agsupport'
+include 'agsupport-rest'
+include 'agcloud'
+include 'agsupport-syslog'
+include 'agsupport-bim'
+include 'agsupport-common'
+

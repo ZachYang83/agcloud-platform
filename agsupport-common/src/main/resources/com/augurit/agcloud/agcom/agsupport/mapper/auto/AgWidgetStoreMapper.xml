@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.AgWidgetStoreMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStore" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="route_name" property="routeName" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="widget_name" property="widgetName" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="thumb_name" property="thumbName" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="expand" property="expand" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreWithBLOBs" extends="BaseResultMap" >
+    <result column="thumb" property="thumb" jdbcType="BINARY" />
+    <result column="widget_file" property="widgetFile" jdbcType="BINARY" />
+    <result column="md_file" property="mdFile" jdbcType="BINARY" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, route_name, description, version, create_time, modify_time, widget_name, 
+    size, thumb_name, en_name, expand, status
+  </sql>
+  <sql id="Blob_Column_List" >
+    thumb, widget_file, md_file
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ag_widget_store
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ag_widget_store
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ag_widget_store
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ag_widget_store
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreExample" >
+    delete from ag_widget_store
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreWithBLOBs" >
+    insert into ag_widget_store (id, name, route_name, 
+      description, version, create_time, 
+      modify_time, widget_name, size, 
+      thumb_name, en_name, expand, 
+      status, thumb, widget_file,md_file
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{routeName,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{widgetName,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}, 
+      #{thumbName,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, #{expand,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{thumb,jdbcType=BINARY}, #{widgetFile,jdbcType=BINARY},
+      #{mdFile,jdbcType=BINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreWithBLOBs" >
+    insert into ag_widget_store
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="routeName != null" >
+        route_name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="widgetName != null" >
+        widget_name,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="thumbName != null" >
+        thumb_name,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="expand != null" >
+        expand,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="thumb != null" >
+        thumb,
+      </if>
+      <if test="widgetFile != null" >
+        widget_file,
+      </if>
+      <if test="mdFile != null">
+        md_file,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="routeName != null" >
+        #{routeName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="widgetName != null" >
+        #{widgetName,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbName != null" >
+        #{thumbName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="expand != null" >
+        #{expand,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="thumb != null" >
+        #{thumb,jdbcType=BINARY},
+      </if>
+      <if test="widgetFile != null" >
+        #{widgetFile,jdbcType=BINARY},
+      </if>
+      <if test="mdFile != null" >
+        #{mdFile,jdbcType=BINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreExample" resultType="java.lang.Integer" >
+    select count(*) from ag_widget_store
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ag_widget_store
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.routeName != null" >
+        route_name = #{record.routeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.widgetName != null" >
+        widget_name = #{record.widgetName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.size != null" >
+        size = #{record.size,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbName != null" >
+        thumb_name = #{record.thumbName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enName != null" >
+        en_name = #{record.enName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expand != null" >
+        expand = #{record.expand,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.thumb != null" >
+        thumb = #{record.thumb,jdbcType=BINARY},
+      </if>
+      <if test="record.widgetFile != null" >
+        widget_file = #{record.widgetFile,jdbcType=BINARY},
+      </if>
+      <if test="record.mdFile != null" >
+        md_file = #{record.mdFile,jdbcType=BINARY},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ag_widget_store
+    set id = #{record.id,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      route_name = #{record.routeName,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      widget_name = #{record.widgetName,jdbcType=VARCHAR},
+      size = #{record.size,jdbcType=VARCHAR},
+      thumb_name = #{record.thumbName,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      expand = #{record.expand,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      thumb = #{record.thumb,jdbcType=BINARY},
+      widget_file = #{record.widgetFile,jdbcType=BINARY}
+      md_file = #{record.mdFile,jdbcType=BINARY}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ag_widget_store
+    set id = #{record.id,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      route_name = #{record.routeName,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      widget_name = #{record.widgetName,jdbcType=VARCHAR},
+      size = #{record.size,jdbcType=VARCHAR},
+      thumb_name = #{record.thumbName,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      expand = #{record.expand,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreWithBLOBs" >
+    update ag_widget_store
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="routeName != null" >
+        route_name = #{routeName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="widgetName != null" >
+        widget_name = #{widgetName,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbName != null" >
+        thumb_name = #{thumbName,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="expand != null" >
+        expand = #{expand,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="thumb != null" >
+        thumb = #{thumb,jdbcType=BINARY},
+      </if>
+      <if test="widgetFile != null" >
+        widget_file = #{widgetFile,jdbcType=BINARY},
+      </if>
+      <if test="mdFile != null" >
+        md_file = #{mdFile,jdbcType=BINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStoreWithBLOBs" >
+    update ag_widget_store
+    set name = #{name,jdbcType=VARCHAR},
+      route_name = #{routeName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      widget_name = #{widgetName,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      thumb_name = #{thumbName,jdbcType=VARCHAR},
+      en_name = #{enName,jdbcType=VARCHAR},
+      expand = #{expand,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      thumb = #{thumb,jdbcType=BINARY},
+      widget_file = #{widgetFile,jdbcType=BINARY}
+      md_file = #{mdFile,jdbcType=BINARY}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetStore" >
+    update ag_widget_store
+    set name = #{name,jdbcType=VARCHAR},
+      route_name = #{routeName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      widget_name = #{widgetName,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      thumb_name = #{thumbName,jdbcType=VARCHAR},
+      en_name = #{enName,jdbcType=VARCHAR},
+      expand = #{expand,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

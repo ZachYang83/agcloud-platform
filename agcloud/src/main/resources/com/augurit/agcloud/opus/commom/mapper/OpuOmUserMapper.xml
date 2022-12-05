@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augurit.agcloud.opus.common.mapper.OpuOmUserMapper">
+    <!-- 临时解决因为切换pgsql数据库导致的出问题 -->
+    <!-- 用户帐号所有字段 -->
+    <sql id="OpuOmUser_All_Columns_Properties">
+        omuser.USER_ID as userId,
+        omuser.LOGIN_NAME as loginName,
+        omuser.LOGIN_PWD as loginPwd,
+        omuser.DINGTALK_ACCOUNT as dingtalkAccount,
+        omuser.DINGTALK_ID as dingtalkId,
+        omuser.WECHAT_ACCOUNT as wechatAccount,
+        omuser.WECHAT_ID as wechatId,
+        omuser.USER_NAME as userName,
+        omuser.USER_SEX as userSex,
+        omuser.IS_PWD_ENCRYPTED as isPwdEncrypted,
+        omuser.ENCRYPT_SALT as encryptSalt,
+        omuser.PWD_STRENGTH_GRADE as pwdStrengthGrade,
+        omuser.IS_ACTIVE as isActive,
+        omuser.ACTIVE_BEGIN_TIME as activeBeginTime,
+        omuser.ACTIVE_END_TIME as activeEndTime,
+        omuser.USER_DELETED as userDeleted,
+        omuser.CREATER as creater,
+        omuser.CREATE_TIME as createTime,
+        omuser.MODIFIER as modifier,
+        omuser.MODIFY_TIME as modifyTime,
+        omuser.IS_ORIGINAL_ADMIN as isOriginalAdmin,
+        omuser.IS_LOCK as isLock,
+        omuser.LOGIN_FAIL_NUM as loginFailNum,
+        omuser.LOCK_TIME as lockTime
+    </sql>
+
+    <!-- OpuOmUserInfo 用户信息字段 -->
+    <sql id="OpuOmUserInfo_All_Columns_Properties" >
+        userInfo.USER_TYPE as userType,
+        userInfo.USER_MOBILE as userMobile,
+        userInfo.USER_POST_STATUS as userPostStatus
+    </sql>
+
+    <!-- 新增用户帐号 -->
+    <insert id="saveUser" parameterType="OpuOmUser">
+        insert into OPU_OM_USER (
+            USER_ID,
+            LOGIN_NAME,
+            LOGIN_PWD,
+            DINGTALK_ACCOUNT,
+            DINGTALK_ID,
+            WECHAT_ACCOUNT,
+            WECHAT_ID,
+            USER_NAME,
+            USER_SEX,
+            IS_PWD_ENCRYPTED,
+            ENCRYPT_SALT,
+            PWD_STRENGTH_GRADE,
+            IS_ACTIVE,
+            ACTIVE_BEGIN_TIME,
+            ACTIVE_END_TIME,
+            USER_DELETED,
+            CREATER,
+            CREATE_TIME,
+            MODIFIER,
+            MODIFY_TIME,
+            IS_ORIGINAL_ADMIN,
+            IS_LOCK,
+            LOGIN_FAIL_NUM,
+            LOCK_TIME
+        )
+        values (
+            #{userId},
+            #{loginName},
+            #{loginPwd},
+            #{dingtalkAccount},
+            #{dingtalkId},
+            #{wechatAccount},
+            #{wechatId},
+            #{userName},
+            #{userSex},
+            #{isPwdEncrypted},
+            #{encryptSalt},
+            #{pwdStrengthGrade},
+            #{isActive},
+            #{activeBeginTime,jdbcType=TIMESTAMP},
+            #{activeEndTime,jdbcType=TIMESTAMP},
+            #{userDeleted},
+            #{creater},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{modifier},
+            #{modifyTime,jdbcType=TIMESTAMP},
+            #{isOriginalAdmin},
+            #{isLock},
+            #{loginFailNum,jdbcType=BIGINT},
+            #{lockTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <!-- 修改用户帐号 -->
+    <update id="updateUser" parameterType="OpuOmUser">
+        update OPU_OM_USER
+        <set >
+            <if test="loginName != null and loginName !='' ">
+                LOGIN_NAME = #{loginName},
+            </if>
+            <if test="loginPwd != null and loginPwd !='' ">
+                LOGIN_PWD = #{loginPwd},
+            </if>
+            <if test="dingtalkAccount != null and dingtalkAccount !='' ">
+                DINGTALK_ACCOUNT = #{dingtalkAccount},
+            </if>
+            <if test="dingtalkId != null and dingtalkId !='' ">
+                DINGTALK_ID = #{dingtalkId},
+            </if>
+            <if test="wechatAccount != null and wechatAccount !='' ">
+                WECHAT_ACCOUNT = #{wechatAccount},
+            </if>
+            <if test="wechatId != null and wechatId !='' ">
+                WECHAT_ID = #{wechatId},
+            </if>
+            <if test="userName != null and userName !='' ">
+                USER_NAME = #{userName},
+            </if>
+            <if test="userSex != null and userSex !='' ">
+                USER_SEX = #{userSex},
+            </if>
+            <if test="isPwdEncrypted != null and isPwdEncrypted !='' ">
+                IS_PWD_ENCRYPTED = #{isPwdEncrypted},
+            </if>
+            <if test="encryptSalt != null and encryptSalt !='' ">
+                ENCRYPT_SALT = #{encryptSalt},
+            </if>
+            <if test="pwdStrengthGrade != null and pwdStrengthGrade !='' ">
+                PWD_STRENGTH_GRADE = #{pwdStrengthGrade,jdbcType=DECIMAL},
+            </if>
+            <if test="isActive != null and isActive !='' ">
+                IS_ACTIVE = #{isActive},
+            </if>
+            <if test="activeBeginTime != null and activeBeginTime !='' ">
+                ACTIVE_BEGIN_TIME = #{activeBeginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="activeEndTime != null and activeEndTime !='' ">
+                ACTIVE_END_TIME = #{activeEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userDeleted != null and userDeleted !='' ">
+                USER_DELETED = #{userDeleted},
+            </if>
+            <if test="modifier != null  and modifier !='' ">
+                MODIFIER = #{modifier},
+            </if>
+            <if test="modifyTime != null  ">
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLock != null and isLock!='' ">
+                IS_LOCK  = #{isLock},
+            </if>
+            <if test="loginFailNum != null and loginFailNum!='' ">
+                LOGIN_FAIL_NUM = #{loginFailNum,jdbcType=BIGINT},
+            </if>
+            <if test="lockTime != null ">
+                LOCK_TIME = #{lockTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where USER_ID = #{userId}
+    </update>
+
+    <!-- 通过主键数组逻辑删除指定用户帐号-->
+    <update id="deleteUserByUserId">
+        update  OPU_OM_USER
+        <set>
+            USER_DELETED ='1'
+        </set>
+        <where>
+            USER_ID = #{userId}
+        </where>
+    </update>
+
+    <!-- 根据主键获取用户帐号对象 -->
+    <select id="getUserByUserId" resultType="OpuOmUser" parameterType="string">
+        select
+            <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser
+        where  omuser.USER_ID = #{userId} and omuser.USER_DELETED='0'
+    </select>
+
+    <select id="listOpuOmUserByUserIds" resultType="OpuOmUser">
+        select
+            <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser
+        where  omuser.USER_DELETED = '0'
+          and  omuser.USER_ID in
+           <foreach collection="userIds" item="userId" open="(" close=")" separator=",">
+              #{userId}
+           </foreach>
+    </select>
+
+    <!-- 根据用户帐号登录名获取对应用户帐号form对象 -->
+    <select id="getUserByLoginName" resultType="OpuOmUser" parameterType="string">
+        select
+            <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser
+        where omuser.LOGIN_NAME = #{loginName}
+        and omuser.IS_ACTIVE='1'
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <select id="getExistUserByLoginName" resultType="OpuOmUser" parameterType="string">
+        select
+            <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser
+        where omuser.LOGIN_NAME = #{loginName}
+    </select>
+
+    <select id="getCountUserByLoginName" resultType="java.lang.Long" parameterType="string">
+        select
+            count(USER_ID)
+        from OPU_OM_USER
+        where LOGIN_NAME = #{loginName}
+          and USER_DELETED='0'
+    </select>
+
+    <!--查询用户信息列表(只查询可以管理的组织范围的用户)-->
+    <select id="listOpuOmUser" resultType="OpuOmUser">
+        select
+            <include refid="OpuOmUser_All_Columns_Properties" />,
+            <include refid="OpuOmUserInfo_All_Columns_Properties" />
+        from
+        OPU_OM_ORG org,opu_om_user_org user_org, OPU_OM_USER omuser
+        LEFT JOIN OPU_OM_USER_INFO userInfo ON omuser.USER_ID = userInfo.USER_ID
+        <where>
+
+            org.ORG_ID = user_org.ORG_ID
+            and user_org.USER_ID=omuser.USER_ID
+            and org.ORG_DELETED='0'
+            and org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+
+            <if test="userName != null and userName !='' " >
+                AND omuser.USER_NAME like CONCAT(CONCAT('%',#{userName}),'%')
+            </if>
+            <if test="loginName != null and loginName !='' " >
+                AND omuser.Login_Name like CONCAT(CONCAT('%',#{loginName}),'%')
+            </if>
+            <if test="userType != null  and userType !='' " >
+                AND userInfo.USER_TYPE = #{userType}
+            </if>
+            <if test="userMobile != null and userMobile !='' " >
+                AND userInfo.USER_MOBILE = #{userMobile}
+            </if>
+            <if test="userPostStatus != null and userPostStatus !='' " >
+                AND userInfo.USER_POST_STATUS = #{userPostStatus}
+            </if>
+            <if test="isActive != null and isActive !='' " >
+                AND omuser.IS_Active = #{isActive}
+            </if>
+            and  omuser.USER_DELETED = '0'
+        </where>
+        order by omuser.CREATE_TIME desc,omuser.MODIFY_TIME desc
+    </select>
+
+    <!-- 根据用户帐号模糊查询用户 -->
+    <select id="getUserByNameKeyWord" resultType="OpuOmUser" >
+        select DISTINCT
+            <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser,OPU_OM_ORG org,opu_om_user_org user_org
+        where
+            org.ORG_ID = user_org.ORG_ID
+            and user_org.USER_ID=omuser.USER_ID
+            and org.ORG_DELETED='0'
+            and org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+            and omuser.USER_NAME like CONCAT(CONCAT('%', #{userName}), '%')
+            and omuser.USER_DELETED='0'
+    </select>
+
+    <!-- 根据用户帐号模糊查询启用状态用户 -->
+    <select id="getActiveUserByNameKeyWord" resultType="OpuOmUser" >
+        select DISTINCT
+        <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser,OPU_OM_ORG org,opu_om_user_org user_org
+        where
+        org.ORG_ID = user_org.ORG_ID
+        and user_org.USER_ID=omuser.USER_ID
+        and org.ORG_DELETED='0'
+        and org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+        and omuser.USER_NAME like CONCAT(CONCAT('%', #{userName}), '%')
+        and omuser.IS_ACTIVE='1'
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <select id="getOpuOmUserByOrgId" resultType="OpuOmUser" >
+        select
+        <include refid="OpuOmUser_All_Columns_Properties" />
+        from
+        OPU_OM_USER omuser,OPU_OM_USER_ORG uo
+        where omuser.USER_ID = uo.USER_ID
+        and  uo.ORG_ID = #{orgId}
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <select id="getOpuOmActiveUserByOrgId" resultType="OpuOmUser" >
+        select
+        <include refid="OpuOmUser_All_Columns_Properties" />
+        from
+        OPU_OM_USER omuser,OPU_OM_USER_ORG uo
+        where omuser.USER_ID = uo.USER_ID
+        and  uo.ORG_ID = #{orgId}
+        and omuser.IS_ACTIVE='1'
+        and omuser.USER_DELETED='0'
+    </select>
+
+
+    <select id="listAllOpuOmUserByOrgId" resultType="OpuOmUser" parameterType="string" >
+        select DISTINCT
+            <include refid="OpuOmUser_All_Columns_Properties" />,
+        org.ORG_LEVEL as orgLevel,
+        org.ORG_SORT_NO	as orgSortNo
+        from opu_om_user omuser, opu_om_user_org uOrg, OPU_OM_ORG org
+        <where>
+            and org.ORG_ID = uOrg.ORG_ID
+            and omuser.USER_ID = uOrg.USER_ID
+            and org.IS_ACTIVE = '1'
+            and org.ORG_DELETED = '0'
+            and omuser.USER_DELETED = '0'
+            and org.ORG_SEQ like CONCAT(CONCAT('%.',#{orgId}),'.%')
+        </where>
+        order by org.ORG_LEVEL asc, org.ORG_SORT_NO asc
+    </select>
+
+    <select id="listAllUserRelOrgByOrgId" resultType="OpuOmUser">
+        select
+            <include refid="OpuOmUser_All_Columns_Properties" />,
+            org.ORG_ID  as orgId,
+            org.ORG_CODE as orgCode,
+            org.ORG_NAME as orgName
+        from opu_om_user omuser, opu_om_user_org uOrg, OPU_OM_ORG org
+        <where>
+            and org.ORG_ID = uOrg.ORG_ID
+            and omuser.USER_ID = uOrg.USER_ID
+            and org.IS_ACTIVE = '1'
+            and org.ORG_DELETED = '0'
+            and omuser.USER_DELETED = '0'
+            and org.ORG_SEQ like CONCAT(CONCAT('%.',#{orgId}),'.%')
+        </where>
+        order by org.ORG_LEVEL asc, org.ORG_SORT_NO asc
+    </select>
+
+    <!-- 根据组织ID查询用户(不包括子组织的用户) -->
+    <select id="listOpuOmUserByOrgId" resultType="OpuOmUser" parameterType="string" >
+        select
+        <include refid="OpuOmUser_All_Columns_Properties" />,
+        info.user_code userCode,info.user_mobile userMobile
+        from OPU_OM_ORG org ,opu_om_user_org uOrg,opu_om_user omuser
+        LEFT JOIN opu_om_user_info info ON omuser.USER_ID = info.USER_ID
+        where
+        org.ORG_ID = #{orgId}
+        and org.IS_ACTIVE='1'
+        and org.ORG_DELETED='0'
+        and org.ORG_ID = uOrg.ORG_ID
+        and omuser.USER_ID =uOrg.USER_ID
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <!-- 根据角色ID查询用户 -->
+    <select id="listOpuOmUserByRoleId" resultType="OpuOmUser" >
+        select
+        <include refid="OpuOmUser_All_Columns_Properties" />
+        from OPU_OM_USER omuser
+        where
+        omuser.USER_ID in (SELECT ru.user_id FROM OPU_AC_ROLE_USER ru where ru.ROLE_ID = #{roleId} )
+        and omuser.IS_ACTIVE='1'
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <select id="listOpuOmUserAndOrgByRoleId" resultType="OpuOmUser" >
+        select
+        <include refid="OpuOmUser_All_Columns_Properties" />,
+        temp1.ORG_NAME as orgName,
+        temp1.ORG_ID as orgId
+        from OPU_OM_USER omuser
+        LEFT JOIN (
+        SELECT userorg.USER_ID, org.ORG_NAME, org.ORG_ID
+        FROM OPU_OM_ORG org
+        LEFT JOIN OPU_OM_USER_ORG userorg ON userorg.ORG_ID = org.ORG_ID
+        WHERE userorg.is_main = '1'
+        ) temp1 ON temp1.USER_ID = omuser.USER_ID
+        where
+        omuser.USER_ID in (SELECT ru.user_id FROM OPU_AC_ROLE_USER ru where ru.ROLE_ID = #{roleId} )
+        and omuser.IS_ACTIVE='1'
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <select id="listOpuOmUserByRoleIds" resultType="OpuOmUser" >
+        SELECT
+          <include refid="OpuOmUser_All_Columns_Properties" />
+        FROM OPU_OM_USER omuser
+        LEFT JOIN OPU_OM_USER_INFO ooui ON omuser.USER_ID = ooui.USER_ID
+        WHERE omuser.USER_ID IN (
+            SELECT oaru.USER_ID FROM OPU_AC_ROLE_USER oaru
+            LEFT JOIN OPU_OM_USER oou ON oaru.USER_ID = oou.USER_ID
+            WHERE oaru.ROLE_ID IN
+            <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+                #{roleId}
+            </foreach>
+            GROUP BY oaru.USER_ID
+        )
+        and omuser.IS_ACTIVE='1'
+        and omuser.USER_DELETED='0'
+    </select>
+
+    <update id="enOrDisableIsActive" parameterType="java.lang.String">
+        update OPU_OM_USER set IS_ACTIVE =
+        case IS_ACTIVE when '0' then '1' else '0' end
+        where USER_ID = #{userId}
+    </update>
+
+    <update id="unLockOpuOmUserByUserId" parameterType="java.lang.String">
+        update OPU_OM_USER set IS_LOCK = '0', LOGIN_FAIL_NUM='0', LOCK_TIME = null where USER_ID = #{userId}
+    </update>
+
+</mapper>

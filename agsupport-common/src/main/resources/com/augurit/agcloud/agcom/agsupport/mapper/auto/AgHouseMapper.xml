@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.AgHouseMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouse" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="source_name" property="sourceName" jdbcType="VARCHAR" />
+    <result column="store_full_path" property="storeFullPath" jdbcType="VARCHAR" />
+    <result column="suffix" property="suffix" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="old_name" property="oldName" jdbcType="VARCHAR" />
+    <result column="hourse_name" property="hourseName" jdbcType="VARCHAR" />
+    <result column="homestead_area" property="homesteadArea" jdbcType="VARCHAR" />
+    <result column="floor_area" property="floorArea" jdbcType="VARCHAR" />
+    <result column="covered_area" property="coveredArea" jdbcType="VARCHAR" />
+    <result column="cost_estimates" property="costEstimates" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="VARCHAR" />
+    <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="thumb" property="thumb" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="structure_type" property="structureType" jdbcType="VARCHAR" />
+    <result column="model_size" property="modelSize" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="component_code" property="componentCode" jdbcType="VARCHAR" />
+    <result column="component_code_name" property="componentCodeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, source_name, store_full_path, suffix, size, type, category_id, create_time, modify_time, 
+    remark, old_name, hourse_name, homestead_area, floor_area, covered_area, cost_estimates, 
+    is_show, source_id, user_id, thumb, table_name, structure_type, model_size, status, 
+    component_code, component_code_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ag_house
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ag_house
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ag_house
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouseExample" >
+    delete from ag_house
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouse" >
+    insert into ag_house (id, source_name, store_full_path, 
+      suffix, size, type, 
+      category_id, create_time, modify_time, 
+      remark, old_name, hourse_name, 
+      homestead_area, floor_area, covered_area, 
+      cost_estimates, is_show, source_id, 
+      user_id, thumb, table_name, 
+      structure_type, model_size, status, 
+      component_code, component_code_name)
+    values (#{id,jdbcType=VARCHAR}, #{sourceName,jdbcType=VARCHAR}, #{storeFullPath,jdbcType=VARCHAR}, 
+      #{suffix,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{categoryId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{oldName,jdbcType=VARCHAR}, #{hourseName,jdbcType=VARCHAR}, 
+      #{homesteadArea,jdbcType=VARCHAR}, #{floorArea,jdbcType=VARCHAR}, #{coveredArea,jdbcType=VARCHAR}, 
+      #{costEstimates,jdbcType=VARCHAR}, #{isShow,jdbcType=VARCHAR}, #{sourceId,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{thumb,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, 
+      #{structureType,jdbcType=VARCHAR}, #{modelSize,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{componentCode,jdbcType=VARCHAR}, #{componentCodeName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouse" >
+    insert into ag_house
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sourceName != null" >
+        source_name,
+      </if>
+      <if test="storeFullPath != null" >
+        store_full_path,
+      </if>
+      <if test="suffix != null" >
+        suffix,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="oldName != null" >
+        old_name,
+      </if>
+      <if test="hourseName != null" >
+        hourse_name,
+      </if>
+      <if test="homesteadArea != null" >
+        homestead_area,
+      </if>
+      <if test="floorArea != null" >
+        floor_area,
+      </if>
+      <if test="coveredArea != null" >
+        covered_area,
+      </if>
+      <if test="costEstimates != null" >
+        cost_estimates,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+      <if test="sourceId != null" >
+        source_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="thumb != null" >
+        thumb,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="structureType != null" >
+        structure_type,
+      </if>
+      <if test="modelSize != null" >
+        model_size,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="componentCode != null" >
+        component_code,
+      </if>
+      <if test="componentCodeName != null" >
+        component_code_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceName != null" >
+        #{sourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeFullPath != null" >
+        #{storeFullPath,jdbcType=VARCHAR},
+      </if>
+      <if test="suffix != null" >
+        #{suffix,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldName != null" >
+        #{oldName,jdbcType=VARCHAR},
+      </if>
+      <if test="hourseName != null" >
+        #{hourseName,jdbcType=VARCHAR},
+      </if>
+      <if test="homesteadArea != null" >
+        #{homesteadArea,jdbcType=VARCHAR},
+      </if>
+      <if test="floorArea != null" >
+        #{floorArea,jdbcType=VARCHAR},
+      </if>
+      <if test="coveredArea != null" >
+        #{coveredArea,jdbcType=VARCHAR},
+      </if>
+      <if test="costEstimates != null" >
+        #{costEstimates,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="thumb != null" >
+        #{thumb,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="structureType != null" >
+        #{structureType,jdbcType=VARCHAR},
+      </if>
+      <if test="modelSize != null" >
+        #{modelSize,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="componentCode != null" >
+        #{componentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="componentCodeName != null" >
+        #{componentCodeName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouseExample" resultType="java.lang.Integer" >
+    select count(*) from ag_house
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ag_house
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceName != null" >
+        source_name = #{record.sourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeFullPath != null" >
+        store_full_path = #{record.storeFullPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.suffix != null" >
+        suffix = #{record.suffix,jdbcType=VARCHAR},
+      </if>
+      <if test="record.size != null" >
+        size = #{record.size,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryId != null" >
+        category_id = #{record.categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oldName != null" >
+        old_name = #{record.oldName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hourseName != null" >
+        hourse_name = #{record.hourseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.homesteadArea != null" >
+        homestead_area = #{record.homesteadArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.floorArea != null" >
+        floor_area = #{record.floorArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coveredArea != null" >
+        covered_area = #{record.coveredArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.costEstimates != null" >
+        cost_estimates = #{record.costEstimates,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isShow != null" >
+        is_show = #{record.isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceId != null" >
+        source_id = #{record.sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumb != null" >
+        thumb = #{record.thumb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tableName != null" >
+        table_name = #{record.tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.structureType != null" >
+        structure_type = #{record.structureType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modelSize != null" >
+        model_size = #{record.modelSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.componentCode != null" >
+        component_code = #{record.componentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.componentCodeName != null" >
+        component_code_name = #{record.componentCodeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ag_house
+    set id = #{record.id,jdbcType=VARCHAR},
+      source_name = #{record.sourceName,jdbcType=VARCHAR},
+      store_full_path = #{record.storeFullPath,jdbcType=VARCHAR},
+      suffix = #{record.suffix,jdbcType=VARCHAR},
+      size = #{record.size,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      category_id = #{record.categoryId,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      old_name = #{record.oldName,jdbcType=VARCHAR},
+      hourse_name = #{record.hourseName,jdbcType=VARCHAR},
+      homestead_area = #{record.homesteadArea,jdbcType=VARCHAR},
+      floor_area = #{record.floorArea,jdbcType=VARCHAR},
+      covered_area = #{record.coveredArea,jdbcType=VARCHAR},
+      cost_estimates = #{record.costEstimates,jdbcType=VARCHAR},
+      is_show = #{record.isShow,jdbcType=VARCHAR},
+      source_id = #{record.sourceId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      thumb = #{record.thumb,jdbcType=VARCHAR},
+      table_name = #{record.tableName,jdbcType=VARCHAR},
+      structure_type = #{record.structureType,jdbcType=VARCHAR},
+      model_size = #{record.modelSize,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      component_code = #{record.componentCode,jdbcType=VARCHAR},
+      component_code_name = #{record.componentCodeName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouse" >
+    update ag_house
+    <set >
+      <if test="sourceName != null" >
+        source_name = #{sourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="storeFullPath != null" >
+        store_full_path = #{storeFullPath,jdbcType=VARCHAR},
+      </if>
+      <if test="suffix != null" >
+        suffix = #{suffix,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldName != null" >
+        old_name = #{oldName,jdbcType=VARCHAR},
+      </if>
+      <if test="hourseName != null" >
+        hourse_name = #{hourseName,jdbcType=VARCHAR},
+      </if>
+      <if test="homesteadArea != null" >
+        homestead_area = #{homesteadArea,jdbcType=VARCHAR},
+      </if>
+      <if test="floorArea != null" >
+        floor_area = #{floorArea,jdbcType=VARCHAR},
+      </if>
+      <if test="coveredArea != null" >
+        covered_area = #{coveredArea,jdbcType=VARCHAR},
+      </if>
+      <if test="costEstimates != null" >
+        cost_estimates = #{costEstimates,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="thumb != null" >
+        thumb = #{thumb,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="structureType != null" >
+        structure_type = #{structureType,jdbcType=VARCHAR},
+      </if>
+      <if test="modelSize != null" >
+        model_size = #{modelSize,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="componentCode != null" >
+        component_code = #{componentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="componentCodeName != null" >
+        component_code_name = #{componentCodeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgHouse" >
+    update ag_house
+    set source_name = #{sourceName,jdbcType=VARCHAR},
+      store_full_path = #{storeFullPath,jdbcType=VARCHAR},
+      suffix = #{suffix,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      old_name = #{oldName,jdbcType=VARCHAR},
+      hourse_name = #{hourseName,jdbcType=VARCHAR},
+      homestead_area = #{homesteadArea,jdbcType=VARCHAR},
+      floor_area = #{floorArea,jdbcType=VARCHAR},
+      covered_area = #{coveredArea,jdbcType=VARCHAR},
+      cost_estimates = #{costEstimates,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=VARCHAR},
+      source_id = #{sourceId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      thumb = #{thumb,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      structure_type = #{structureType,jdbcType=VARCHAR},
+      model_size = #{modelSize,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      component_code = #{componentCode,jdbcType=VARCHAR},
+      component_code_name = #{componentCodeName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

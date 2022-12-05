@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgDataSituationMapper">
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgDataSituation">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="DATA_RESOURCE_NUM" property="dataResourceNum" jdbcType="INTEGER"/>
+        <result column="DATA_RESOURCE_SIZE" property="dataResourceSize" jdbcType="BIGINT"/>
+        <result column="STATISTICAL_TIME" property="statisticalTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="statisticstMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgDataSituation">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="DATA_RESOURCE_NUM" property="dataResourceNum" jdbcType="INTEGER"/>
+        <result column="DATA_RESOURCE_SIZE" property="dataResourceSize" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgDataSituation">
+        INSERT INTO AG_DATA_SITUATION(ID,DATA_RESOURCE_NUM,DATA_RESOURCE_SIZE,STATISTICAL_TIME)
+        VALUES (#{id,jdbcType=VARCHAR},#{dataResourceNum,jdbcType=INTEGER},
+        #{dataResourceSize,jdbcType=BIGINT},#{statisticalTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="statisticsCountAndSize" resultMap="statisticstMap">
+        select sum(DATA_SIZE) DATA_RESOURCE_SIZE,count(1) DATA_RESOURCE_NUM  from AG_DATA_OVERVIEW
+    </select>
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from AG_DATA_SITUATION ORDER by STATISTICAL_TIME ASC
+    </select>
+    <select id="getResourceSituationByTime" resultMap="BaseResultMap">
+        SELECT * FROM AG_DATA_SITUATION
+        <where>
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    <if test="startDay != null and startDay != ''">
+                        and STATISTICAL_TIME &gt;= to_date(#{startDay},'yyyy-mm-dd hh24:mi:ss')
+                    </if>
+                    <if test="endDay != null and endDay != ''">
+                        and STATISTICAL_TIME &lt;= to_date(#{endDay},'yyyy-MM-dd hh24:mi:ss')
+                    </if>
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    <if test="startDay != null and startDay != ''">
+                        and STATISTICAL_TIME &gt;= #{startDay}
+                    </if>
+                    <if test="endDay != null and endDay != ''">
+                        and STATISTICAL_TIME &lt;= #{endDay}
+                    </if>
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    <if test="startDay != null and startDay != ''">
+                        and STATISTICAL_TIME &gt;= TO_TIMESTAMP(#{startDay},'yyyy-mm-dd hh24:mi:ss')
+                    </if>
+                    <if test="endDay != null and endDay != ''">
+                        and STATISTICAL_TIME &lt;= TO_TIMESTAMP(#{endDay},'yyyy-MM-dd hh24:mi:ss')
+                    </if>
+                </when>
+            </choose>
+        </where>
+        ORDER BY STATISTICAL_TIME desc
+    </select>
+</mapper>

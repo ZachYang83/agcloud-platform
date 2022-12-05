@@ -1,0 +1,229 @@
+<!--@Author: ZL-->
+<!--@Date:   2019/5/14-->
+<!--@Last Modified by:   ZL-->
+<!--@Last Modified time: $ $-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>
+        奥格城市信息模型平台AGCIM-iServer
+    </title>
+    <link rel="stylesheet" href="../../../../../static/agcloud/framework/js-lib/element-2/element.css"
+        th:href="@{/agcloud/framework/js-lib/element-2/element.css}" />
+<!--    <link rel="stylesheet" href="../../../../../static/agcloud/framework/icon-lib/agcloud-fonts/iconfont.css"-->
+<!--        th:href="@{/agcloud/framework/icon-lib/agcloud-fonts/iconfont.css}">-->
+    <link rel="stylesheet" href="../../../../../static/agcloud/framework/ui-schemes/default/css/iconfont.css"
+          th:href="@{/agcloud/framework/ui-schemes/default/css/iconfont.css}">
+    <link rel="stylesheet" href="../../../../../static/agcloud/framework/ui-schemes/default/css/index.css"
+        th:href="@{/agcloud/framework/ui-schemes/default/css/index.css}">
+    <script>
+        var ctx = '[[@{/}]]';
+       // var ctx = 'http://192.168.11.15:8290/agcloud/';
+    </script>
+</head>
+
+
+<body class="style-white">
+    <div id="portal" class="menu-page" v-cloak>
+        <!-- header start -->
+        <header class="protal-header">
+            <!-- logo-box -->
+            <div class="logo-box">
+                <img src="../../../../../static/agcloud/framework/ui-schemes/default/images/login_tag.png"
+                    th:src="@{/agcloud/framework/ui-schemes/default/images/login_tag.png}"
+                    alt="login_tag">
+                <!--<img src="../../../../../static/agcloud/framework/ui-schemes/default/images/login_tag.png" v-else-->
+                    <!--:src="ctx+portalLogoUrl" alt="portalLogoUrl">-->
+                <h2 style="font-size: 18px">奥格城市信息模型平台AGCIM-iServer（5.1.12.29）</h2>
+                <!--<h2 v-else>{{portalTitle}}</h2>-->
+            </div>
+            <!-- header-menu-box -->
+            <div class="header-menu-box">
+                <ul class="header-menu_nav">
+                    <li v-for="(item,index) in headerDataShow" class="header-menu_item show"
+                        :class="index==headerActive?'header-menu_item-active':''"
+                        @click="headerChangeMenu(item,index,$event)">
+                        <i class="menu-icon el-icon-tickets"
+                            :class="item.menuIconCss?item.menuIconCss:'el-icon-tickets'"></i>
+                        <span class="m-menu__link-text">{{item.menuName}}</span>
+                    </li>
+                    <li v-show="showMenuMore" class="header-menu_item pull-more" @mouseenter="showMoreItem=true"
+                        @mouseleave="showMoreItem=false">
+                        <b class="ag ag-ellipsis-v"></b>
+                        <ul class="more-tabs" v-show="showMoreItem">
+                            <li v-for="(itemHide,ind) in hideHeaderData" @click="headerChangeMenu(itemHide,-1,$event)">
+                                <i class="more-tabs-icon el-icon-tickets"
+                                    :class="itemHide.menuIconCss?itemHide.menuIconCss:'el-icon-tickets'"></i>
+                                <span class="more-tabs-text">{{itemHide.menuName}}</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- user-info-box -->
+            <div class="user-info-box">
+                <li class="user-info">
+                    <el-dropdown>
+                        <span class="el-dropdown-link">
+                            <dl>
+                                <dd>{{loginName}}</dd>
+                                <dd class="userName">{{userName}}</dd>
+                            </dl>
+                            <div class="user-photo">
+                                <img v-if="userSex==0"
+                                    src="../../../../../static/agcloud/framework/ui-schemes/default/images/user_man.jpg"
+                                    th:src="@{/agcloud/framework/ui-schemes/default/images/user_man.jpg}">
+                                <img v-else
+                                    src="../../../../../static/agcloud/framework/ui-schemes/default/images/user_woman.jpg"
+                                    th:src="@{/agcloud/framework/ui-schemes/default/images/user_woman.jpg}">
+                            </div>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>
+                                <p class="user-detail" @click="showUserInfo=true"><i class="ag ag-user"></i>个人中心</p>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <p class="edit-password" @click="editPasswordFlag=true"><i class="ag ag-lock"></i>修改密码
+                                </p>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <p class="login-out" @click="logout($event)"><i class="ag ag-unlock"></i>退出登陆</p>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </li>
+                <li>
+                    <i class="icons icons-notice"
+                        @click="addTab($event,{menuName:'公告',id:'noticeDetail',menuOuterUrl: ctx+'rest/aoa/notice/content/viewNotice?businessFlag=busiTypeDefault'},activeTabIframe,index)"></i>
+                </li>
+                <li>
+                    <i class="icons icons-message"
+                        @click="addTab($event,{menuName:'我的消息',id:'myMessge',menuOuterUrl: ctx+'/aoa/msg/index'},activeTabIframe,index)">
+                        <el-badge v-show="messgeCount>0" :value="messgeCount"></el-badge>
+                    </i>
+                </li>
+                <li>
+                    <i class="icons icons-exit" @click="logout"></i>
+                </li>
+            </div>
+        </header>
+        <!-- header end -->
+
+        <!-- 无侧边栏 start -->
+        <div v-show="isHasMenu" class="content-box" :style="{ height: (curHeight-60) + 'px'}">
+            <template v-for="item in isNomenuArr">
+                <iframe v-show="isCurIframe.id == item.id" :src="item.menuOuterUrl" :id="item.id" frameborder="0" name="_blank" width="100%" height="100%"
+                        allowfullscreen></iframe>
+            </template>
+        </div>
+        <!-- 无侧边栏 end -->
+
+        <!-- 侧边栏 start -->
+        <div v-show="!isHasMenu" class="content-box" :style="{ height: (curHeight-60) + 'px'}">
+            <div class="l-box">
+                <el-menu :default-active="defaultActive" class="el-menu-vertical-demo" :collapse="leftClosed">
+                    <template v-for="(item, index) in leftData">
+                        <!-- 是否2级menu -->
+                        <template v-if="item.childrenList">
+                            <el-submenu :index="String(index)" :id="item.id">
+                                <template slot="title">
+                                    <i :class="item.menuIconCss?item.menuIconCss:'el-icon-menu'"></i>
+                                    <span slot="title">{{item.menuName}}</span>
+                                </template>
+                                <el-menu-item v-for="(itemChild,ind) in item.childrenList" :key="itemChild.id"
+                                    :index="index+'-'+ind" :id="itemChild.id"
+                                    @click="addTab($event,itemChild,activeTabIframe,ind)">
+                                    {{itemChild.menuName}}
+                                </el-menu-item>
+                            </el-submenu>
+                        </template>
+
+                        <!-- 是否2级menu -->
+                        <template v-if="!item.childrenList">
+                            <el-menu-item @click="addTab($event,item,activeTabIframe,index)" ref="elMenu"
+                                :index="String(index)">
+                                <i :class="item.menuIconCss?item.menuIconCss:'el-icon-tickets'"></i>
+                                <span slot="title">{{item.menuName}}</span>
+                            </el-menu-item>
+                        </template>
+
+                    </template>
+                </el-menu>
+            </div>
+            <div class="r-box">
+                <!-- 顶部选项卡 start -->
+                <div class="top-tabs">
+                    <span class="icon-fold" :class="leftClosed?'el-icon-s-unfold':'el-icon-s-fold'"
+                        @click="changeLeftClosed(leftClosed)"></span>
+                    <el-tabs v-model="activeTabIframe" closable @tab-remove="removeTab" @tab-click="changeTab"
+                        @contextmenu.native.prevent="tabMouseRightClick">
+                        <el-tab-pane v-for="(item, index) in activeTabData" :key="item.id" :label="item.menuName"
+                            :name="item.id">
+                            <div class="content-iframe" :style="{ height: (curHeight-100) + 'px' }">
+                                <iframe :src="item.menuOuterUrl" frameborder="0" name="_blank" width="100%"
+                                    height="100%" allowfullscreen></iframe>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+                <!-- 顶部选项卡 end -->
+                <div class="popup_menu" v-show="showTabOpt" :style="{top:tabOptTop+10+'px',left:tabOptleft+10+'px'}">
+                    <ul>
+                        <li @click="closeOther()">
+                            <a href="javascript:;"><i class="el-icon-close"></i> 关闭其他标签页</a>
+                        </li>
+                        <li @click="closeLeft()">
+                            <a href="javascript:;"><i class="el-icon-close"></i> 关闭左边标签页</a>
+                        </li>
+                        <li @click="closeRight()">
+                            <a href="javascript:;"><i class="el-icon-close"></i> 关闭右边标签页</a>
+                        </li>
+                        <li @click="toAPIUrl()">
+                            <a href="javascript:;"><i class="el-icon-link"></i>查看接口</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- 侧边栏 end -->
+
+
+        <!--修改密码弹窗 start-->
+        <el-dialog title="修改密码" class="edit-password" :visible.sync="editPasswordFlag" top="30vh" width="460px"
+            @closed="clearDialogData('editPasswordData')">
+            <el-form :model="editPasswordData" :rules="editPasswordRule" ref="editPasswordData">
+                <el-form-item label="请输入原密码：" label-width="160px" prop="oldPassword">
+                    <el-input v-model="editPasswordData.oldPassword" type="password"></el-input>
+                </el-form-item>
+                <el-form-item label="请输入新密码：" label-width="160px" prop="newPassword">
+                    <el-input v-model="editPasswordData.newPassword" type="password"></el-input>
+                </el-form-item>
+                <el-form-item label="请再次输入新密码：" label-width="160px" prop="newPasswordCheck">
+                    <el-input v-model="editPasswordData.newPasswordCheck" type="password"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="editPasswordFlag = false;">取消</el-button>
+                <el-button size="small" type="primary" @click="editPasswordSubmit">保存</el-button>
+            </div>
+        </el-dialog>
+        <!--修改密码弹窗 end-->
+    </div>
+    <script src="../../../../../static/agcloud/framework/js-lib/jquery-v1/jquery.min.js"
+        th:src="@{/agcloud/framework/js-lib/jquery-v1/jquery.min.js}"></script>
+    <script src="../../../../../static/agcloud/framework/js-lib/vue-v2/vue.js"
+        th:src="@{/agcloud/framework/js-lib/vue-v2/vue.js}"></script>
+    <script src="../../../../../static/agcloud/framework/js-lib/element-2/element.js"
+        th:src="@{/agcloud/framework/js-lib/element-2/element.js}"></script>
+    <script src="../../../../../static/agcloud/framework/js-lib/agcloud-lib/js/common.js"
+        th:src="@{/agcloud/framework/js-lib/agcloud-lib/js/common.js}"></script>
+    <script src="../../../../../static/agcloud/framework/ui-schemes/default/js/index.js"
+        th:src="@{/agcloud/framework/ui-schemes/default/js/index.js}"></script>
+    <!--END:js文件-->
+</body>
+
+</html>

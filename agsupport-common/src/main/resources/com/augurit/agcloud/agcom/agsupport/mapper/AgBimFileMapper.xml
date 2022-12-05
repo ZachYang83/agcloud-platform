@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimFileMapper">
+    <resultMap id="bimFileMap" type="AgBimFile">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="alias" property="alias"/>
+        <result column="service_url" property="serviceUrl"/>
+        <result column="service_factor_url" property="serviceFactorUrl"/>
+        <result column="approval_unit" property="approvalUnit"/>
+        <result column="construction_unit" property="constructionUnit"/>
+        <result column="purpose" property="purpose"/>
+        <result column="remarks" property="remarks"/>
+        <result column="bim_md5" property="bimMd5"/>
+        <result column="relation_service_list" property="relationServiceList"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="sort" property="sort"/>
+        <result column="state" property="state"/>
+        <result column="project_id" property="projectId"/>
+        <association property="bimVersion" javaType="AgBimVersion">
+            <id column="v_id" property="id"/>
+            <result column="pk_id" property="pkId"/>
+            <result column="change_name" property="changeName"/>
+            <result column="bim_path" property="bimPath"/>
+            <result column="bim_extension" property="bimExtension"/>
+            <result column="bim_length" property="bimLength"/>
+            <result column="bim_url" property="bimUrl"/>
+            <result column="file_name" property="fileName"/>
+            <result column="is_current" property="isCurrent"/>
+        </association>
+    </resultMap>
+    <sql id="allColumns">
+         ID id,
+         NAME "name",
+         ALIAS alias,
+         SERVICE_URL serviceUrl,
+         SERVICE_FACTOR_URL serviceFactorUrl,
+         APPROVAL_UNIT approvalUnit,
+         CONSTRUCTION_UNIT constructionUnit,
+         PURPOSE purpose,
+         REMARKS remarks,
+         BIM_MD5 bimMd5,
+         RELATION_SERVICE_LIST relationServiceList,
+         CREATE_NAME createName,
+         CREATE_TIME createTime,
+         UPDATE_TIME updateTime,
+         SORT sort,
+         STATE state,
+         PROJECT_ID projectId
+    </sql>
+
+    <!--根据id获取数据,测试测试-->
+    <select id="getById" resultType="AgBimFile" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_FILE WHERE ID = #{id}
+    </select>
+
+    <!--获取所有数据-->
+    <select id="getAll" resultType="AgBimFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_FILE order by sort asc
+    </select>
+
+    <!--根据id删除一条数据-->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM AG_BIM_FILE WHERE ID = #{id}
+    </delete>
+
+    <!--删除更多数据-->
+    <delete id="deleteMany">
+        DELETE FROM AG_BIM_FILE
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--添加一条数据-->
+    <insert id="add" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimFile">
+        INSERT INTO AG_BIM_FILE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="alias != null">
+                alias,
+            </if>
+            <if test="serviceUrl != null">
+                service_url,
+            </if>
+            <if test="serviceFactorUrl != null">
+                service_factor_url,
+            </if>
+            <if test="approvalUnit != null">
+                approval_unit,
+            </if>
+            <if test="constructionUnit != null">
+                construction_unit,
+            </if>
+            <if test="purpose != null">
+                purpose,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+            <if test="bimMd5 != null">
+                bimMd5,
+            </if>
+            <if test="relationServiceList != null">
+                relation_service_list,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="alias != null">
+                #{alias},
+            </if>
+            <if test="serviceUrl != null">
+                #{serviceUrl},
+            </if>
+            <if test="serviceFactorUrl != null">
+                #{serviceFactorUrl},
+            </if>
+            <if test="approvalUnit != null">
+                #{approvalUnit},
+            </if>
+            <if test="constructionUnit != null">
+                #{constructionUnit},
+            </if>
+            <if test="purpose != null">
+                #{purpose},
+            </if>
+            <if test="remarks != null">
+                #{remarks},
+            </if>
+            <if test="bimMd5 != null">
+                #{bimMd5},
+            </if>
+            <if test="relationServiceList != null">
+                #{relationServiceList},
+            </if>
+            <if test="createName != null">
+                #{createName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="projectId != null">
+                #{projectId},
+            </if>
+        </trim>
+    </insert>
+
+    <!--编辑一条数据-->
+    <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimFile">
+        UPDATE AG_BIM_FILE
+        <set>
+            <if test="null != name">
+                NAME = #{name},
+            </if>
+            <if test="null != alias">
+                ALIAS = #{alias},
+            </if>
+            <if test="null != serviceUrl">
+                SERVICE_URL = #{serviceUrl},
+            </if>
+            <if test="null != serviceFactorUrl">
+                SERVICE_FACTOR_URL = #{serviceFactorUrl},
+            </if>
+            <if test="null != approvalUnit">
+                APPROVAL_UNIT = #{approvalUnit},
+            </if>
+            <if test="null != constructionUnit">
+                CONSTRUCTION_UNIT = #{constructionUnit},
+            </if>
+            <if test="null != purpose">
+                PURPOSE = #{purpose},
+            </if>
+            <if test="null != remarks">
+                REMARKS = #{remarks},
+            </if>
+            <if test="null != bimMd5">
+                BIM_MD5 = #{bimMd5},
+            </if>
+            <if test="null != relationServiceList">
+                RELATION_SERVICE_LIST = #{relationServiceList},
+            </if>
+            <if test="null != sort">
+                SORT = #{sort},
+            </if>
+            <if test="null != updateTime">
+                UPDATE_TIME = #{updateTime},
+            </if>
+            <if test="null != state">
+                STATE = #{state},
+            </if>
+            <if test="null != projectId">
+                PROJECT_ID = #{projectId}
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+
+    <!--特殊条件And分页查询-->
+    <select id="getByAndKeyWords" resultType="AgBimFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_FILE
+        WHERE
+        1 = 1
+        <if test="null != name">
+            AND NAME = #{name}
+        </if>
+        <if test="null != domain">
+            AND DOMAIN = #{domain}
+        </if>
+        <if test="null != usage">
+            AND USAGE = #{usage}
+        </if>
+        <if test="null != alias">
+            AND ALIAS = #{alias}
+        </if>
+        <if test="null != purpose">
+            AND PURPOSE = #{purpose}
+        </if>
+        <if test="null != remarks">
+            AND REMARKS = #{remarks}
+        </if>
+        ORDER BY SORT asc
+    </select>
+
+    <!--特殊条件Or分页查询-->
+    <select id="getByOrKeyWords" resultMap="bimFileMap">
+        SELECT f.*,v.id v_id,v.change_name,v.file_name,v.is_current,v.bim_path,v.bim_length,v.bim_url,v.bim_extension,v.pk_id
+        FROM AG_BIM_FILE f left join ag_bim_version v on v.pk_id = f.id and v.is_current = 'IN_USE'
+        WHERE project_id = #{projectId}
+        <if test="null != keyword">
+            and (NAME LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%')
+            OR ALIAS LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%')
+            OR PURPOSE LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%')
+            OR REMARKS LIKE CONCAT(CONCAT('%', TRIM(#{keyword})), '%'))
+        </if>
+        ORDER BY sort asc,create_time desc
+    </select>
+
+    <!--获取更多数据-->
+    <select id="getByIds" resultType="AgBimFile">
+        SELECT * FROM AG_BIM_FILE
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--根据md5获取数据-->
+    <select id="getByMd5" resultType="AgBimFile" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_FILE WHERE BIM_MD5 = #{bimMd5}
+    </select>
+
+    <select id="publishing" resultType="int" parameterType="java.lang.String">
+        select count(id)  from AG_BIM_FILE where STATE='1' and ID != #{id}
+    </select>
+
+
+
+    <select id="findByProjectId" resultType="AgBimFile">
+        select <include refid="allColumns"/> from ag_bim_file where project_id = #{projectId} order by sort asc,create_time desc
+    </select>
+
+</mapper>

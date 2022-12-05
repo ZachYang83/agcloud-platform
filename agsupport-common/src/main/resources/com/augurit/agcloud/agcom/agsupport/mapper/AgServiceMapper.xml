@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgServiceMapper">
+
+    <sql id="agServiceAllColumns">
+        ID id,
+        NAME "name",
+        NAME_CN nameCn,
+        URL url,
+        LAYER_TYPE layerType,
+        FEATURE_TYPE featureType,
+        ADD_FLAG addFlag,
+        LAYER_TABLE layerTable,
+        PARAM_ID paramId,
+        IS_PROXY isProxy,
+        PROXY_URL proxyUrl,
+        VECTOR_LAYER_ID vectorLayerId,
+        EXTENT extent,
+        DATA "data",
+        METADATA_ID metadataId
+    </sql>
+    <sql id="agServiceLogAllColumns">
+        t.ID  id,
+        t.USER_ID  userId,
+        t.SERVICE_ID  serviceId,
+        t.IP  ip,
+        t.URL  url,
+        t.ACCESS_TIME  accessTime,
+        t.BYTE_SIZE  byteSize,
+        t.TOTAL_TIMES  totalTimes,
+        t.SERVICE_OWNER serviceOwner,
+        t.SERVER_IP serverIp,
+        t.BAD_REQUEST badRequest
+    </sql>
+    <sql id="agServiceUserinfoAllColumns">
+        t.ID  id,
+        t.USER_ID  userId,
+        t.SERVICE_ID  serviceId,
+        t.FLAG  flag,
+        t.APPLY_OPINION  applyOpinion,
+        t.APPROVE_OPINION  approveOpinion,
+        t.APPLY_TIME  applyTime,
+        t.APPROVE_TIME  approveTime,
+        t.UUID  uuid,
+        t.IP  ip
+    </sql>
+    <!--根据id查询 用户关系对象-->
+    <select id="getAgServiceUserinfoById" resultType="AgServiceUserinfo">
+        SELECT
+        <include refid="agServiceUserinfoAllColumns"/>
+        FROM ag_service_userinfo t
+        <where>
+            id=#{id}
+        </where>
+    </select>
+    <!--更新用户关系对象，审核-->
+    <update id="updateAgServiceUserinfo">
+        UPDATE ag_service_userinfo
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="serviceId != null">
+                service_id = #{serviceId},
+            </if>
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+            <if test="ip != null">
+                ip = #{ip},
+            </if>
+            <if test="uuid != null">
+                uuid = #{uuid},
+            </if>
+            <if test="approveTime != null">
+                approve_time = #{approveTime},
+            </if>
+            <if test="applyTime != null">
+                apply_time = #{applyTime},
+            </if>
+            <if test="approveOpinion != null">
+                approve_opinion = #{approveOpinion},
+            </if>
+            <if test="applyOpinion != null">
+                apply_opinion = #{applyOpinion}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+    <!--根据条件 分页查询所有 用户关系对象-->
+    <select id="listAgServiceUserinfo" resultType="AgServiceUserinfo">
+        SELECT
+        <include refid="agServiceUserinfoAllColumns"/>,a.user_name userName,b.name "name"
+        FROM ag_service_userinfo t,ag_user a,ag_layer b
+        <where>
+            1 = 1
+            <if test="flag != null">
+                AND t.flag = #{flag}
+            </if>
+            <if test="ip != null">
+                AND t.ip like CONCAT('%', CONCAT(#{ip}, '%'))
+            </if>
+            <if test="name != null">
+                AND b.name like CONCAT('%', CONCAT(#{name}, '%'))
+            </if>
+            <if test="userName != null">
+                AND a.user_name like CONCAT('%', CONCAT(#{userName}, '%'))
+            </if>
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    <if test="applyTimeStart != null">
+                        AND t.apply_time &gt;= to_date(#{applyTimeStart}, 'yyyy-MM-dd')
+                    </if>
+                    <if test="applyTimeEnd != null">
+                        AND t.apply_time &lt;= to_date(#{applyTimeEnd}, 'yyyy-MM-dd')
+                    </if>
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    <if test="applyTimeStart != null">
+                        AND t.apply_time &gt;= #{applyTimeStart}
+                    </if>
+                    <if test="applyTimeEnd != null">
+                        AND t.apply_time &lt;= #{applyTimeEnd}
+                    </if>
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    <if test="applyTimeStart != null">
+                        AND t.apply_time &gt;= to_date(#{applyTimeStart},'yyyy-MM-dd')
+                    </if>
+                    <if test="applyTimeEnd != null">
+                        AND t.apply_time &lt;= to_date(#{applyTimeEnd},'yyyy-MM-dd')
+                    </if>
+                </when>
+            </choose>
+            AND a.id = t.user_id AND b.id = t.service_id
+        </where>
+    </select>
+    <!--对接 agcloud opus 组织用户机构，根据条件 分页查询所有 用户关系对象-->
+    <select id="listAgServiceUserinfoOpus" resultType="AgServiceUserinfo">
+        SELECT
+        <include refid="agServiceUserinfoAllColumns"/>,b.name "name"
+        FROM ag_service_userinfo t,ag_layer b
+        <where>
+            1 = 1
+            <if test="flag != null">
+                AND t.flag = #{flag}
+            </if>
+            <if test="ip != null">
+                AND t.ip like CONCAT('%', CONCAT(#{ip}, '%'))
+            </if>
+            <if test="name != null">
+                AND b.name like CONCAT('%', CONCAT(#{name}, '%'))
+            </if>
+            <choose>
+                <when test="_databaseId == 'oracle'">
+                    <if test="applyTimeStart != null">
+                        AND t.apply_time &gt;= to_date(CONCAT(#{applyTimeStart}, ' 00:00:00'), 'yyyy-MM-dd HH24:MI:SS')
+                    </if>
+                    <if test="applyTimeEnd != null">
+                        AND t.apply_time &lt;= to_date(CONCAT(#{applyTimeEnd}, ' 23:59:59'), 'yyyy-MM-dd HH24:MI:SS')
+                    </if>
+                </when>
+                <when test="_databaseId == 'mysql'">
+                    <if test="applyTimeStart != null">
+                        AND t.apply_time &gt;= #{applyTimeStart}
+                    </if>
+                    <if test="applyTimeEnd != null">
+                        AND t.apply_time &lt;= #{applyTimeEnd}
+                    </if>
+                </when>
+                <when test="_databaseId == 'postgresql'">
+                    <if test="applyTimeStart != null">
+                        AND t.apply_time &gt;= #{applyTimeStart}
+                    </if>
+                    <if test="applyTimeEnd != null">
+                        AND t.apply_time &lt;= #{applyTimeEnd}
+                    </if>
+                </when>
+
+            </choose>
+            AND b.id = t.service_id
+        </where>
+    </select>
+    <!--按用户id查询-->
+    <select id="findListByUserId" resultType="AgServiceUserinfo">
+        SELECT
+        <include refid="agServiceUserinfoAllColumns"/>
+        FROM
+        ag_service_userinfo t
+        WHERE
+        t.user_id = #{userId}
+    </select>
+
+    <!--按服务id查询-->
+    <select id="findListByServiceId" resultType="AgServiceUserinfo">
+        SELECT
+        <include refid="agServiceUserinfoAllColumns"/>
+        FROM
+        ag_service_userinfo t
+        WHERE
+        t.service_id = #{serviceId}
+    </select>
+
+    <!--删除服务用户关系对象-->
+    <delete id="deleteAgServiceUserinfo">
+        DELETE FROM ag_service_userinfo
+        WHERE
+        id = #{id}
+    </delete>
+
+    <!-- 根据图层id批量删除服务用户信息 -->
+    <delete id="deleteAgServiceUserinfoBatch">
+        DELETE FROM ag_service_userinfo
+        WHERE
+        service_id in
+        <foreach collection="layerIds" item="layerId" open="(" separator="," close=")">
+            #{layerId}
+        </foreach>
+    </delete>
+
+    <!--根据服务id查询该条服务的服务访问日志情况，返回成功访问总数，花费总时间，失败访问次数-->
+    <select id="getLogByServiceId" resultType="Map">
+        SELECT
+        SUM(total_times) AS request_total_times,COUNT(total_times) AS total_times_count,
+        SUM(bad_request) bad_request, COUNT(bad_request) AS bad_request_count
+        FROM ag_service_log t
+        WHERE t.service_id = #{serviceId}
+    </select>
+
+    <!--分页查询所有服务访问日志-->
+    <select id="listAgServiceLog" resultType="AgServiceLog">
+        SELECT
+        <include refid="agServiceLogAllColumns"/>,b.name
+        FROM ag_service_log t,ag_layer b
+        <where>
+            1 = 1 AND b.id = t.service_id
+            <if test="url != null">
+                AND t.url like CONCAT('%', CONCAT(#{url}, '%'))
+            </if>
+            <if test="ip != null">
+                AND t.ip like CONCAT('%', CONCAT(#{ip}, '%'))
+            </if>
+            <if test="name != null">
+                AND b.name like CONCAT('%', CONCAT(#{name}, '%'))
+            </if>
+            <if test="accessTimeStart != null">
+                AND t.access_time &gt;= #{accessTimeStart}
+            </if>
+            <if test="accessTimeEnd != null">
+                AND t.access_time &lt; #{accessTimeEnd}
+            </if>
+            <if test="serviceOwner != null">
+                AND t.SERVICE_OWNER &lt;= #{serviceOwner}
+            </if>
+            <if test="serverIp != null">
+                AND t.SERVER_IP &lt;= #{serverIp}
+            </if>
+        </where>
+        ORDER BY t.ACCESS_TIME DESC
+    </select>
+    <!--对接 agcloud opus 组织用户机构,分页查询所有服务访问日志-->
+    <select id="listAgServiceLogOpus" resultType="AgServiceLog">
+        SELECT
+        <include refid="agServiceLogAllColumns"/>,b.name
+        FROM ag_service_log t,ag_layer b
+        <where>b.id = t.service_id and t.ACCESS_TIME is not null
+            <if test="agServiceLog.url != null">
+                AND t.url like CONCAT('%', CONCAT(#{agServiceLog.url}, '%'))
+            </if>
+            <if test="agServiceLog.ip != null">
+                AND t.ip like CONCAT('%', CONCAT(#{agServiceLog.ip}, '%'))
+            </if>
+            <if test="agServiceLog.name != null">
+                AND b.name like CONCAT('%', CONCAT(#{agServiceLog.name}, '%'))
+            </if>
+            <if test="agServiceLog.accessTimeStart != null">
+                AND t.access_time &gt;= #{agServiceLog.accessTimeStart}
+            </if>
+            <if test="agServiceLog.accessTimeEnd != null">
+                AND t.access_time &lt; #{agServiceLog.accessTimeEnd}
+            </if>
+            <if test="agServiceLog.serviceOwner != null">
+                AND t.SERVICE_OWNER = #{agServiceLog.serviceOwner}
+            </if>
+            <if test="agServiceLog.serverIp != null">
+                AND t.SERVER_IP like CONCAT('%', CONCAT(#{agServiceLog.serverIp}, '%'))
+            </if>
+            <if test="agServiceLog.userName==null or agServiceLog.userName.length()==0">
+                <!--userName为空，代表查询所有日志，我知道这里可以省略，但是请不要删掉，方便理解-->
+                And 1 = 1
+            </if>
+            <if test="agServiceLog.userName!=null and agServiceLog.userName.length()!=0 and userIds.size() == 0 ">
+                <!--查询用户日志，但该用户不存在，不返回记录-->
+                And 1 != 1
+            </if>
+            <if test="agServiceLog.userName != null and agServiceLog.userName.length() != 0 and userIds.size() > 0 ">
+                <!--查询用户日志，用户存在，返回该用户的记录-->
+                And USER_ID IN
+                <foreach collection="userIds" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY t.ACCESS_TIME DESC
+
+    </select>
+
+    <!--根据用户名分组查询访问次数前十的记录-->
+    <select id="getLogOrderByUser" resultType="AgServiceLog">
+        SELECT * FROM(
+        SELECT
+        SUM(t.TOTAL_TIMES) totalTimes,a.user_name userName
+        FROM ag_service_log t,ag_user a,ag_layer b
+        WHERE
+        a.id = t.user_id AND b.id = t.service_id
+        GROUP BY
+        a.USER_NAME
+        ORDER BY
+        totalTimes DESC) c
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                WHERE ROWNUM &lt;= 9
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT
+                9
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT
+                9
+            </when>
+        </choose>
+    </select>
+    <!--对接 agcloud opus 组织用户机构，根据用户名分组查询访问次数前十的记录-->
+    <select id="getLogOrderByUserOpus" resultType="AgServiceLog">
+        SELECT tt.* FROM(
+        SELECT
+        SUM(t.TOTAL_TIMES) totalTimes,t.user_id userId
+        FROM ag_service_log t,ag_layer b
+        WHERE
+        b.id = t.service_id
+        GROUP BY
+        t.user_id
+        ORDER BY
+        totalTimes DESC) tt
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                WHERE ROWNUM &lt;= 9
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT
+                9
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT
+                9
+            </when>
+        </choose>
+    </select>
+
+    <!--根据服务名称分组查询访问次数前十的记录-->
+    <select id="getLogOrderByService" resultType="AgServiceLog">
+        SELECT * FROM (
+        SELECT
+        SUM(t.TOTAL_TIMES) totalTimes,b.name "name"
+        FROM ag_service_log t,ag_user a,ag_layer b
+        WHERE
+        a.id = t.user_id AND b.id = t.service_id
+        GROUP BY
+        b.name
+        ORDER BY
+        totalTimes DESC
+        ) c
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                WHERE ROWNUM &lt;= 9
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT
+                9
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT
+                9
+            </when>
+        </choose>
+    </select>
+    <!---对接 agcloud opus 组织用户机构,根据服务名称分组查询访问次数前十的记录-->
+    <select id="getLogOrderByServiceOpus" resultType="AgServiceLog">
+        SELECT * FROM (
+        SELECT
+        SUM(t.TOTAL_TIMES) totalTimes,b.name "name"
+        FROM ag_service_log t,ag_layer b
+        WHERE
+        b.id = t.service_id
+        GROUP BY
+        b.name
+        ORDER BY
+        totalTimes DESC
+        ) n
+        <choose>
+            <when test="_databaseId == 'oracle'">
+                WHERE ROWNUM &lt;= 9
+            </when>
+            <when test="_databaseId == 'mysql'">
+                LIMIT
+                9
+            </when>
+            <when test="_databaseId == 'postgresql'">
+                LIMIT
+                9
+            </when>
+        </choose>
+    </select>
+
+    <!--根据id查询服务访问日志-->
+    <select id="getAgServiceLogById" resultType="AgServiceLog">
+        SELECT
+        <include refid="agServiceLogAllColumns"/>
+        FROM ag_service_log
+        WHERE
+        id = #{id}
+    </select>
+    <!--根据id查询服务图层数据-->
+    <select id="getAgServiceById" resultType="AgLayer">
+        SELECT
+        <include refid="agServiceAllColumns"/>
+        FROM ag_layer
+        WHERE
+        id = #{id}
+    </select>
+    <insert id="insertAgServiceUserinfo" parameterType="AgServiceUserinfo">
+        insert into AG_SERVICE_USERINFO (
+        ID,USER_ID,SERVICE_ID,FLAG,APPLY_OPINION,APPROVE_OPINION,APPLY_TIME,APPROVE_TIME,UUID,IP
+        )  values  (
+        #{id},#{userId},#{serviceId},#{flag},#{applyOpinion},#{approveOpinion},#{applyTime},#{approveTime},#{uuid},#{ip}
+        )
+    </insert>
+
+    <!--根据label获取图层-->
+    <select id="findByLabel" resultType="AgMetadata">
+        SELECT
+        t2.id id,
+        t2.owner "owner",
+        t2.create_time createTime,
+        t2.picture picture,
+        t2.label "label",
+        t2.illustration illustration
+        FROM ag_metadata t2
+        WHERE
+        t2.label LIKE concat(concat('%',#{label}),'%')
+        <if test="asc == true">
+            ORDER BY t2.create_time ASC
+        </if>
+        <if test="asc == false">
+            ORDER BY t2.create_time DESC
+        </if>
+    </select>
+
+    <!--根据label统计图层个数-->
+    <select id="countByLabel" resultType="int">
+        SELECT count(1)
+        FROM ag_layer t1, ag_metadata t2
+        WHERE
+        t1.metadata_id = t2.id
+        AND
+        t2.label LIKE concat(concat('%',#{label}),'%') ORDER BY t2.create_time
+    </select>
+    <!--根据label,userId统计图层个数-->
+    <select id="countByLabelAndUid" resultType="int">
+        SELECT count(1)
+        FROM ag_layer t1, ag_metadata t2,
+        ( SELECT * FROM ag_dir_layer
+        WHERE id IN (
+        SELECT DISTINCT(dir_layer_id) FROM ag_user_layer
+        WHERE user_id IN (
+        SELECT user_id FROM ag_user_role
+        WHERE user_id = #{userId}
+        )
+        )
+        ) a
+        WHERE a.layer_id = t1.id
+        AND
+        t1.metadata_id = t2.id
+        AND
+        t2.label LIKE concat(concat('%',#{label}),'%') ORDER BY t2.create_time
+    </select>
+    <select id="countByLabelAndUsers" resultType="int">
+        SELECT count(1)
+        FROM ag_layer t1, ag_metadata t2,
+        ( SELECT * FROM ag_dir_layer
+        WHERE id IN (
+        SELECT DISTINCT(dir_layer_id) FROM ag_user_layer
+        WHERE user_id IN
+        <foreach collection="userList" item="user" separator="," open="(" close=")">
+            #{user.id}
+        </foreach>
+        )
+        ) a
+        WHERE a.layer_id = t1.id
+        AND
+        t1.metadata_id = t2.id
+        AND
+        t2.label LIKE concat(concat('%',#{label}),'%') ORDER BY t2.create_time
+    </select>
+
+    <select id="findByMetadataId" resultType="AgLayer">
+        SELECT
+        <include refid="agServiceAllColumns"/>
+        FROM ag_layer
+        WHERE
+        metadata_id = #{metadataId}
+    </select>
+    <select id="findByMidAndUid" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name "name",
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data "data",
+            t.extent extent,
+            t.metadata_id metadataId,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM ag_layer t,
+        ( SELECT * FROM ag_dir_layer
+            WHERE id IN (
+            SELECT DISTINCT(dir_layer_id) FROM ag_user_layer
+              WHERE user_id IN (
+                SELECT user_id FROM ag_user_role
+                  WHERE user_id = #{userId}
+              )
+            )
+        ) a
+        WHERE a.layer_id = t.id AND t.metadata_id = #{metadataId}
+    </select>
+    <select id="findByMidAndUsers" resultType="AgLayer">
+        SELECT
+            t.id id,
+            t.name "name",
+            t.name_cn nameCn,
+            t.url url,
+            t.layer_type layerType,
+            t.feature_type featureType,
+            t.add_flag addFlag,
+            t.layer_table layerTable,
+            t.param_id paramId,
+            t.is_proxy isProxy,
+            t.proxy_url proxyUrl,
+            t.vector_layer_id vectorLayerId,
+            t.data "data",
+            t.extent extent,
+            t.metadata_id metadataId,
+            a.dir_id dirId,
+            a.id dirLayerId
+        FROM ag_layer t,
+        ( SELECT * FROM ag_dir_layer
+            WHERE id IN (
+            SELECT DISTINCT(dir_layer_id) FROM ag_user_layer
+              WHERE user_id IN
+              <foreach collection="userList" item="user" separator="," open="(" close=")">
+                  #{user.id}
+              </foreach>
+            )
+        ) a
+        WHERE a.layer_id = t.id AND t.metadata_id = #{metadataId}
+    </select>
+
+    <!-- 根据用户ID 和 服务ID 获取服务用户信息 -->
+    <select id="getAgServiceUserinfoByUidAndSid" resultType="AgServiceUserinfo">
+        select
+        <include refid="agServiceUserinfoAllColumns"/>
+        from AG_SERVICE_USERINFO t
+        where t.USER_ID=#{userId} and t.SERVICE_ID=#{serviceId}
+    </select>
+
+
+    <select id="getServiceUserInfoByServiceIdAndUserName" resultType="AgServiceUserinfo">
+        SELECT
+        <include refid="agServiceUserinfoAllColumns"/>
+        FROM ag_service_userinfo t
+        WHERE
+            t.user_Id = #{userId}
+
+          AND t.service_id = #{serviceId}
+
+    </select>
+
+    <select id="getHotService" resultType="Map" databaseId="oracle">
+        SELECT DISTINCT serviceId id
+        FROM
+        (
+        SELECT
+            t.service_id serviceId, b.name serviceName, SUM(t.total_times) totalTimes
+        FROM AG_SERVICE_LOG t LEFT JOIN AG_LAYER b ON t.service_id=b.id
+        WHERE t.access_time BETWEEN TO_DATE(#{startDay}, 'yyyy-mm-dd hh24:mi:ss') AND TO_DATE(#{endDay}, 'yyyy-mm-dd hh24:mi:ss')
+        GROUP BY t.service_id, b.name ORDER BY totalTimes DESC
+        ) n
+        WHERE ROWNUM &lt;=5
+
+    </select>
+    <select id="getHotService" resultType="Map" databaseId="mysql">
+        SELECT
+            t.service_id id, b.name serviceName, SUM(t.total_times) totalTimes
+        FROM AG_SERVICE_LOG t LEFT JOIN AG_LAYER b ON t.service_id=b.id
+        WHERE t.access_time BETWEEN TO_DATE(#{startDay}, 'yyyy-mm-dd hh24:mi:ss') AND TO_DATE(#{endDay}, 'yyyy-mm-dd hh24:mi:ss')
+        GROUP BY t.service_id, b.name ORDER BY totalTimes DESC limit 5
+    </select>
+    <select id="getHotService" resultType="Map" databaseId="postgresql">
+        SELECT
+            t.service_id id, b.name serviceName, SUM(t.total_times) totalTimes
+        FROM AG_SERVICE_LOG t LEFT JOIN AG_LAYER b ON t.service_id=b.id
+        WHERE t.access_time BETWEEN TO_DATE(#{startDay}, 'yyyy-mm-dd hh24:mi:ss') AND TO_DATE(#{endDay}, 'yyyy-mm-dd hh24:mi:ss')
+        GROUP BY t.service_id, b.name ORDER BY totalTimes DESC limit 5
+    </select>
+
+    <select id="getHotServiceRecentAllByte" resultType="AgServiceLog">
+       SELECT e.name,e.visitDay,sum(e.byteSize) byteSize
+       FROM
+          (
+              SELECT t1.service_id serviceId, t2.name, TO_CHAR(T1.ACCESS_TIME, 'yyyy-mm-dd') visitDay,  t1.BYTE_SIZE byteSize
+                FROM AG_SERVICE_LOG t1
+                INNER JOIN AG_LAYER t2
+                ON  t1.SERVICE_ID = t2.ID
+                AND
+                t1.access_time BETWEEN TO_DATE(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') AND TO_DATE(#{endTime}, 'yyyy-mm-dd hh24:mi:ss')
+          ) e
+			WHERE e.serviceId = #{serviceId}
+          GROUP BY e.visitDay, e.name ORDER BY e.visitDay ASC
+    </select>
+
+</mapper>

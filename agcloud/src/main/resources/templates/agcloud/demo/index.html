@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <link rel="stylesheet"  th:href="@{/agcloud/framework/js-lib/metronic-5/vendors.bundle.css}">
+    <link rel="stylesheet"  th:href="@{/agcloud/framework/ui-private/default/common/css/metronic.css}">
+    <link rel="stylesheet"  th:href="@{/agcloud/framework/js-lib/element-2/element.css}">
+    <link rel="stylesheet"  th:href="@{/agcloud/framework/ui-private/default/common/css/layout.css}">
+    <link rel="stylesheet"  th:href="@{/agcloud/framework/ui-private/default/blue/css/theme.css}">
+    <script>
+        var ctx = '[[@{/}]]';
+    </script>
+</head>
+<body>
+    <div id="demo">
+        <el-table
+                :data="tableData"
+                border
+                style="width: 100%">
+            <el-table-column
+                    prop="date"
+                    label="日期"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="address"
+                    label="地址">
+            </el-table-column>
+        </el-table>
+    </div>
+</body>
+<script  th:src="@{/agcloud/framework/js-lib/vue-v2/vue.js}" type="text/javascript"></script>
+<script  th:src="@{/agcloud/framework/js-lib/element-2/element.js}"></script>
+<script  th:src="@{/agcloud/framework/js-lib/agcloud-lib/js/common.js}"></script>
+<script  th:src="@{/grxm/demo/js/index.js}"></script>
+
+</html>

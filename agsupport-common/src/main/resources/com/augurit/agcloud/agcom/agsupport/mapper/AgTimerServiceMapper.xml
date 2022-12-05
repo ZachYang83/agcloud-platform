@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgTimerServiceMapper">
+
+    <sql id="allColumns">
+        ID id,
+        NAME "name",
+        BAT_PATH batPath,
+        TYPE "type",
+        DELAY delay,
+        TIMING timing,
+        CIRCULATED circulated,
+        TIME_INTERVAL timeInterval,
+        PORT port,
+        STATE state
+    </sql>
+
+    <!--按id查找-->
+    <select id="findById" resultType="AgTimerService">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_timer_service
+        WHERE
+            id = #{id}
+    </select>
+
+    <!--按条件查找-->
+    <select id="findList" resultType="AgTimerService">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_timer_service
+        <where>
+            1 = 1
+            <if test="name != null">
+                AND name LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            </if>
+        </where>
+        ORDER BY name
+    </select>
+
+    <!--保存-->
+    <insert id="save">
+        INSERT INTO ag_timer_service(
+          id, name, bat_path, time_interval, port, state, type, delay, timing, circulated
+        ) VALUES (
+          #{id}, #{name}, #{batPath}, #{timeInterval}, #{port}, #{state}, #{type}, #{delay}, #{timing}, #{circulated}
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        UPDATE ag_timer_service
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="batPath != null">
+                bat_path = #{batPath},
+            </if>
+            <if test="timeInterval != null">
+                time_interval = #{timeInterval},
+            </if>
+            <if test="port != null">
+                port = #{port},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="delay != null">
+                delay = #{delay},
+            </if>
+            <if test="timing != null">
+                timing = #{timing},
+            </if>
+            <if test="circulated != null">
+                circulated = #{circulated}
+            </if>
+        </set>
+        WHERE
+            id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            ag_timer_service
+        WHERE
+            id = #{id}
+    </delete>
+</mapper>

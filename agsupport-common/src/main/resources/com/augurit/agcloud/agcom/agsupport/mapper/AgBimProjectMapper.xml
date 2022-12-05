@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimProjectMapper">
+
+    <sql id="project">
+        id,
+        project_name,
+        project_code,
+        remark,
+        create_name,
+        create_time,
+        parent_id,
+        sort
+    </sql>
+
+
+    <select id="find" parameterType="String" resultType="com.augurit.agcloud.agcom.agsupport.domain.AgBimProject">
+        select
+        <include refid="project"/>
+        from ag_bim_project where id = #{id}
+    </select>
+
+    <select id="findAll" resultType="com.augurit.agcloud.agcom.agsupport.domain.AgBimProject">
+        select
+        <include refid="project"/>
+        from ag_bim_project order by sort asc,create_time desc
+    </select>
+
+    <insert id="save" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimProject">
+        insert into ag_bim_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="projectName != null">
+                project_name,
+            </if>
+            <if test="projectCode != null">
+                project_code,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="parentId != null and parentId != '' ">
+                parent_id,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="projectName != null">
+                #{projectName},
+            </if>
+            <if test="projectCode != null">
+                #{projectCode},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="createName != null">
+                #{createName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="parentId != null and parentId != ''">
+                #{parentId},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimProject">
+        update ag_bim_project
+        <set>
+            <if test="null != projectName">
+                project_name = #{projectName},
+            </if>
+            <if test="null != projectCode">
+                project_code = #{projectCode},
+            </if>
+            <if test="null != remark">
+                remark = #{remark},
+            </if>
+            <if test="null != createTime">
+                create_time = #{createTime},
+            </if>
+            <if test="null != createName">
+                create_name = #{createName},
+            </if>
+            <if test="null != parentId and parentId != ''">
+                parent_id = #{parentId},
+            </if>
+            <if test="null != sort">
+                sort = #{sort}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from ag_bim_project where id = #{id}
+    </delete>
+
+    <select id="findByParentId" parameterType="String" resultType="AgBimProject">
+        select <include refid="project"/> from  ag_bim_project where parent_id = #{projectId} order by sort asc,create_time desc
+    </select>
+
+    <select id="findParentIsNull" resultType="AgBimProject">
+        select <include refid="project"/> from  ag_bim_project where parent_id is null order by sort asc,create_time desc
+    </select>
+</mapper>

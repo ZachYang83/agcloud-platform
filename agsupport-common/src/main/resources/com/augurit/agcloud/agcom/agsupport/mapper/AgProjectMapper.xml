@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgProjectMapper">
+
+    <sql id="layerColumns">
+        ID id,
+        NAME "name",
+        NAME_CN nameCn,
+        URL url,
+        LAYER_TYPE layerType,
+        FEATURE_TYPE featureType,
+        ADD_FLAG addFlag,
+        LAYER_TABLE layerTable,
+        PARAM_ID paramId,
+        IS_PROXY isProxy,
+        PROXY_URL proxyUrl,
+        VECTOR_LAYER_ID vectorLayerId,
+        EXTENT extent,
+        DATA "data",
+        METADATA_ID metadataId
+    </sql>
+
+    <sql id="roleColumns">
+        ID id,
+        NAME "name",
+        FLAG flag
+    </sql>
+
+    <!--分页查询所有图层-->
+    <select id="findLayerByNameCn" resultType="AgLayer">
+        SELECT
+        <include refid="layerColumns"/>
+        FROM ag_layer
+        WHERE name_cn in
+        <foreach item="item" index="index" collection="nameCns" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--分页查询专题目录下的所有图层-->
+    <select id="findLayerByDirLayerId" resultType="AgLayer">
+        SELECT
+            t1.ID id,
+            t1.NAME "name",
+            t1.NAME_CN nameCn,
+            t1.URL url,
+            t1.LAYER_TYPE layerType,
+            t1.LAYER_TABLE layerTable,
+            t1.PARAM_ID paramId,
+            t1.DATA "data",
+            t2.XPATH dirPath,
+            t3.ID dirLayerId
+        FROM ag_layer t1,ag_dir t2, ag_dir_layer t3
+        WHERE t1.id = t3.layer_id AND t2.id = t3.dir_id AND t3.id in
+        <foreach item="item" index="index" collection="dirLayerId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="name != null">
+            AND t1.name like CONCAT(CONCAT('%',TRIM(#{name})),'%')
+        </if>
+    </select>
+    <select id="findLayerByLayerId" resultType="AgLayer">
+        SELECT
+        t1.ID id,
+        t1.NAME "name",
+        t1.NAME_CN nameCn,
+        t1.URL url,
+        t1.LAYER_TYPE layerType,
+        t1.FEATURE_TYPE featureType,
+        t1.LAYER_TABLE layerTable,
+        t1.PARAM_ID paramId,
+        t1.IS_PROXY isProxy,
+        t1.DATA "data",
+        t1.VISIBLE_MINZOOM visibleMinZoom,
+        t1.VISIBLE_MAXZOOM visibleMaxZoom,
+        t1.METADATA_ID metadataId,
+        t1.IS_BASE_MAP isBaseMap,
+        t2.XPATH dirPath,
+        t3.ID dirLayerId
+        FROM ag_layer t1,ag_dir t2, ag_dir_layer t3
+        WHERE t1.id = t3.layer_id AND t2.id = t3.dir_id AND t3.layer_id =#{dirLayerId}
+        <if test="name != null">
+            AND t1.name like CONCAT(CONCAT('%',TRIM(#{name})),'%')
+        </if>
+    </select>
+
+    <!--根据dirLayerId和登录名，分页查询已经授权的所有图层-->
+    <select id="findLayerByRoot" resultType="AgLayer">
+        SELECT
+            t1.ID id,
+            t1.NAME "name",
+            t1.NAME_CN nameCn,
+            t1.URL url,
+            t1.LAYER_TYPE layerType,
+            t1.LAYER_TABLE layerTable,
+            t1.FEATURE_TYPE featureType,
+            t1.ADD_FLAG addFlag,
+            t1.PARAM_ID paramId,
+            t1.PROXY_URL proxyUrl,
+            t1.VECTOR_LAYER_ID vectorLayerId,
+            t1.DATA "data",
+            t2.ID dirLayerId
+        FROM ag_layer t1, ag_dir_layer t2,ag_user_layer t3
+        WHERE t1.id = t2.layer_id  AND t2.id in
+        <foreach item="item" index="index" collection="dirLayerId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t2.id = t3.dir_layer_id AND t3.user_id  = #{userid}
+    </select>
+    <!--根据角色id查询角色-->
+    <select id="findRoleByIds" resultType="AgRole">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM ag_role
+        WHERE id in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="name != null">
+            AND name like CONCAT(CONCAT('%',TRIM(#{name})),'%')
+        </if>
+    </select>
+    <!--根据角色id查询角色-->
+    <select id="findRoleById" resultType="AgRole">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM ag_role
+        WHERE id like #{id}
+        <if test="name != null">
+            AND name like CONCAT(CONCAT('%',TRIM(#{name})),'%')
+        </if>
+    </select>
+    <!--根据登陆用户名查询其角色-->
+    <select id="findRoleByLoginName" resultType="AgRole">
+        SELECT
+          a.role_id id
+        FROM ag_user_role a,ag_user b
+        WHERE a.user_id = b.id AND b.login_name = #{loginName}
+    </select>
+
+    <!--根据登陆用户名查询其角色-->
+    <select id="getProjectNextOrder" resultType="Integer">
+        SELECT
+          (NVL(MAX(a.order),0)+1) NextOrder
+        FROM ag_project a
+        WHERE a.user_id = b.id AND b.login_name = #{loginName}
+    </select>
+</mapper>

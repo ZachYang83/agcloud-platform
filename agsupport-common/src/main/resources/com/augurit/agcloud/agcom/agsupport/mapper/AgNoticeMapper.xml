@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgNoticeMapper">
+    <sql id="allColumns">
+        t1.ID id,
+        t1.TITLE title,
+        t1.CONTENT content,
+        t1.RELEASE_TIME releaseTime,
+        t1.USER_ID userId,
+        t1.PICTURES_PATH picturesPath,
+        t1.USER_NAME userName
+    </sql>
+
+    <!--按userId查找-->
+    <select id="findList" resultType="AgNotice">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        AG_NOTICE_INFO t1
+        WHERE
+         1=1
+         <if test="userId !=null">
+             AND t1.USER_ID = #{userId}
+         </if>
+    </select>
+
+    <!--按id查找-->
+    <select id="getNotice" resultType="AgNotice">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        AG_NOTICE_INFO t1
+        WHERE
+        t1.ID = #{id}
+    </select>
+
+    <!--保存-->
+    <insert id="save">
+        INSERT INTO AG_NOTICE_INFO(
+            id, TITLE, CONTENT, RELEASE_TIME,PICTURES_PATH, USER_ID,USER_NAME
+        ) VALUES (
+            #{id}, #{title}, #{content}, #{releaseTime},#{picturesPath} ,#{userId},#{userName}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            AG_NOTICE_INFO
+        WHERE
+            id = #{id}
+    </delete>
+
+    <update id="update">
+        UPDATE AG_NOTICE_INFO
+        SET
+          TITLE = #{title},
+          CONTENT = #{content},
+          RELEASE_TIME = #{releaseTime},
+          PICTURES_PATH = #{picturesPath}
+        WHERE
+        id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimCheckStandardCustomMapper">
+
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgBimCheckStandard" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="clause" property="clause" jdbcType="VARCHAR" />
+        <result column="serial" property="serial" jdbcType="VARCHAR" />
+        <result column="enforce" property="enforce" jdbcType="VARCHAR" />
+        <result column="clause_content" property="clauseContent" jdbcType="VARCHAR" />
+        <result column="associate_model" property="associateModel" jdbcType="VARCHAR" />
+        <result column="clause_category" property="clauseCategory" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insertList">
+        INSERT INTO ag_bim_check_standard
+        (id, clause,serial, enforce,clause_content,associate_model,clause_category,create_time,modify_time, remark)
+        VALUES
+        <foreach collection="bimCheckStandardClauseList" item="clause" separator=",">
+            (#{clause.id,jdbcType=VARCHAR}, #{clause.clause,jdbcType=VARCHAR}, #{clause.serial,jdbcType=VARCHAR}, #{clause.enforce,jdbcType=VARCHAR}, #{clause.clauseContent,jdbcType=VARCHAR}, #{clause.associateModel,jdbcType=VARCHAR},#{clause.clauseCategory,jdbcType=VARCHAR},
+            #{clause.createTime,jdbcType=TIMESTAMP},#{clause.modifyTime,jdbcType=TIMESTAMP},#{clause.remark,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <select id="getCategories" resultType="java.lang.String">
+        select distinct clause_category from ag_bim_check_standard where clause_category is not null
+    </select>
+
+    <select id="getClauses" resultType="java.lang.String">
+        select distinct clause from ag_bim_check_standard where clause_category=#{clause_category}
+    </select>
+
+    <select id="getClauseContents" resultMap="BaseResultMap">
+        select * from ag_bim_check_standard where clause_category=#{clause_category} and clause=#{clause}
+        order by serial
+    </select>
+
+<!--    <select id="groupByKey" resultType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgBimCheckStandard">-->
+<!--        select ${groupKey}, count(1) as serial from ag_bim_check_standard where ${groupKey} is not null group by ${groupKey}-->
+<!--    </select>-->
+</mapper>

@@ -1,0 +1,89 @@
+sourceCompatibility = 1.8
+// jar包前缀
+archivesBaseName = 'agcloud'
+version '5.0.0'
+ext {
+    springCloudVersion = 'Finchley.RELEASE'
+    agcloudVersion = '5.0.0'
+    flowableVersion = '6.3.0'
+}
+
+if(isDeployment) {
+    apply from: "$rootDir/agcloud/deployApp.gradle"
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.12.v20180830'
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-util
+    compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.4.12.v20180830'
+
+    //依赖的agcloud相关jar
+    compile('oracle:ojdbc:6')
+    compile('mysql:mysql-connector-java')
+    compile "com.augurit.agcloud:agcloud-framework:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-framework-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-bsc:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-bsc-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-agx:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-agx-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-agx-common:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-meta:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-meta-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-opus-common:5.0.1"
+    compile "com.augurit.agcloud:agcloud-opus-front:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-opus-front-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-opus-admin:5.0.1"
+    compile "com.augurit.agcloud:agcloud-opus-admin-ui:5.0.1"
+    compile "com.augurit.agcloud:agcloud-bpm-common:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-bpm-admin:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-bpm-admin-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-bpm-front:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-bpm-front-ui:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-aoa:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-aoa-ui:${agcloudVersion}"
+
+    compile "com.augurit.agcloud:flowable-bpmn-converter-agcloud:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-bpmn-model-agcloud:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-engine-agcloud:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-task-service-agcloud:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-task-service-api-agcloud:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-variable-service-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-variable-service:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-spring-common:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-spring-boot-starter-process:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-spring-boot-autoconfigure:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-spring:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-process-validation:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-job-spring-service:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-job-service-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-job-service:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-image-generator:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-idm-spring:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-idm-engine:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-idm-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-identitylink-service-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-identitylink-service:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-form-model:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-form-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-engine-common-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-engine-common:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-dmn-model:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-dmn-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-content-api:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-cmmn-model:${flowableVersion}"
+    compile "com.augurit.agcloud:flowable-cmmn-api:${flowableVersion}"
+
+    //agcom
+    //compile "com.augurit.agcloud.agcom:agcloud-agcom-agsupport-ui:5.0.0",{ changing = true }
+    //compile "com.augurit.agcloud.agcom:agcloud-agcom-agsupport:5.0.0"
+    compile fileTree(include: ['*.jar'], dir: 'src\\main\\resources\\lib')
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+    compile('org.springframework.kafka:spring-kafka')
+
+    compile project(":agsupport-common")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

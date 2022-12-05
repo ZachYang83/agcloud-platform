@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.mapper.OpuRsToolBarMapper">
+
+    <sql id="OpuRsFunc_All_Columns_Properties">
+    func.FUNC_ID as funcId,
+    func.APP_SOFT_ID as appSoftId,
+    func.FUNC_CODE as funcCode,
+    func.FUNC_NAME as funcName,
+    func.FUNC_TYPE as funcType,
+    func.FUNC_INVOKE_TYPE as funcInvokeType,
+    func.FUNC_INVOKE_URL as funcInvokeUrl,
+    func.FUNC_INVOKE_ACTIVITY as funcInvokeActivity,
+    func.FUNC_INVOKE_PARAM as funcInvokeParam,
+    func.FUNC_SORT_NO as funcSortNo,
+    func.PARENT_FUNC_ID as parentFuncId,
+    func.FUNC_LEVEL as funcLevel,
+    func.FUNC_SEQ as funcSeq,
+    func.FUNC_SUB_COUNT as funcSubCount,
+    func.IS_AUTO_IMPORT as isAutoImport,
+    func.IS_ACTIVE_FUNC as isActiveFunc,
+    func.FUNC_DELETED as funcDeleted,
+    func.FUNC_DESC as funcDesc,
+    func.FUNC_MEMO as funcMemo,
+    func.WIDGET_TYPE as  widgetType,
+    func.FUNC_ICON_CSS as funcIconCss,
+    func.WIDGET_IS_CONFIG as widgetIsConfig,
+    func.WIDGET_IS_VISIABLE as widgetIsVisiable,
+    func.FUNC_SHORTCUT_KEY as funcShortcutKey,
+    func.WIDGET_IS_USE_TPL as widgetIsUseTpl,
+    func.TMN_ID as tmnId,
+    func.IS_IMG_ICON as isImgIcon,
+    func.SMALL_IMG_PATH as smallImgPath,
+    func.MIDDLE_IMG_PATH as middleImgPath,
+    func.BIG_IMG_PATH as bigImgPath,
+    func.HUGE_IMG_PATH as hugeImgPath,
+    func.TOOLBARID as toolBarId,
+    func.WIDGETID as widgetId,
+    func.TOOLBAR_INVOKEURL as toolBarInvokeUrl,
+    func.ONLOAD as onload,
+    func.ICON as icon,
+    func.SRC as src,
+    func.PAGE_POSITION as pagePosition
+  </sql>
+
+    <sql id="OpuRsFunc_All_Columns">
+    FUNC_ID,
+    APP_SOFT_ID,
+    FUNC_CODE,
+    FUNC_NAME,
+    FUNC_TYPE,
+    FUNC_INVOKE_TYPE,
+    FUNC_INVOKE_URL,
+    FUNC_INVOKE_ACTIVITY,
+    FUNC_INVOKE_PARAM,
+    FUNC_SORT_NO,
+    PARENT_FUNC_ID,
+    FUNC_LEVEL,
+    FUNC_SEQ,
+    FUNC_SUB_COUNT,
+    IS_AUTO_IMPORT,
+    IS_ACTIVE_FUNC,
+    FUNC_DELETED,
+    FUNC_DESC,
+    FUNC_MEMO,
+    CREATER,
+    CREATE_TIME,
+    MODIFIER,
+    MODIFY_TIME,
+    WIDGET_TYPE,
+    FUNC_ICON_CSS,
+    WIDGET_IS_CONFIG,
+    WIDGET_IS_VISIABLE,
+    FUNC_SHORTCUT_KEY,
+    WIDGET_IS_USE_TPL,
+    TMN_ID,
+    IS_IMG_ICON,
+    SMALL_IMG_PATH ,
+    MIDDLE_IMG_PATH ,
+    BIG_IMG_PATH ,
+    HUGE_IMG_PATH,
+    TOOLBARID,
+    WIDGETID,
+    TOOLBAR_INVOKEURL,
+    ONLOAD,
+    ICON,
+    SRC,
+    PAGE_POSITION
+  </sql>
+
+    <sql id="OpuRsFunc_All_Properties">
+    #{funcId},
+    #{appSoftId},
+    #{funcCode},
+    #{funcName},
+    #{funcType},
+    #{funcInvokeType},
+    #{funcInvokeUrl},
+    #{funcInvokeActivity},
+    #{funcInvokeParam},
+    #{funcSortNo,jdbcType=DECIMAL},
+    #{parentFuncId},
+    #{funcLevel},
+    #{funcSeq},
+    #{funcSubCount,jdbcType=DECIMAL},
+    #{isAutoImport,jdbcType=CHAR},
+    #{isActiveFunc,jdbcType=CHAR},
+    #{funcDeleted,jdbcType=CHAR},
+    #{funcDesc},
+    #{funcMemo},
+    #{creater},
+    #{createTime,jdbcType=TIMESTAMP},
+    #{modifier},
+    #{modifyTime,jdbcType=TIMESTAMP},
+    #{widgetType},
+    #{funcIconCss},
+    #{widgetIsConfig},
+    #{widgetIsVisiable},
+    #{funcShortcutKey},
+    #{widgetIsUseTpl},
+    #{tmnId},
+    #{isImgIcon},
+    #{smallImgPath},
+    #{middleImgPath},
+    #{bigImgPath},
+    #{hugeImgPath},
+    #{toolBarId},
+    #{widgetId},
+    #{toolBarInvokeUrl},
+    #{onload},
+    #{icon},
+    #{src},
+    #{pagePosition}
+  </sql>
+
+    <insert id="insertToolBar" parameterType="OpuRsToolBar">
+        insert into OPU_RS_FUNC (
+        <include refid="OpuRsFunc_All_Columns"/>
+        )
+        values (
+        <include refid="OpuRsFunc_All_Properties"/>
+        )
+    </insert>
+
+    <update id="updateToolBar" parameterType="OpuRsToolBar">
+        update OPU_RS_FUNC
+        <set>
+            <if test="funcCode != null">
+                FUNC_CODE = #{funcCode},
+            </if>
+            <if test="funcName != null">
+                FUNC_NAME = #{funcName},
+            </if>
+            <if test="funcType != null">
+                FUNC_TYPE = #{funcType},
+            </if>
+            <if test="appSoftId != null">
+                APP_SOFT_ID = #{appSoftId},
+            </if>
+            <if test="funcInvokeType != null">
+                FUNC_INVOKE_TYPE = #{funcInvokeType},
+            </if>
+            <if test="funcInvokeUrl != null">
+                FUNC_INVOKE_URL = #{funcInvokeUrl},
+            </if>
+            <if test="funcInvokeActivity != null">
+                FUNC_INVOKE_ACTIVITY = #{funcInvokeActivity},
+            </if>
+            <if test="funcInvokeParam != null">
+                FUNC_INVOKE_PARAM = #{funcInvokeParam},
+            </if>
+            <if test="parentFuncId != null">
+                PARENT_FUNC_ID = #{parentFuncId},
+            </if>
+            <if test="funcLevel != null">
+                FUNC_LEVEL = #{funcLevel},
+            </if>
+            <if test="funcSeq != null">
+                FUNC_SEQ = #{funcSeq},
+            </if>
+            <if test="funcSortNo != null">
+                FUNC_SORT_NO = #{funcSortNo,jdbcType=DECIMAL},
+            </if>
+            <if test="funcSubCount != null">
+                FUNC_SUB_COUNT = #{funcSubCount,jdbcType=DECIMAL},
+            </if>
+            <if test="isAutoImport != null">
+                IS_AUTO_IMPORT = #{isAutoImport,jdbcType=CHAR},
+            </if>
+            <if test="isActiveFunc != null">
+                IS_ACTIVE_FUNC = #{isActiveFunc,jdbcType=CHAR},
+            </if>
+            <if test="funcDesc != null">
+                FUNC_DESC = #{funcDesc},
+            </if>
+            <if test="funcMemo != null">
+                FUNC_MEMO = #{funcMemo},
+            </if>
+            <if test="funcDeleted != null">
+                FUNC_DELETED = #{funcDeleted,jdbcType=CHAR},
+            </if>
+            <if test="creater != null">
+                CREATER = #{creater},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                MODIFIER = #{modifier},
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="widgetType != null">
+                WIDGET_TYPE = #{widgetType},
+            </if>
+            <if test="funcIconCss != null">
+                FUNC_ICON_CSS = #{funcIconCss},
+            </if>
+            <if test="widgetIsConfig != null">
+                WIDGET_IS_CONFIG = #{widgetIsConfig},
+            </if>
+            <if test="widgetIsVisiable != null">
+                WIDGET_IS_VISIABLE = #{widgetIsVisiable},
+            </if>
+            <if test="funcShortcutKey != null">
+                FUNC_SHORTCUT_KEY = #{funcShortcutKey},
+            </if>
+            <if test="widgetIsUseTpl != null">
+                WIDGET_IS_USE_TPL = #{widgetIsUseTpl},
+            </if>
+            <if test="tmnId != null">
+                TMN_ID = #{tmnId},
+            </if>
+            <if test="isImgIcon != null and isImgIcon!='' ">
+                IS_IMG_ICON = #{isImgIcon},
+            </if>
+            <if test="smallImgPath != null">
+                SMALL_IMG_PATH = #{smallImgPath},
+            </if>
+            <if test="middleImgPath != null">
+                MIDDLE_IMG_PATH = #{middleImgPath},
+            </if>
+            <if test="bigImgPath != null">
+                BIG_IMG_PATH = #{bigImgPath},
+            </if>
+            <if test="hugeImgPath!=null">
+                HUGE_IMG_PATH = #{hugeImgPath},
+            </if>
+            <if test="toolBarId!=null">
+                TOOLBARID = #{toolBarId},
+            </if>
+            <if test="widgetId!=null">
+                WIDGETID = #{widgetId},
+            </if>
+            <if test="icon!=null">
+                ICON = #{icon},
+            </if>
+            <if test="onload!=null">
+                ONLOAD = #{onload},
+            </if>
+            <if test="src!=null">
+                SRC = #{src},
+            </if>
+            <if test="toolBarInvokeUrl!=null">
+                TOOLBAR_INVOKEURL = #{toolBarInvokeUrl},
+            </if>
+            <if test="pagePosition!=null">
+                PAGE_POSITION = #{pagePosition}
+            </if>
+        </set>
+        where FUNC_ID = #{funcId}
+    </update>
+
+    <update id="editPagePosition" parameterType="java.lang.String">
+        update OPU_RS_FUNC
+        <set>
+            PAGE_POSITION = #{pagePosition}
+        </set>
+        where FUNC_ID = #{funcId}
+    </update>
+
+    <!-- 获取某个应用下的模块、功能、微件并排序 -->
+    <select id="listFuncsBySoftIdAndSorting" resultType="OpuRsToolBar">
+        select
+        <include refid="OpuRsFunc_All_Columns_Properties"/>,
+        pfunc.FUNC_NAME as parentFuncName
+        from OPU_RS_FUNC func
+        left join OPU_RS_FUNC pfunc on pfunc.FUNC_ID = func.PARENT_FUNC_ID
+        <where>
+            and func.FUNC_DELETED = '0'
+            and func.APP_SOFT_ID = #{appSoftId}
+            <if test="keyword != null and keyword!='' ">
+                and (
+                func.FUNC_CODE like concat(concat('%',#{keyword}),'%')
+                or func.FUNC_NAME like concat(concat('%',#{keyword}),'%')
+                or func.FUNC_ICON_CSS like concat(concat('%',#{keyword}),'%')
+                or func.SMALL_IMG_PATH like concat(concat('%',#{keyword}),'%')
+                )
+            </if>
+        </where>
+        order by func.FUNC_SORT_NO asc ,func.CREATE_TIME asc
+    </select>
+
+    <select id="getModuleOrFuncById" resultType="OpuRsToolBar" parameterType="string">
+        select
+        <include refid="OpuRsFunc_All_Columns_Properties"/>
+        from
+        OPU_RS_FUNC func
+        where
+        func.FUNC_DELETED = '0'
+        and func.FUNC_ID = #{funcId}
+    </select>
+
+
+    <select id="getToolBarByAppSoftId" resultType="OpuRsToolBar">
+        select
+        <include refid="OpuRsFunc_All_Columns_Properties"/>
+        from OPU_RS_FUNC func where func.APP_SOFT_ID = #{appSoftId} and func.func_type = 'toolBar' and func_deleted = 0
+    </select>
+
+    <select id="getAppSoftBySoftCode" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from OPU_RS_APP_SOFT appSoft
+        where SOFT_CODE = #{softCode}
+        order by CREATE_TIME desc ,MODIFY_TIME desc
+    </select>
+
+    <sql id="OpuRsAppSoft_All_Columns_Properties">
+        appSoft.APP_SOFT_ID as appSoftId,
+        appSoft.ORG_ID as orgId,
+        appSoft.SOFT_CODE as softCode,
+        appSoft.SOFT_NAME as softName,
+        appSoft.SOFT_WEB_CONTEXT as softWebContext,
+        appSoft.PROTOCOL_HEADER as protocolHeader,
+        appSoft.SOFT_TYPE as softType,
+        appSoft.IS_CLOUD_SOFT as isCloudSoft,
+        appSoft.SOFT_DELETED as softDeleted,
+        appSoft.SOFT_MEMO as softMemo,
+        appSoft.CREATER as creater,
+        appSoft.CREATE_TIME as createTime,
+        appSoft.MODIFIER as modifier,
+        appSoft.MODIFY_TIME as modifyTime,
+        appSoft.CLOUD_SOFT_ID as cloudSoftId,
+        appSoft.CLIENT_ID as clientId,
+        appSoft.CLIENT_SECRET as clientSecret,
+        appSoft.STATUS_UPDATE_TIME as statusUpdateTime,
+        appSoft.SOFT_STATUS as softStatus,
+        appSoft.USE_LOAD_BALENCE as useLoadBalence,
+        appSoft.IS_SINGLE_URL as isSingleUrl,
+        appSoft.AUTO_SWITCH as autoSwitch,
+        appSoft.SOFT_INNER_URL as softInnerUrl,
+        appSoft.SOFT_GOV_URL as softGovUrl,
+        appSoft.SOFT_OUTER_URL as softOuterUrl,
+        appSoft.IS_ADMIN as isAdmin,
+        appSoft.IS_IMG_ICON as isImgIcon,
+        appSoft.SOFT_ICON_CSS as softIconCss,
+        appSoft.SMALL_IMG_PATH as smallImgPath,
+        appSoft.MIDDLE_IMG_PATH as middleImgPath,
+        appSoft.BIG_IMG_PATH as bigImgPath,
+        appSoft.HUGE_IMG_PATH as hugeImgPath
+  </sql>
+
+
+    <delete id="deleteToolBarByName">
+    delete from OPU_RS_FUNC func where func.func_name = #{funcName}
+  </delete>
+</mapper>

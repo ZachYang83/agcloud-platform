@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgEsSynonymWordMapper">
+
+    <sql id="allColumns">
+        ID id,
+        WORD word,
+        SYNONYM_WORD synonymWord,
+        CHANGE_TIME changeTime
+    </sql>
+
+    <select id="findByWord" resultType="AgEsSynonymWord">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_es_synonym_word t
+        WHERE
+        t.word = #{word}
+    </select>
+
+    <!--查询-->
+    <select id="findAll" resultType="AgEsSynonymWord">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_es_synonym_word t
+        WHERE
+        1=1
+    </select>
+
+    <!--分页查-->
+    <select id="findList" resultType="AgEsSynonymWord">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_es_synonym_word t
+        <where>
+            1 = 1
+            <if test="synonymWord != null">
+                AND t.synonym_word LIKE CONCAT(CONCAT('%', TRIM(#{synonymWord})), '%')
+            </if>
+        </where>
+        ORDER BY t.CHANGE_TIME DESC
+    </select>
+
+    <select id="findWord" resultType="AgEsSynonymWord">
+        SELECT <include refid="allColumns"/>
+        FROM ag_es_synonym_word t
+        WHERE t.WORD = #{synonymWord}
+    </select>
+    <!-- 保存 -->
+    <insert id="save">
+        INSERT
+        INTO ag_es_synonym_word
+        (id,word,synonym_word,change_time)
+        VALUES (#{id},#{word},#{synonymWord},#{changeTime})
+    </insert>
+
+    <update id="update">
+        UPDATE ag_es_synonym_word
+        <set>
+            <if test="word != null">
+                word = #{word},
+            </if>
+            <if test="synonymWord != null">
+                synonym_word = #{synonymWord},
+            </if>
+            <if test="changeTime != null">
+                change_time = #{changeTime}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="delById">
+        DELETE
+        FROM
+        ag_es_synonym_word
+        WHERE
+        id = #{id}
+    </delete>
+
+    <delete id="batchDelById" parameterType="String">
+        DELETE FROM ag_es_synonym_word
+        WHERE id IN
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getLatestTime" resultType="AgEsSynonymWord">
+        select
+        <include refid="allColumns"/>
+        from ag_es_custom_word
+        where change_time = (select max( change_time) from ag_es_custom_word)
+    </select>
+</mapper>

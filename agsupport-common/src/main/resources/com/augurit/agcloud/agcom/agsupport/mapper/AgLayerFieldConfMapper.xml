@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgLayerFieldConfMapper">
+
+    <sql id="allColumns">
+        ID id,
+        VIEW_IN_RESULT viewInResult;
+        EDITABLE editable;
+        VIEW_IN_BLURQUERY viewInBlurquery;
+        LAYER_FIELD_ID layerFieldId;
+        LAYER_ID layerId;
+        FIELD_NAME fieldName;
+        FIELD_NAME_CN fieldNameCn;
+        FIELD_TYPE fieldType;
+        FIELD_SIZE fieldSize;
+        ORDER_NM orderNm;
+        IS_KEY isKey;
+        REF_ID refId;
+    </sql>
+
+    <!--按目录图层id查找-->
+  <!--  <select id="findByDirLayerId" resultType="AgLayerFieldConf">
+        SELECT
+         b.ID as id,
+         b.LAYER_ID layerId,
+         b.FIELD_NAME fieldName,
+         b.FIELD_NAME_CN fieldNameCn,
+         b.FIELD_TYPE fieldType,
+         b.FIELD_SIZE fieldSize,
+         b.ORDER_NM orderNm,
+         b.REF_ID refId,
+         b.IS_KEY isKey,
+         a.ROLE_LAYER_ID roleLayerId,
+         a.FIELD_ID fieldId,
+         a.VIEW_IN_RESULT viewInResult,
+         a.EDITABLE editable,
+         a.VIEW_IN_BLURQUERY viewInBlurquery
+         FROM (select * from AG_LAYER_FIELD t WHERE t.layer_id IN(select layer_id from AG_DIR_LAYER t WHERE t.id = #{dirLayerId})) b
+        LEFT   JOIN AG_FIELD_AUTHORIZE a on a.FIELD_ID = b.ID where  a.FIELD_ID is not null
+    </select>-->
+
+    <select id="findByLayerId" resultType="AgLayerFieldConf">
+        SELECT
+        t.ID as id,
+        t.LAYER_ID layerId,
+        t.FIELD_NAME fieldName,
+        t.FIELD_NAME_CN fieldNameCn,
+        t.FIELD_TYPE fieldType,
+        t.FIELD_SIZE fieldSize,
+        t.ORDER_NM orderNm,
+        t.REF_ID refId,
+        t.IS_KEY isKey,
+        t.VIEW_IN_RESULT viewInResult,
+        t.EDITABLE editable,
+        t.VIEW_IN_BLURQUERY viewInBlurquery
+        FROM AG_LAYER_FIELD t WHERE t.layer_id =#{layerId}
+        order by ORDER_NM
+    </select>
+
+</mapper>

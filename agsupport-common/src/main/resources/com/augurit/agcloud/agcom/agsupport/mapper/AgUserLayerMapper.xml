@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgUserLayerMapper">
+
+    <sql id="allColumns">
+        ID id,
+        USER_ID userId,
+        DIR_LAYER_ID dirLayerId,
+        ADD_FLAG addFlag,
+        EDITABLE editable,
+        QUERYABLE queryable,
+        IS_SHOW isShow,
+        IS_BASE_MAP isBaseMap,
+        EXTENT extent
+    </sql>
+
+    <!--按id查找-->
+    <select id="findById" resultType="AgUserLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user_layer
+        WHERE
+        id = #{id}
+    </select>
+
+    <!--根据用户id、目录图层id查询用户图层关联-->
+    <select id="findByUidAndDid" resultType="AgUserLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user_layer
+        WHERE
+        user_id = #{userId}
+        AND
+        dir_layer_id = #{dirLayerId}
+    </select>
+
+    <!--根据用户id、目录图层id查询用户图层关联，不包含EXTENT 字段-->
+    <select id="findListByUserIdNotWithExtent" resultType="AgUserLayer">
+        SELECT
+            ID id,
+            USER_ID userId,
+            DIR_LAYER_ID dirLayerId,
+            ADD_FLAG addFlag,
+            EDITABLE editable,
+            QUERYABLE queryable,
+            IS_SHOW isShow,
+            IS_BASE_MAP isBaseMap
+        FROM ag_user_layer
+        WHERE
+            user_id = #{userId}
+    </select>
+
+    <!--按用户id查找-->
+    <select id="findListByUserId" resultType="AgUserLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user_layer
+        WHERE
+        user_id = #{userId}
+    </select>
+
+    <!--按用户id查找-->
+    <select id="findByDirLayerIds" resultType="AgUserLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user_layer
+        WHERE
+        dir_layer_id in
+        <foreach collection="agDirLayers" item="dirLayer" open="(" separator="," close=")" >
+            #{dirLayer.id}
+        </foreach>
+    </select>
+
+    <!--按目录图层id查找-->
+    <select id="findListByDirLayerId" resultType="AgUserLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user_layer
+        WHERE
+        dir_layer_id = #{dirLayerId}
+    </select>
+
+    <!--批量保存-->
+    <insert id="saveBatch" parameterType="java.util.List">
+        <if test="_databaseId == 'oracle'">
+            BEGIN
+        </if>
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO ag_user_layer (
+            id,user_id,dir_layer_id,add_flag,editable,queryable,is_show,is_base_map,extent
+            ) VALUES (
+            #{item.id},#{item.userId},#{item.dirLayerId},#{item.addFlag},#{item.editable},#{item.queryable},#{item.isShow},#{item.isBaseMap},#{item.extent}
+            )
+        </foreach>
+        <if test="_databaseId == 'oracle'">
+            ;END;
+        </if>
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+        ag_user_layer
+        WHERE
+        id = #{id}
+    </delete>
+
+    <!--根据dir_layer_id 批量删除-->
+    <delete id="deleteByDirLayerIds">
+        DELETE
+        FROM
+        ag_user_layer
+        WHERE
+        dir_layer_id in
+        <foreach collection="agDirLayers" item="dirLayer" open="(" separator="," close=")" >
+            #{dirLayer.id}
+        </foreach>
+    </delete>
+
+    <!--删除用户授权图层-->
+    <delete id="deleteByUiAndDi">
+        DELETE
+        FROM
+        ag_user_layer
+        WHERE
+        user_id = #{userId}
+        AND
+        dir_layer_id = #{dirLayerId}
+    </delete>
+
+    <update id="updateUserLayer" parameterType="AgUserLayer">
+        UPDATE AG_USER_LAYER
+        <set>
+            <if test="addFlag != null">
+                ADD_FLAG = #{addFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="dirLayerId != null">
+                DIR_LAYER_ID = #{dirLayerId,jdbcType=VARCHAR},
+            </if>
+            <if test="editable != null">
+                EDITABLE = #{editable,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                USER_ID = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="isBaseMap != null">
+                IS_BASE_MAP = #{isBaseMap,jdbcType=VARCHAR},
+            </if>
+            <if test="isShow != null">
+                IS_SHOW = #{isShow,jdbcType=VARCHAR},
+            </if>
+            <if test="queryable != null">
+                QUERYABLE = #{queryable,jdbcType=VARCHAR},
+            </if>
+            <if test="extent != null">
+                EXTENT = #{extent},
+            </if>
+            <if test="queryCon != null">
+                QUERY_CON = #{queryCon},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

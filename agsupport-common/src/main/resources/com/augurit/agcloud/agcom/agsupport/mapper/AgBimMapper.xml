@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimMapper">
+
+    <sql id="allColumns">
+        ID id,
+        NAME "name",
+        PARENT_ID parentId,
+        XPATH xpath,
+        DIR_SEQ dirSeq,
+        ORDER_NM orderNm,
+        MAP_PARAM_ID mapParamId
+    </sql>
+    <!--查找所有目录 过滤没有矢量图层数据的目录-->
+    <select id="findAllDirSJHC" resultType="AgDir">
+       /*select *
+        from (select * FROM ag_dir t
+        WHERE t.ID IN (SELECT DIR_ID FROM AG_DIR_LAYER A,AG_LAYER b
+        WHERE A.LAYER_ID = b.ID AND b.LAYER_TYPE =010001) ORDER BY order_nm)c,ag_dir d
+        where d.ID=c.id OR d.ID=c.parent_id*/
+
+        select <include refid="allColumns"/> from
+        (SELECT *
+		FROM
+			ag_bim T
+		WHERE
+			T . ID IN (
+				SELECT
+					DIR_ID
+				FROM
+                    ag_bim_layer A,
+					AG_LAYER b
+				WHERE
+					A .LAYER_ID = b. ID
+				AND b.LAYER_TYPE = 010001
+			) or id='root'
+      )
+    </select>
+
+    <!--查找所有目录-->
+    <select id="findAll" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        ORDER BY order_nm
+    </select>
+    <!--查找所有二级目录-->
+    <select id="findSecond" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_bim t1
+        WHERE
+        t1.PARENT_ID
+        IN
+        (SELECT t2.ID FROM ag_bim t2 WHERE t2.PARENT_ID is null)
+        ORDER BY t1.order_nm
+    </select>
+
+    <!--按id集合查找-->
+    <select id="findByIds" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        WHERE id IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        ORDER BY order_nm
+    </select>
+
+    <!--按id查找目录-->
+    <select id="findById" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        WHERE id = #{id}
+        ORDER BY order_nm
+    </select>
+
+    <!--获取最顶层的目录-->
+    <select id="findTopDir" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        WHERE ID = 'root'
+    </select>
+
+    <!--按用户id查找-->
+  <!--  <select id="findByUserId" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_dir
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_id)
+        FROM
+        ag_dir_layer
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_layer_id)
+        FROM
+        ag_user_layer
+        WHERE
+        user_id IN (
+        SELECT
+        user_id
+        FROM
+        ag_user_role
+        WHERE
+        user_id = #{userId}
+        )
+        )
+        )
+        ORDER BY
+        order_nm
+    </select>-->
+    <select id="findByUserId" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_bim
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_id)
+        FROM
+        ag_bim_layer
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_layer_id)
+        FROM
+        ag_user_layer
+        WHERE
+        user_id = #{userId}
+        )
+        )
+        ORDER BY
+        order_nm
+    </select>
+
+    <select id="findAgDirByXpath" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        WHERE xpath = #{xpath}
+    </select>
+
+    <select id="findByUsers" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_bim
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_id)
+        FROM
+        ag_bim_layer
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (dir_layer_id)
+        FROM
+        ag_user_layer
+        WHERE
+        user_id IN
+        <foreach collection="userList" item="user" separator="," open="(" close=")">
+            #{user.id}
+        </foreach>
+        )
+        )
+        ORDER BY
+        order_nm
+    </select>
+    <!--查询矢量所在目录-->
+    <select id="findByVector" resultType="AgDir">
+        SELECT
+            ad.id id,
+            ad.name "name",
+            ad.parent_id parentId,
+            ad.xpath xpath,
+            ad.dir_seq dirSeq,
+            ad.order_nm orderNm,
+            ad.map_param_id mapParamId
+        FROM
+            ag_bim ad,
+            (
+                SELECT DISTINCT
+                    adl.dir_id
+                FROM
+                    ag_bim_layer adl,
+                    ag_layer al
+                WHERE
+                    adl.layer_id = al.id
+                AND al.layer_type = '010001'
+            ) a
+        WHERE
+            ad.id = a.dir_id
+        ORDER BY
+            ad.order_nm
+    </select>
+    <select id="findByDirLayer" resultType="AgDir">
+        SELECT DISTINCT
+            ad.id id,
+            ad.name "name",
+            ad.parent_id parentId,
+            ad.xpath xpath,
+            ad.dir_seq dirSeq,
+            ad.order_nm orderNm,
+            ad.map_param_id mapParamId
+        FROM
+            ag_bim ad,
+            ag_bim_layer adl
+        WHERE
+            ad.id = adl.dir_id
+        ORDER BY
+            ad.order_nm
+    </select>
+    <!--获取最大顺序-->
+    <select id="getOrder" resultType="java.lang.String">
+        SELECT
+        max(order_nm)
+        FROM ag_bim
+        WHERE parent_id = #{pid}
+    </select>
+    <!--获取-->
+    <select id="getChildrenByParentId" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        WHERE parent_id = #{pid}
+        ORDER BY order_nm
+    </select>
+    <!--根据xpath获取子目录-->
+    <select id="findByXpath" resultType="AgDir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_bim
+        WHERE xpath LIKE CONCAT(#{xpath},'/%')
+    </select>
+
+    <!--根据目录的xpath和当前用户ID判断目录是否已授权：判断没有权限的标准是目录及子目录下没有任何图层-->
+    <select id="isAuthorizedToDir" resultType="Boolean">
+        SELECT ( CASE WHEN count(*)>0 THEN 1 ELSE 0 END ) as Authorized
+        FROM AG_USER_LAYER a join ag_bim_layer b on a.DIR_LAYER_ID = b.ID
+        WHERE a.USER_ID=#{userId} and b.DIR_ID in (select ID from AG_bim WHERE XPATH Like CONCAT(#{xpath},'%'))
+    </select>
+
+    <!--根据目录的xpath和当前用户ID判断目录是否已授权：判断没有权限的标准是目录及子目录下没有任何非底图图层-->
+    <select id="isAuthorizedDirContainNotBaseLayer" resultType="Boolean">
+        SELECT ( CASE WHEN count(*)>0 THEN 1 ELSE 0 END ) as Authorized
+        FROM AG_USER_LAYER a join ag_bim_layer b on a.DIR_LAYER_ID = b.ID
+        WHERE a.USER_ID=#{userId} and b.DIR_ID in (select ID from AG_bim WHERE XPATH Like CONCAT(#{xpath},'%')) and (IS_BASE_MAP != '1' or a.IS_BASE_MAP is NULL)
+    </select>
+
+    <!--保存目录-->
+    <insert id="save">
+        INSERT INTO ag_bim (
+          id,name,parent_id,xpath,dir_seq,order_nm,map_param_id
+        ) VALUES (
+          #{id},#{name},#{parentId},#{xpath},#{dirSeq},#{orderNm},#{mapParamId}
+        )
+    </insert>
+    <!--删除目录-->
+    <delete id="delete">
+        DELETE FROM ag_bim
+        WHERE id = #{id}
+    </delete>
+    <!--删除目录以及子目录-->
+    <delete id="deleteByXpath">
+        DELETE FROM ag_bim
+        WHERE xpath = #{xpath}
+        OR xpath LIKE CONCAT(#{xpath},'/%')
+    </delete>
+    <!--修改目录-->
+    <update id="update">
+        UPDATE ag_bim
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="xpath != null">
+                xpath = #{xpath},
+            </if>
+            <if test="dirSeq != null">
+                dir_seq = #{dirSeq},
+            </if>
+            <if test="orderNm != null">
+                order_nm = #{orderNm},
+            </if>
+            <if test="mapParamId != null">
+                map_param_id = #{mapParamId}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <!--批量修改目录-->
+    <update id="updateBatch" parameterType="java.util.List">
+        <if test="_databaseId == 'oracle'">
+            BEGIN
+        </if>
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE ag_bim
+            <set>
+                <if test="item.name != null">
+                    name = #{item.name},
+                </if>
+                <if test="item.parentId != null">
+                    parent_id = #{item.parentId},
+                </if>
+                <if test="item.xpath != null">
+                    xpath = #{item.xpath},
+                </if>
+                <if test="item.dirSeq != null">
+                    dir_seq = #{item.dirSeq},
+                </if>
+                <if test="item.orderNm != null">
+                    order_nm = #{item.orderNm},
+                </if>
+                <if test="item.mapParamId != null">
+                    map_param_id = #{item.mapParamId}
+                </if>
+            </set>
+            WHERE id = #{item.id}
+        </foreach>
+        <if test="_databaseId == 'oracle'">
+            ;END;
+        </if>
+    </update>
+</mapper>

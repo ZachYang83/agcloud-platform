@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgStyleMapper">
+
+    <sql id="allColumns">
+         ID id,
+        NAME "name",
+        STYLE style,
+        TYPE "type",
+        POINT_TYPE pointType,
+        IS_SYSTEM isSystem
+    </sql>
+
+    <!--查询所有AgStyle记录-->
+    <select id="findAll" resultType="AgStyle">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_STYLE
+    </select>
+
+    <!--按条件查询-->
+    <select id="findAgStyleList" resultType="AgStyle">
+        SELECT *  FROM (
+        SELECT
+        t.ID id,
+        t.NAME as name,
+        t.STYLE style,
+        t.TYPE as type,
+        t.POINT_TYPE pointType,
+        t.IS_SYSTEM isSystem,
+        t2.layerNum isUsing
+        FROM AG_STYLE t LEFT JOIN (
+        SELECT styleId, COUNT(*) layerNum
+        FROM AG_STYLE_LAYER
+        GROUP BY styleId
+        ) t2 ON t.id = t2.styleId
+        ) a WHERE
+        1 = 1
+        <if test="name != null">
+            AND a.NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+        </if>
+        <if test="type != null">
+            AND a.TYPE = #{type}
+        </if>
+        <if test="style != null">
+            AND a.STYLE = #{style}
+        </if>
+        <if test="isSystem != '2'.toString() and isSystem != null">
+            AND a.isSystem = #{isSystem}
+        </if>
+        ORDER BY name
+    </select>
+
+    <!--查询被图层使用的符号-->
+    <select id="findUsedAgStyleList" resultType="AgStyle">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_STYLE t
+        WHERE
+            t.ID IN (SELECT styleId FROM AG_STYLE_LAYER)
+    </select>
+
+    <!--按条件查询-->
+    <select id="findAgStyleById" resultType="AgStyle">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_STYLE
+        WHERE
+        ID = #{id}
+        ORDER BY name
+    </select>
+
+
+
+    <!--按条件查询-->
+    <select id="findDefaultStyleList" resultType="AgStyle">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_STYLE
+        WHERE
+        ID = '692060df-e59d-4612-91f8-b4325000d1f8' OR ID = 'e398a409-7790-4d6b-98c0-d86d1391de0b' OR ID = '00b4004a-40d6-4ae9-b6a8-92b206de731b'
+        ORDER BY name
+    </select>
+
+    <!--保存-->
+    <insert id="saveAgStyle">
+        INSERT
+        INTO AG_STYLE (
+          ID, NAME, STYLE, TYPE, POINT_TYPE, IS_SYSTEM
+        ) VALUES (
+          #{id},#{name},#{style},#{type},#{pointType},#{isSystem}
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="updateAgStyle">
+        UPDATE AG_STYLE
+        <set>
+            <if test="name != null">
+                NAME = #{name},
+            </if>
+            <if test="style != null">
+                STYLE = #{style},
+            </if>
+            <if test="type != null">
+                TYPE = #{type},
+            </if>
+            <if test="pointType != null">
+                POINT_TYPE = #{pointType},
+            </if>
+            <if test="isSystem != null">
+                IS_SYSTEM = #{isSystem},
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="deleteAgStyle">
+        DELETE
+        FROM
+            AG_STYLE
+        WHERE
+            ID IN
+           <foreach collection="ids" item="id" open="(" separator="," close=")">
+                  #{id}
+           </foreach>
+    </delete>
+    <!-- 根据图层id批量删除-->
+    <delete id="deleteAgStyleBatch">
+        DELETE
+        FROM
+        AG_STYLE_LAYER
+        WHERE
+        LAYERID IN
+        <foreach collection="layerIds" item="layerId" open="(" separator="," close=")">
+            #{layerId}
+        </foreach>
+    </delete>
+
+    <select id="findStyleIdsByLayerId" resultType="String">
+        SELECT DISTINCT styleId AS styleId
+        FROM AG_STYLE_LAYER t
+        WHERE t.layerId = #{layerId}
+    </select>
+
+    <insert id="saveLayerStyle">
+        BEGIN
+        <foreach collection="items" item="item" separator=";">
+            INSERT INTO AG_STYLE_LAYER(
+             id, layerId, styleId
+            )
+            VALUES
+            (#{item.id}, #{item.layerId},#{item.styleId})
+        </foreach>
+        ;END;
+    </insert>
+
+    <delete id="deleteLayerStyle">
+        DELETE FROM AG_STYLE_LAYER t
+        WHERE
+        t.layerId = #{layerId}
+        AND
+        t.styleId IN
+        <foreach collection="styleIds" item="styleId" open="(" close=")" separator=",">
+            #{styleId}
+        </foreach>
+    </delete>
+
+</mapper>

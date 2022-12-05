@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgServicesMonitorMapper">
+
+    <sql id="allColumns">
+        ID id,
+        STATUS status,
+        MONITOR_STATUS monitorStatus,
+        SERVICE_NAME serviceName,
+        SERVICE_FULL_NAME serviceFullName,
+        MONITOR_URL monitorUrl,
+        AVAILABLE available,
+        AVERAGE_TIME averageTime,
+        MONITOR_FREQUENCY monitorFrequency,
+        SUCCESS_RATE successRate,
+        MONITOR_DETAIL monitorDetail,
+        REQUEST_TOTAL requestTotal,
+        START_MONITOR_TIME startMonitorTime,
+        LAST_MONITOR_TIME lastMonitorTime,
+        IP_BLACK_LIST ipBlackList,
+        EMAIL_ADDRESS emailAddress,
+        PHONE phone,
+        SEND_TATE sendRate,
+        SEND_LEVEL sendLevel,
+        RECEIVE_WAY receiveWay
+    </sql>
+    <!--分页查询所有监控服务-->
+    <select id="findList" resultType="AgServicesMonitor">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_services_monitor t
+       <where>
+           1 = 1
+           <if test="status != -2">
+               AND t.status = #{status}
+           </if>
+           <if test="serviceName != null">
+               AND t.SERVICE_NAME like CONCAT(CONCAT('%', TRIM(#{serviceName})),'%')
+           </if>
+           <if test="queryStartTime !=null">
+               AND t.START_MONITOR_TIME >= to_date(#{queryStartTime}, 'yyyy-MM-dd hh24-mi-ss')
+           </if>
+           <if test="queryEndTime !=null">
+               AND t.START_MONITOR_TIME &lt;= to_date(#{queryEndTime}, 'yyyy-MM-dd hh24-mi-ss')
+           </if>
+       </where>
+    </select>
+    <!--查询所有监控服务-->
+    <select id="findAllList" resultType="AgServicesMonitor">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_services_monitor
+        WHERE
+        1 = 1
+    </select>
+
+    <!--按监控地址称查找-->
+    <select id="findByMonitorUrl" resultType="AgServicesMonitor">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_services_monitor
+        WHERE
+        monitor_url = #{monitorUrl}
+    </select>
+
+    <!--根据服务id查找监控记录-->
+    <select id="findById" resultType="AgServicesMonitor">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_services_monitor
+        WHERE
+        ID = #{id}
+    </select>
+
+
+    <!--保存-->
+    <insert id="save">
+        INSERT
+        INTO ag_services_monitor (
+        id,status,monitor_status,service_name,service_full_name,monitor_url,available,average_time,monitor_frequency,success_rate,monitor_detail,request_total,start_monitor_time,last_monitor_time,ip_black_list
+        ) VALUES (
+        #{id},#{status},#{monitorStatus},#{serviceName},#{serviceFullName},#{monitorUrl},#{available},#{averageTime},#{monitorFrequency},#{successRate},#{monitorDetail},#{requestTotal},#{startMonitorTime},#{lastMonitorTime},#{ipBlackList}
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        UPDATE ag_services_monitor
+        <set>
+            <if test="status != 0">
+                status = #{status},
+            </if>
+            <if test="monitorStatus != 0">
+                monitor_status = #{monitorStatus},
+            </if>
+            <if test="serviceName != null">
+                service_name = #{serviceName},
+            </if>
+            <if test="serviceFullName != null">
+                service_full_name = #{serviceFullName},
+            </if>
+            <if test="monitorUrl != null">
+                monitor_url = #{monitorUrl},
+            </if>
+            <if test="available != null">
+                available = #{available},
+
+            </if>
+            <if test="averageTime != null">
+                average_time = #{averageTime},
+
+            </if>
+            <if test="monitorFrequency != null">
+                monitor_frequency = #{monitorFrequency},
+            </if>
+            <if test="successRate !=null">
+                success_rate = #{successRate},
+            </if>
+            <if test="monitorDetail !=null">
+                monitor_detail = #{monitorDetail},
+            </if>
+            <if test="requestTotal !=null">
+                request_Total = #{requestTotal},
+            </if>
+            <if test="startMonitorTime !=null">
+                start_monitor_time = #{startMonitorTime},
+            </if>
+            <if test="lastMonitorTime !=null">
+                last_monitor_time = #{lastMonitorTime},
+            </if>
+            <if test="ipBlackList !=null">
+                ip_black_list = #{ipBlackList}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!-- 修改告警设置信息  id=all 设置所有告警信息-->
+    <update id="updateSetWarnInfo">
+        UPDATE ag_services_monitor
+        <set>
+            <if test="emailAddress != null">
+                EMAIL_ADDRESS = #{emailAddress},
+            </if>
+            <if test="phone != null">
+                PHONE = #{phone},
+            </if>
+            <if test="sendRate >=0">
+                SEND_TATE = #{sendRate},
+            </if>
+            <if test="sendLevel != null">
+                SEND_LEVEL = #{sendLevel},
+            </if>
+            <if test="receiveWay != null">
+                RECEIVE_WAY = #{receiveWay}
+            </if>
+        </set>
+        <if test="id !='all'">
+            WHERE id = #{id}
+        </if>
+    </update>
+
+   <!-- 开始/停止 监控服务-->
+    <update id="changeMonitorStatus">
+         UPDATE ag_services_monitor
+        <set>
+            <if test="monitorStatus != 0">
+                monitor_status = #{monitorStatus},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--关闭或启动所有监听-->
+    <update id="changeAllMonitorStatus">
+        UPDATE ag_services_monitor
+        <set>
+            <if test="monitorStatus != 0">
+                monitor_status = #{monitorStatus}
+            </if>
+        </set>
+    </update>
+    <!--删除-->
+    <delete id="deleteByMonitorUrl">
+        DELETE
+        FROM
+        ag_services_monitor
+        WHERE
+        monitor_url = #{monitorUrl}
+    </delete>
+
+    <!-- 批量删除-->
+    <delete id="delByIds" parameterType="java.util.List">
+        DELETE FROM ag_services_monitor where ID in
+        <foreach collection="list" item="item" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

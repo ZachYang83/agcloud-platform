@@ -1,0 +1,33 @@
+archivesBaseName = 'agcloud-agcom-agsupport'
+version '5.0.0'
+
+jar {
+    enabled = true
+    exclude('com/augurit/*.class','application.properties', 'license.lic', 'mybatis.xml')
+}
+// build不执行test
+//check.dependsOn.remove(test)
+dependencies {
+    compile project(":agsupport-common")
+    compile fileTree(include: ['*.jar'], dir: 'src/main/webapp/WEB-INF/lib')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task deleteAgsupportJar(type:Exec){
+    commandLine "rm", "-rf","$agcloud_lib_path/agcloud-agcom-agsupport-5.0.0.jar"
+    doLast {
+        println '将agcloud原来的agsupport.jar删除：成功'
+    }
+}
+
+//复制agsupport的Jar到agcloud下lib目录
+task copyReleaseJarToAgCloud(type: Exec,dependsOn: deleteAgsupportJar) {//(type: Copy)
+    commandLine "cp", "$agsupport_jar_path", "$agcloud_lib_path/"
+    doLast {
+        println '将agsupport.jar复制到agcloud：成功'
+    }
+}
+
+if (isDeployment) {
+    jar.finalizedBy copyReleaseJarToAgCloud
+}

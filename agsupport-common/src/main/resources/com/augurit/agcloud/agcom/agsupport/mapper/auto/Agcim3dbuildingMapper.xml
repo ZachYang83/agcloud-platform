@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.Agcim3dbuildingMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuilding" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="projectid" property="projectid" jdbcType="VARCHAR" />
+    <result column="buildingname" property="buildingname" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="VARCHAR" />
+    <result column="buildingtype" property="buildingtype" jdbcType="VARCHAR" />
+    <result column="usage" property="usage" jdbcType="VARCHAR" />
+    <result column="builtuparea" property="builtuparea" jdbcType="VARCHAR" />
+    <result column="height" property="height" jdbcType="VARCHAR" />
+    <result column="boundingbox" property="boundingbox" jdbcType="VARCHAR" />
+    <result column="baseline" property="baseline" jdbcType="VARCHAR" />
+    <result column="entitytable" property="entitytable" jdbcType="VARCHAR" />
+    <result column="entitycount" property="entitycount" jdbcType="VARCHAR" />
+    <result column="materialtable" property="materialtable" jdbcType="VARCHAR" />
+    <result column="geometrytable" property="geometrytable" jdbcType="VARCHAR" />
+    <result column="geometrytype" property="geometrytype" jdbcType="VARCHAR" />
+    <result column="buildingecoindex" property="buildingecoindex" jdbcType="VARCHAR" />
+    <result column="metadata" property="metadata" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, projectid, buildingname, location, createtime, buildingtype, usage, builtuparea, 
+    height, boundingbox, baseline, entitytable, entitycount, materialtable, geometrytable, 
+    geometrytype, buildingecoindex, metadata
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuildingExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from agcim3dbuilding
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from agcim3dbuilding
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from agcim3dbuilding
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuildingExample" >
+    delete from agcim3dbuilding
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuilding" >
+    insert into agcim3dbuilding (id, projectid, buildingname, 
+      location, createtime, buildingtype, 
+      usage, builtuparea, height, 
+      boundingbox, baseline, entitytable, 
+      entitycount, materialtable, geometrytable, 
+      geometrytype, buildingecoindex, metadata
+      )
+    values (#{id,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR}, #{buildingname,jdbcType=VARCHAR}, 
+      #{location,jdbcType=VARCHAR}, #{createtime,jdbcType=VARCHAR}, #{buildingtype,jdbcType=VARCHAR}, 
+      #{usage,jdbcType=VARCHAR}, #{builtuparea,jdbcType=VARCHAR}, #{height,jdbcType=VARCHAR}, 
+      #{boundingbox,jdbcType=VARCHAR}, #{baseline,jdbcType=VARCHAR}, #{entitytable,jdbcType=VARCHAR}, 
+      #{entitycount,jdbcType=VARCHAR}, #{materialtable,jdbcType=VARCHAR}, #{geometrytable,jdbcType=VARCHAR}, 
+      #{geometrytype,jdbcType=VARCHAR}, #{buildingecoindex,jdbcType=VARCHAR}, #{metadata,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuilding" >
+    insert into agcim3dbuilding
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectid != null" >
+        projectid,
+      </if>
+      <if test="buildingname != null" >
+        buildingname,
+      </if>
+      <if test="location != null" >
+        location,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="buildingtype != null" >
+        buildingtype,
+      </if>
+      <if test="usage != null" >
+        usage,
+      </if>
+      <if test="builtuparea != null" >
+        builtuparea,
+      </if>
+      <if test="height != null" >
+        height,
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox,
+      </if>
+      <if test="baseline != null" >
+        baseline,
+      </if>
+      <if test="entitytable != null" >
+        entitytable,
+      </if>
+      <if test="entitycount != null" >
+        entitycount,
+      </if>
+      <if test="materialtable != null" >
+        materialtable,
+      </if>
+      <if test="geometrytable != null" >
+        geometrytable,
+      </if>
+      <if test="geometrytype != null" >
+        geometrytype,
+      </if>
+      <if test="buildingecoindex != null" >
+        buildingecoindex,
+      </if>
+      <if test="metadata != null" >
+        metadata,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingname != null" >
+        #{buildingname,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingtype != null" >
+        #{buildingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="usage != null" >
+        #{usage,jdbcType=VARCHAR},
+      </if>
+      <if test="builtuparea != null" >
+        #{builtuparea,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        #{height,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        #{boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="baseline != null" >
+        #{baseline,jdbcType=VARCHAR},
+      </if>
+      <if test="entitytable != null" >
+        #{entitytable,jdbcType=VARCHAR},
+      </if>
+      <if test="entitycount != null" >
+        #{entitycount,jdbcType=VARCHAR},
+      </if>
+      <if test="materialtable != null" >
+        #{materialtable,jdbcType=VARCHAR},
+      </if>
+      <if test="geometrytable != null" >
+        #{geometrytable,jdbcType=VARCHAR},
+      </if>
+      <if test="geometrytype != null" >
+        #{geometrytype,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingecoindex != null" >
+        #{buildingecoindex,jdbcType=VARCHAR},
+      </if>
+      <if test="metadata != null" >
+        #{metadata,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuildingExample" resultType="java.lang.Integer" >
+    select count(*) from agcim3dbuilding
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update agcim3dbuilding
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectid != null" >
+        projectid = #{record.projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buildingname != null" >
+        buildingname = #{record.buildingname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.location != null" >
+        location = #{record.location,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buildingtype != null" >
+        buildingtype = #{record.buildingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usage != null" >
+        usage = #{record.usage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.builtuparea != null" >
+        builtuparea = #{record.builtuparea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.height != null" >
+        height = #{record.height,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boundingbox != null" >
+        boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="record.baseline != null" >
+        baseline = #{record.baseline,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entitytable != null" >
+        entitytable = #{record.entitytable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entitycount != null" >
+        entitycount = #{record.entitycount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materialtable != null" >
+        materialtable = #{record.materialtable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.geometrytable != null" >
+        geometrytable = #{record.geometrytable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.geometrytype != null" >
+        geometrytype = #{record.geometrytype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buildingecoindex != null" >
+        buildingecoindex = #{record.buildingecoindex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.metadata != null" >
+        metadata = #{record.metadata,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update agcim3dbuilding
+    set id = #{record.id,jdbcType=VARCHAR},
+      projectid = #{record.projectid,jdbcType=VARCHAR},
+      buildingname = #{record.buildingname,jdbcType=VARCHAR},
+      location = #{record.location,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=VARCHAR},
+      buildingtype = #{record.buildingtype,jdbcType=VARCHAR},
+      usage = #{record.usage,jdbcType=VARCHAR},
+      builtuparea = #{record.builtuparea,jdbcType=VARCHAR},
+      height = #{record.height,jdbcType=VARCHAR},
+      boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      baseline = #{record.baseline,jdbcType=VARCHAR},
+      entitytable = #{record.entitytable,jdbcType=VARCHAR},
+      entitycount = #{record.entitycount,jdbcType=VARCHAR},
+      materialtable = #{record.materialtable,jdbcType=VARCHAR},
+      geometrytable = #{record.geometrytable,jdbcType=VARCHAR},
+      geometrytype = #{record.geometrytype,jdbcType=VARCHAR},
+      buildingecoindex = #{record.buildingecoindex,jdbcType=VARCHAR},
+      metadata = #{record.metadata,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuilding" >
+    update agcim3dbuilding
+    <set >
+      <if test="projectid != null" >
+        projectid = #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingname != null" >
+        buildingname = #{buildingname,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingtype != null" >
+        buildingtype = #{buildingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="usage != null" >
+        usage = #{usage,jdbcType=VARCHAR},
+      </if>
+      <if test="builtuparea != null" >
+        builtuparea = #{builtuparea,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="baseline != null" >
+        baseline = #{baseline,jdbcType=VARCHAR},
+      </if>
+      <if test="entitytable != null" >
+        entitytable = #{entitytable,jdbcType=VARCHAR},
+      </if>
+      <if test="entitycount != null" >
+        entitycount = #{entitycount,jdbcType=VARCHAR},
+      </if>
+      <if test="materialtable != null" >
+        materialtable = #{materialtable,jdbcType=VARCHAR},
+      </if>
+      <if test="geometrytable != null" >
+        geometrytable = #{geometrytable,jdbcType=VARCHAR},
+      </if>
+      <if test="geometrytype != null" >
+        geometrytype = #{geometrytype,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingecoindex != null" >
+        buildingecoindex = #{buildingecoindex,jdbcType=VARCHAR},
+      </if>
+      <if test="metadata != null" >
+        metadata = #{metadata,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dbuilding" >
+    update agcim3dbuilding
+    set projectid = #{projectid,jdbcType=VARCHAR},
+      buildingname = #{buildingname,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=VARCHAR},
+      buildingtype = #{buildingtype,jdbcType=VARCHAR},
+      usage = #{usage,jdbcType=VARCHAR},
+      builtuparea = #{builtuparea,jdbcType=VARCHAR},
+      height = #{height,jdbcType=VARCHAR},
+      boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      baseline = #{baseline,jdbcType=VARCHAR},
+      entitytable = #{entitytable,jdbcType=VARCHAR},
+      entitycount = #{entitycount,jdbcType=VARCHAR},
+      materialtable = #{materialtable,jdbcType=VARCHAR},
+      geometrytable = #{geometrytable,jdbcType=VARCHAR},
+      geometrytype = #{geometrytype,jdbcType=VARCHAR},
+      buildingecoindex = #{buildingecoindex,jdbcType=VARCHAR},
+      metadata = #{metadata,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

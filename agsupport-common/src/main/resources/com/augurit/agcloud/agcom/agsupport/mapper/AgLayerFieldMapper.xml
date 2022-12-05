@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgLayerFieldMapper">
+
+    <sql id="allColumns">
+        ID id,
+        FIELD_NAME fieldName,
+        FIELD_NAME_CN fieldNameCn,
+        FIELD_TYPE fieldType,
+        FIELD_SIZE fieldSize,
+        ORDER_NM orderNm,
+        LAYER_ID layerId,
+        VIEW_IN_RESULT viewInResult,
+        EDITABLE editable,
+        VIEW_IN_BLURQUERY viewInBlurquery,
+        FNULLABLE fnullable
+    </sql>
+
+    <!--按图层layerId查找-->
+    <select id="findByLayerId" resultType="AgLayerField">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_layer_field
+        WHERE
+            layer_id = #{layerId}
+    </select>
+
+    <!--按图层id查找-->
+    <select id="findById" resultType="AgLayerField">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_layer_field
+        WHERE
+        id = #{id}
+    </select>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            ag_layer_field
+        WHERE
+            id = #{id}
+    </delete>
+
+    <delete id="deleteBacthByLayerIds">
+        DELETE
+        FROM
+        ag_layer_field
+        WHERE
+        layer_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getLayerFieldByLayerIdAndFieldName" resultType="AgLayerField">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_layer_field
+        WHERE
+        LAYER_ID = #{layerId}  and FIELD_NAME = #{fieldName}
+    </select>
+
+    <select id="getFieldNameAlias" resultType="AgLayerField">
+        SELECT DISTINCT <include refid="allColumns"/>
+        FROM AG_LAYER_FIELD a where a.LAYER_ID = #{layerId}
+    </select>
+
+    <insert id="insertOrUpdateLayerFieldList" parameterType="java.util.List">
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'oracle'">
+                merge into AG_LAYER_FIELD t
+                using
+                (
+                <foreach collection="agLayerFields" item="aglayerField" separator="union all">  <!-- 传入的集合参数 -->
+                    select
+                    #{aglayerField.id, jdbcType=VARCHAR} id,
+                    #{aglayerField.fieldName, jdbcType=VARCHAR} FIELD_NAME,
+                    #{aglayerField.fieldNameCn, jdbcType=VARCHAR} FIELD_NAME_CN,
+                    #{aglayerField.fieldType, jdbcType=VARCHAR} FIELD_TYPE,
+                    #{aglayerField.fieldSize, jdbcType=VARCHAR} FIELD_SIZE,
+                    #{aglayerField.orderNm, jdbcType=VARCHAR} ORDER_NM,
+                    #{aglayerField.layerId, jdbcType=VARCHAR} LAYER_ID,
+                    #{aglayerField.viewInResult, jdbcType=VARCHAR} VIEW_IN_RESULT,
+                    #{aglayerField.editable, jdbcType=VARCHAR} EDITABLE,
+                    #{aglayerField.viewInBlurquery, jdbcType=VARCHAR} VIEW_IN_BLURQUERY,
+                    #{aglayerField.fnullable, jdbcType=VARCHAR} FNULLABLE
+                    from dual
+                </foreach>
+                ) t1
+                on (t.id= t1.id)
+                when matched then <!-- 如果存在就更新 -->
+                update set
+                t.FIELD_NAME = t1.FIELD_NAME,
+                t.FIELD_NAME_CN = t1.FIELD_NAME_CN,
+                t.FIELD_TYPE = t1.FIELD_TYPE,
+                t.FIELD_SIZE = t1.FIELD_SIZE,
+                t.ORDER_NM = t1.ORDER_NM,
+                t.LAYER_ID = t1.LAYER_ID,
+                t.VIEW_IN_RESULT = t1.VIEW_IN_RESULT,
+                t.EDITABLE = t1.EDITABLE,
+                t.VIEW_IN_BLURQUERY = t1.VIEW_IN_BLURQUERY,
+                t.FNULLABLE = t1.FNULLABLE
+                when not matched then  <!-- 不存在就插入数据 -->
+                insert
+                (t.id, t.FIELD_NAME, t.FIELD_NAME_CN,
+                t.FIELD_TYPE, t.FIELD_SIZE, t.ORDER_NM,
+                t.LAYER_ID, t.VIEW_IN_RESULT, t.EDITABLE,
+                t.VIEW_IN_BLURQUERY, t.FNULLABLE)
+                values
+                (t1.id, t1.FIELD_NAME, t1.FIELD_NAME_CN,
+                t1.FIELD_TYPE, t1.FIELD_SIZE, t1.ORDER_NM,
+                t1.LAYER_ID, t1.VIEW_IN_RESULT, t1.EDITABLE,
+                t1.VIEW_IN_BLURQUERY, t1.FNULLABLE)
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'mysql'">
+                insert into AG_LAYER_FIELD (ID,FIELD_NAME,FIELD_NAME_CN,
+                FIELD_TYPE,FIELD_SIZE,ORDER_NM,LAYER_ID,VIEW_IN_RESULT,EDITABLE,VIEW_IN_BLURQUERY,FNULLABLE)
+                values
+                <foreach collection ="agLayerFields" item="aglayerField" separator="," >
+                    (#{aglayerField.id},#{aglayerField.fieldName},#{aglayerField.fieldNameCn}
+                    ,#{aglayerField.fieldType},#{aglayerField.fieldSize},#{aglayerField.orderNm}
+                    ,#{aglayerField.layerId},#{aglayerField.viewInResult},#{aglayerField.editable}
+                    ,#{aglayerField.viewInBlurquery},#{aglayerField.fnullable})
+                </foreach>
+                ON DUPLICATE KEY UPDATE
+                FIELD_NAME = VALUES(FIELD_NAME),
+                FIELD_NAME_CN = VALUES(FIELD_NAME_CN),
+                FIELD_TYPE = VALUES(FIELD_TYPE),
+                FIELD_SIZE = VALUES(FIELD_SIZE),
+                ORDER_NM = VALUES(ORDER_NM),
+                LAYER_ID = VALUES(LAYER_ID),
+                VIEW_IN_RESULT = VALUES(VIEW_IN_RESULT),
+                EDITABLE = VALUES(EDITABLE),
+                VIEW_IN_BLURQUERY = VALUES(VIEW_IN_BLURQUERY),
+                FNULLABLE = VALUES(FNULLABLE)
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+            </when>
+        </choose>
+    </insert>
+</mapper>

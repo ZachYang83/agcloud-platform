@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgFileStoreMapper">
+    <sql id="allColumns">
+         ID id,
+         NAME "name",
+         ALIAS alias,
+         DOMAIN "domain",
+         USAGE usage,
+         URL url,
+         PATH path,
+         EXTENSION "extension",
+         LENGTH length,
+         TAG tag,
+         EXPIRE_TIME expireTime,
+         UPLOAD_TIME uploadTime,
+         MODULE_CODE moduleCode
+    </sql>
+
+    <!--获得所有image记录-->
+    <select id="getAll" resultType="AgFileStore">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_FILE_STORE
+    </select>
+
+
+    <!--根据id获得数据-->
+    <select id="getById" resultType="AgFileStore" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_FILE_STORE WHERE ID = #{id}
+    </select>
+
+    <!--根据id删除一条数据-->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM AG_FILE_STORE WHERE ID = #{id}
+    </delete>
+
+    <!--删除更多数据-->
+    <delete id="deleteMany">
+        DELETE FROM AG_FILE_STORE
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--保存-->
+    <insert id="save" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgFileStore">
+        INSERT INTO AG_FILE_STORE (
+          ID,
+          NAME,
+          ALIAS,
+          DOMAIN,
+          USAGE,
+          URL,
+          PATH,
+          EXTENSION,
+          LENGTH,
+          TAG,
+          EXPIRE_TIME,
+          UPLOAD_TIME,
+          MODULE_CODE
+        ) VALUES (
+          #{id},
+          #{name},
+          #{alias},
+          #{domain},
+          #{usage},
+          #{url},
+          #{path},
+          #{extension},
+          #{length},
+          #{tag},
+          #{expireTime},
+          #{uploadTime},
+          #{moduleCode}
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgFileStore">
+        UPDATE AG_FILE_STORE
+        <set>
+            <if test="null != name">
+                NAME= #{name},
+            </if>
+            <if test="null != alias">
+                ALIAS= #{alias},
+            </if>
+            <if test="null != domain">
+                DOMAIN= #{domain},
+            </if>
+            <if test="null != usage">
+                USAGE= #{usage},
+            </if>
+            <if test="null != url">
+                URL= #{url},
+            </if>
+            <if test="null != path">
+                PATH= #{path},
+            </if>
+            <if test="null != extension">
+                EXTENSION= #{extension},
+            </if>
+            <if test="null != length">
+                LENGTH= #{length},
+            </if>
+            <if test="null != tag">
+                TAG= #{tag},
+            </if>
+            <if test="null != expireTime">
+                EXPIRE_TIME= #{expireTime},
+            </if>
+            <if test="null != moduleCode">
+                MODULE_CODE= #{moduleCode},
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+
+
+    <!--按条件查询-->
+    <select id="downloadByDomainAndUsage" resultType="AgFileStore">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_FILE_STORE
+        WHERE
+        1 = 1
+        <if test="null != name">
+            AND NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+        </if>
+        <if test="null != domain">
+            AND DOMAIN LIKE CONCAT(CONCAT('%', TRIM(#{domain})), '%')
+        </if>
+        <if test="null != usage">
+            AND USAGE LIKE CONCAT(CONCAT('%', TRIM(#{usage})), '%')
+        </if>
+        <if test="null != alias">
+            AND ALIAS LIKE CONCAT(CONCAT('%', TRIM(#{alias})), '%')
+        </if>
+        ORDER BY UPLOAD_TIME
+    </select>
+
+    <!--按条件查询-->
+    <select id="getByDomainAndUsage" resultType="AgFileStore">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_FILE_STORE
+        WHERE
+        1 = 1
+        <if test="null != name">
+            AND NAME = #{name}
+        </if>
+        <if test="null != domain">
+            AND DOMAIN = #{domain}
+        </if>
+        <if test="null != usage">
+            AND USAGE = #{usage}
+        </if>
+        <if test="null != alias">
+            AND ALIAS = #{alias}
+        </if>
+    </select>
+
+    <!--按条件查询-->
+    <select id="getByDomainOrUsage" resultType="AgFileStore">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_FILE_STORE
+        <if test="null != name">
+            WHERE
+            NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            OR DOMAIN LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            OR USAGE LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            OR ALIAS LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+        </if>
+        ORDER BY UPLOAD_TIME
+    </select>
+
+
+    <!--获取更多数据-->
+    <select id="getByIds" resultType="AgFileStore">
+        SELECT * FROM AG_FILE_STORE
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--按条件查询-->
+    <select id="getFileByModuleCode" resultType="AgFileStore">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_FILE_STORE
+        WHERE MODULE_CODE = #{moduleCode}
+        <if test="domain != null">
+            AND DOMAIN = #{domain}
+        </if>
+        <if test="usage !=null">
+            AND USAGE = #{usage}
+        </if>
+        ORDER BY UPLOAD_TIME
+    </select>
+
+
+</mapper>

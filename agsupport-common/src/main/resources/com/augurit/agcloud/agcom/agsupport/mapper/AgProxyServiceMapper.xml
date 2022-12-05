@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgProxyServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgProxyService" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="LAYER_ID" property="layerId" jdbcType="VARCHAR" />
+    <result column="APPLY_REASON" property="applyReason" jdbcType="VARCHAR" />
+    <result column="APPLY_TIME" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="AUDITOR" property="auditor" jdbcType="VARCHAR" />
+    <result column="UUID" property="uuid" jdbcType="VARCHAR" />
+    <result column="APPROVE_OPINION" property="approveOpinion" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_NAME,PASSWORD,LAYER_ID, APPLY_REASON, APPLY_TIME,AUDIT_TIME,STATE,AUDITOR,UUID,APPROVE_OPINION
+  </sql>
+  <insert id="saveProxyService" parameterType="AgProxyService">
+    insert into AG_PROXY_SERVICE (
+    ID, USER_NAME,PASSWORD,LAYER_ID, APPLY_REASON, APPLY_TIME,AUDIT_TIME,STATE,AUDITOR,UUID,APPROVE_OPINION
+    )  values  (
+    #{id},#{userName},#{password},#{layerId},#{applyReason},#{applyTime},#{auditTime},#{state},#{auditor},#{uuid},#{approveOpinion}
+    )
+  </insert>
+
+  <update id="updateProxyServiceState">
+    UPDATE AG_PROXY_SERVICE
+    <set>
+      <if test="state != null">
+        STATE = #{state},
+      </if>
+      <if test="uuid != null and uuid != ''">
+        UUID = #{uuid},
+      </if>
+      <if test="auditTime != null">
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditor != null">
+        AUDITOR = #{auditor},
+      </if>
+      <if test="approveOpinion != null">
+        APPROVE_OPINION = #{approveOpinion}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <select id="getAgProxyServiceById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from AG_PROXY_SERVICE
+    WHERE id = #{id}
+  </select>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from AG_PROXY_SERVICE
+    <where>
+      <if test="userName != null and userName != ''" >
+        and USER_NAME = #{userName}
+      </if>
+
+      <if test="state != null and state !=''" >
+        and STATE = #{state}
+      </if>
+    </where>
+    order by APPLY_TIME desc
+  </select>
+
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from AG_PROXY_SERVICE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+</mapper>

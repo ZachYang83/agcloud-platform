@@ -1,0 +1,33 @@
+archivesBaseName = 'agcloud-agcom-agsupport-bim'
+version '5.0.0'
+
+jar {
+    enabled = true
+    exclude('com/augurit/*.class', 'application.properties', 'license.lic', 'mybatis.xml',)
+}
+// build不执行test
+//check.dependsOn.remove(test)
+dependencies {
+    compile project(":agsupport-common")
+    compile fileTree(include: ['*.jar'], dir: 'src/main/webapp/WEB-INF/lib')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task deleteAgsupportBimJar(type:Exec){
+    commandLine "rm", "-rf","$agcloud_lib_path/agcloud-agcom-agsupport-bim-5.0.0.jar"
+    doLast {
+        println '将agcloud原来的agsupport-bim.jar删除：成功'
+    }
+}
+
+//复制agsupport-bim的Jar到agcloud下lib目录
+task copyReleaseBimJarToAgCloud(type: Exec,dependsOn: deleteAgsupportBimJar) {//(type: Copy)
+    commandLine "cp", "$agsupport_bim_jar_path", "$agcloud_lib_path/"
+    doLast {
+        println '将agsupport-bim.jar复制到agcloud：成功'
+    }
+}
+
+if (isDeployment) {
+    jar.finalizedBy copyReleaseBimJarToAgCloud
+}

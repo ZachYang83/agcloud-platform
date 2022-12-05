@@ -1,0 +1,1143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgOpenMapMapper">
+    <resultMap id="resultMapForOpenMapApply" type="com.augurit.agcloud.agcom.agsupport.domain.AgOpenMapApply">
+        <id column="ID" property="id"/>
+        <result column="APPLICANT" property="applicant"/>
+        <result column="CURRENTPROCESSSTATUS" property="currentProcessStatus"/>
+        <result column="APPLYDOCID" property="applyDocId"/>
+        <result column="APPLICANT_LOGINNAME" property="applicantLoginName"/>
+        <result column="SECRECY" property="secrecy"/>
+        <result column="OBTAINWAY" property="obtainWay"/>
+        <result column="OBTAINWAYDES" property="obtainWayDesc"/>
+        <result column="VALIDITYDATE" property="validityDate"/>
+        <result column="WORKUNIT" property="workUnit"/>
+        <result column="APPLICANTIDCARD" property="applicantIdCard"/>
+        <result column="WORKADDRESS" property="workAddress"/>
+        <result column="APPLICANTMOBILE" property="applicantMobile"/>
+        <result column="APPLYTIME" property="applyTime"/>
+        <result column="APPLYFOR" property="applyFor"/>
+        <result column="IP" property="ip"/>
+        <result column="AUDITOR_LOGINNAME" property="auditorLoginName"/>
+        <result column="AUDITOR_USERNAME" property="auditorUserName"/>
+        <result column="AUDIT_OPINION" property="auditOpinion"/>
+        <result column="AUDIT_TIME" property="auditTime"/>
+    </resultMap>
+    <resultMap id="resultMapForOpenMapAudit" type="com.augurit.agcloud.agcom.agsupport.domain.AgOpenMapAuditList">
+        <id column="ID" property="id"/>
+        <result column="APPLICANT" property="applicant"/>
+        <result column="CURRENTPROCESSSTATUS" property="currentProcessStatus"/>
+        <result column="APPLYDOCID" property="applyDocId"/>
+        <result column="APPLICANT_LOGINNAME" property="applicantLoginName"/>
+        <result column="SECRECY" property="secrecy"/>
+        <result column="OBTAINWAY" property="obtainWay"/>
+        <result column="OBTAINWAYDES" property="obtainWayDesc"/>
+        <result column="VALIDITYDATE" property="validityDate"/>
+        <result column="WORKUNIT" property="workUnit"/>
+        <result column="APPLICANTIDCARD" property="applicantIdCard"/>
+        <result column="WORKADDRESS" property="workAddress"/>
+        <result column="APPLICANTMOBILE" property="applicantMobile"/>
+        <result column="APPLYTIME" property="applyTime"/>
+        <result column="APPLYFOR" property="applyFor"/>
+        <result column="IP" property="ip"/>
+        <result column="AUDITOR_LOGINNAME" property="auditorLoginName"/>
+        <result column="AUDITOR_USERNAME" property="auditorUserName"/>
+        <result column="AUDIT_OPINION" property="auditOpinion"/>
+        <result column="AUDIT_TIME" property="auditTime"/>
+    </resultMap>
+
+    <resultMap id="resultMapForOpenMapLayer" type="com.augurit.agcloud.agcom.agsupport.domain.AgOpenMapLayer">
+        <id column="DIR_LAYER_ID" property="dirLayerId"/>
+        <result column="NAME" property="name"/>
+        <result column="NAME_CN" property="nameCn"/>
+        <result column="URL" property="url"/>
+        <result column="LAYER_TYPE" property="layerType"/>
+        <result column="FEATURE_TYPE" property="featureType"/>
+        <result column="LAYER_TABLE" property="layerTable"/>
+        <result column="IS_BASE_MAP" property="isBaseMap"/>
+        <result column="PARAM_ID" property="paramId"/>
+        <result column="IS_PROXY" property="isProxy"/>
+        <result column="PROXY_URL" property="proxyUrl"/>
+        <result column="VECTOR_LAYER_ID" property="vectorLayerId"/>
+        <result column="DATA" property="data"/>
+        <result column="EXTENT" property="extent"/>
+        <result column="METADATA_ID" property="metadataId"/>
+        <result column="IS_EXTERNAL" property="isExternal"/>
+        <result column="VISIBLE_MINZOOM" property="visibleMinZoom"/>
+        <result column="VISIBLE_MAXZOOM" property="visibleMaxZoom"/>
+        <result column="CURRENTPROCESSSTATUS" property="applyStatus"/>
+        <result column="AUDIT_TIME" property="auditTime"/>
+        <result column="VALIDITYDATE" property="validityDate"/>
+    </resultMap>
+    <resultMap id="resultMapForOpenMapApplyItem" type="com.augurit.agcloud.agcom.agsupport.domain.AgOpenMapApplyItem">
+        <id column="ID" property="id"/>
+        <result column="APPLY_ID" property="applyId"/>
+        <result column="DIR_LAYER_ID" property="dirLayerId"/>
+        <result column="PROXY_URL" property="proxyUrl"/>
+    </resultMap>
+    <resultMap id="resultMapForOpenMapCartItem" type="com.augurit.agcloud.agcom.agsupport.domain.AgOpenMapCartItem">
+        <id column="ID" property="id"/>
+        <result column="DIR_LAYER_ID" property="dirLayerId"/>
+        <result column="LOGINNAME" property="loginName"/>
+        <result column="THUMBNAIL" property="thumbNail"/>
+    </resultMap>
+
+    <resultMap id="resultMapForOpenMapApplyAttachFile" type="com.augurit.agcloud.agcom.agsupport.domain.AgOpenMapAttachFile">
+        <id column="ID" property="id"/>
+        <result column="APPLY_ID" property="applyId"/>
+        <result column="NAME" property="name"/>
+        <result column="FILE_SIZE" property="fileSize"/>
+        <result column="FILE_PATH" property="filePath"/>
+    </resultMap>
+
+    <sql id="columns_AgOpenMapLayer">
+        t1.ID id,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                t1.NAME "name",
+            </when>
+            <otherwise>
+                t1.NAME name,
+            </otherwise>
+        </choose>
+
+
+        t1.name_cn nameCn,
+        t1.LAYER_TYPE layerType,
+        t1.FEATURE_TYPE featureType,
+        t1.ADD_FLAG addFlag,
+        t1.LAYER_TABLE layerTable,
+        t1.PARAM_ID paramId,
+        t1.IS_PROXY isProxy,
+        t1.IS_EXTERNAL isExternal,
+        t1.PROXY_URL proxyUrl,
+        t1.VECTOR_LAYER_ID vectorLayerId,
+        t1.EXTENT extent,
+        <choose>
+        <when test="'${_defaultDatabaseId}' == 'oracle'">
+        TO_CHAR(NVL(t1.DATA,'{}')) data,
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'mysql'">
+        IFNULL(t1.DATA,'{}') data,
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'postgresql'">
+        coalesce(t1.DATA,'{}') "data",
+        </when>
+        </choose>
+    </sql>
+
+    <sql id="columns_AgOpenMapApplyProcess">
+        t1.ID id,
+        t1.applyItemId applyItemId,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                t1.name "name",
+            </when>
+            <otherwise>
+                t1.name name,
+            </otherwise>
+        </choose>
+
+
+
+        t1.handle handle,
+        t1.code code,
+        t1.success success,
+        <choose>
+        <when test="'${_defaultDatabaseId}' == 'oracle'">
+        TO_CHAR(t1.processTime, 'YYYY-MM-DD HH24:MI:SS') processTime
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'mysql'">
+        date_format(t1.processTime, '%Y-%m-%d %H:%i:%s') processTime
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'postgresql'">
+        TO_CHAR(t1.processTime, 'YYYY-MM-DD HH24:MI:SS') processTime
+        </when>
+        </choose>
+    </sql>
+
+    <sql id="columns_FileInfo" >
+        f.ID id,
+        f.SUFFIX suffix,
+        f.NAMEid nameId,
+        f.ORIGINAL_FILENAME originalFilename,
+        f.FILE_SIZE fileSize,
+        f.IS_ACTIVE isActive,
+        f.DIRID dirId,
+        f.CREATORUSERNAME creatorUserName,
+        <choose>
+        <when test="'${_defaultDatabaseId}' == 'oracle'">
+        NVL(to_char(f.CREATETIME, 'YYYY-MM-DD HH24:MI:SS'), '') createTime,
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'mysql'">
+        IFNULL(date_format(f.CREATETIME, '%Y-%m-%d %H:%i:%s'), '') createTime,
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'postgresql'">
+        to_char(f.CREATETIME, 'YYYY-MM-DD HH24:MI:SS') createTime,
+        </when>
+        </choose>
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                f.ENCODING "encoding"
+            </when>
+            <otherwise>
+                f.ENCODING encoding
+            </otherwise>
+        </choose>
+    </sql>
+
+
+    <select id="findLayerAndTag" resultType="AgTagLayer">
+
+        SELECT * FROM (
+        SELECT
+        t1.tagId,
+        t1.layerId,
+        t2.name tagName
+        FROM
+        AG_TAGLAYER t1 LEFT JOIN AG_TAG t2
+        ON t1.tagId = t2.id
+        ) w
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(loginName)">
+            INNER JOIN AG_OPENMAP_APPLYITEM m ON m.layerId = w.layerId
+            AND m.completed = '0' AND m.loginName = #{loginName}
+        </if>
+        INNER JOIN AG_LAYER r ON w.layerId = r.id AND r.is_proxy = '1' AND r.is_external = '1'
+    </select>
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+    <!-- 获取所有对外开放的图层 -->
+    <select id="findOpenLayersByCondition" resultType="AgOpenMapLayer">
+        SELECT
+        h1.ID,
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                h1.NAME "name",
+            </when>
+            <otherwise>
+                h1.NAME name,
+            </otherwise>
+        </choose>
+
+        h1.nameCn,
+        h1.layerType,
+        h1.layerTable,
+        h1.paramId,
+        h1.isProxy,
+        h1.isExternal,
+        h1.proxyUrl,
+        <choose>
+        <when test="'${_defaultDatabaseId}' == 'postgresql'">
+        h1.DATA "data",
+        </when>
+        <otherwise>
+        h1.DATA data,
+        </otherwise>
+        </choose>
+
+        h1.createTime,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                h1.OWNER "owner",
+            </when>
+            <otherwise>
+                h1.OWNER owner,
+            </otherwise>
+        </choose>
+
+
+        h1.illustration,
+        h1.picture,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                string_agg(h1.tagId, ',') AS tagId,
+            </when>
+            <otherwise>
+                WM_CONCAT(h1.tagId) AS tagId,
+            </otherwise>
+        </choose>
+
+        h1.applyStatus,
+        h1.completed,
+        h1.applyTime
+
+        FROM(
+        SELECT
+        p1.ID id,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                p1.NAME "name",
+            </when>
+            <otherwise>
+                p1.NAME name,
+            </otherwise>
+        </choose>
+
+
+
+        p1.nameCn nameCn,
+        p1.layerType layerType,
+        p1.layerTable layerTable,
+        p1.paramId paramId,
+        p1.isProxy isProxy,
+        p1.isExternal isExternal,
+        p1.proxyUrl proxyUrl,
+        <choose>
+        <when test="'${_defaultDatabaseId}' == 'mysql'">
+        IFNULL(p1.DATA,'{}') data,
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'oracle'">
+        TO_CHAR(NVL(p1.DATA,'{}')) data,
+        </when>
+        <when test="'${_defaultDatabaseId}' == 'postgresql'">
+        coalesce(p1.DATA,'{}') "data",
+        </when>
+        </choose>
+
+        p1.create_time createTime,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                p1.owner "owner",
+            </when>
+            <otherwise>
+                p1.owner owner,
+            </otherwise>
+        </choose>
+
+
+        p1.illustration illustration,
+        p1.picture picture,
+        r1.tagId as tagId,
+        e1.currentProcessStatus applyStatus,
+        e1.completed completed,
+        <choose>
+        <when test="'${_defaultDatabaseId}' == 'mysql'">
+        date_format(e1.applyTime, '%Y-%m-%d %H:%i:%s') applyTime
+        </when>
+        <otherwise>
+        to_char(e1.applyTime, 'YYYY-MM-DD HH24:MI:SS') applyTime
+        </otherwise>
+        </choose>
+        FROM AG_TAGLAYER r1
+        LEFT JOIN (
+        SELECT
+        <include refid="columns_AgOpenMapLayer"/>
+        m1.create_time, m1.illustration, m1.owner, m1.picture
+        FROM AG_LAYER t1 INNER JOIN AG_METADATA m1 ON m1.id = t1.metadata_id
+        )p1
+        ON p1.id = r1.layerId
+
+        <choose>
+            <when test="tabType == '0'.toString() ">
+                LEFT JOIN
+                AG_OPENMAP_APPLYITEM e1 ON e1.layerid = r1.layerId AND e1.loginName = #{loginName} AND  e1.completed = '0'
+            </when>
+            <when test="tabType == '1'.toString() ">
+                INNER JOIN
+                AG_OPENMAP_APPLYITEM e1 ON e1.layerid = r1.layerId AND e1.loginName = #{loginName} AND e1.completed = '0'
+            </when>
+        </choose>
+        ) h1
+        WHERE
+        h1.isProxy = '1'
+        AND h1.isExternal = '1'
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(keyWord)">
+            AND (h1.name LIKE CONCAT(CONCAT('%', #{keyWord}), '%') OR h1.name like CONCAT(CONCAT('%', #{keyWord}), '%'))
+        </if>
+
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(tagId)">
+            AND h1.tagId = #{tagId}
+        </if>
+
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(applyStatus)">
+            AND h1.applyStatus = #{applyStatus}
+        </if>
+        GROUP BY h1.id, h1.name, h1.nameCn, h1.layerType, h1.layerTable, h1.paramId, h1.isProxy,
+        h1.isExternal, h1.proxyUrl, h1.data, h1.createTime, h1.owner, h1.illustration, h1.picture, h1.applyStatus, h1.completed,h1.applyTime
+        ORDER BY h1.applyTime, h1.createTime
+
+    </select>
+
+    <select id="findApplyItemByLayerIdAndApplicant" resultType="AgOpenMapApplyItem">
+        select  t.*
+        from (select a.*, row_number() over(order by a.APPLYTIME desc) rw
+        from AG_OPENMAP_APPLYITEM a where  a.layerId = #{layerId}  AND a.loginName = #{loginName} ) t
+        where t.rw = 1
+    </select>
+
+    <select id="findApplyProcessByApplyItemId" resultType="AgOpenMapApplyProcess">
+        SELECT
+        <include refid="columns_AgOpenMapApplyProcess" />
+        FROM AG_OPENMAP_APPLYPROCESS t1
+        WHERE
+        t1.applyItemId = #{applyItemId}
+        ORDER BY
+        t1.processTime
+    </select>
+
+
+
+    <insert id="addApplyItem" parameterType="AgOpenMapApplyItem">
+        INSERT INTO
+        AG_OPENMAP_APPLYITEM(
+          id,
+          applicant,
+          layerId,
+          loginName,
+          applyFor,
+          secrecy,
+          obtainWay,
+          obtainWayDes,
+          validityDate,
+          workUnit,
+          applicantIdCard,
+          workAddress,
+          applicantMobile,
+          CURRENTPROCESSSTATUS,
+          SERIALNO,APPLYTIME,
+          IP
+        )
+        VALUES (
+          #{id},
+          #{applicant},
+          #{layerId},
+          #{loginName},
+          #{applyFor},
+          #{secrecy},
+          #{obtainWay},
+          #{obtainWayDesc},
+          #{validityDate},
+          #{workUnit},
+          #{workAddress},
+          #{applicantIDCard},
+          #{applicantMobile},
+          #{currentProcessStatus},
+          #{serialNo},
+          <choose>
+          <when test="'${_defaultDatabaseId}' == 'mysql'">
+          #{applyTime,
+          </when>
+          <when test="'${_defaultDatabaseId}' == 'oracle'">
+          to_date(#{applyTime},'YYYY-MM-DD HH24:MI:SS'),
+          </when>
+              <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                  to_timestamp(#{applyTime},'YYYY-MM-DD HH24:MI:SS'),
+              </when>
+          </choose>
+
+          #{ip}
+        )
+    </insert>
+
+    <insert id="addApplyProcess" parameterType="AgOpenMapApplyProcess">
+        INSERT INTO
+        AG_OPENMAP_APPLYPROCESS(id,applyItemId,name,processTime,code,handle,success)
+        VALUES (#{id}, #{applyItemId}, #{name},
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'mysql'">
+                #{processTime},
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'oracle'">
+                to_date(#{processTime},'YYYY-MM-DD HH24:MI:SS'),
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                to_timestamp(#{processTime},'YYYY-MM-DD HH24:MI:SS'),
+            </when>
+        </choose>
+          #{code}, #{handle}, #{success})
+    </insert>
+
+    <insert id="saveApplyFile" parameterType="AgOpenMapAttachFile">
+        INSERT INTO AG_OPENMAP_ATTACHFILE(ID, SUFFIX, ORIGINAL_FILENAME, FILE_SIZE, IS_ACTIVE, CREATETIME, ENCODING, DIRID, APPLYITEMID, NAMEID)
+        VALUES (#{id}, #{suffix}, #{originalFilename}, #{fileSize}, #{isActive},
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'mysql'">
+             #{createTime},
+            </when>
+
+            <when test="'${_defaultDatabaseId}' == 'oracle'">
+                to_date(#{createTime},'YYYY-MM-DD HH24:MI:SS'),
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                to_timestamp(#{createTime},'YYYY-MM-DD HH24:MI:SS'),
+            </when>
+        </choose>
+        #{encoding}, #{dirId}, #{applyItemId}, #{nameId})
+    </insert>
+
+    <!-- 查询单个附件信息 -->
+    <select id="getFileInfo" resultType="AgOpenMapAttachFile">
+        SELECT <include refid="columns_FileInfo"/>
+        FROM AG_OPENMAP_ATTACHFILE f
+        WHERE f.id = #{id}
+    </select>
+
+
+    <insert id="addAuditList" parameterType="AgOpenMapAuditList">
+        INSERT INTO
+        AG_OPENMAP_AUDITLIST(id, serialNo, applicant, layerName, applyTime)
+        VALUES (
+        #{id}, #{serialNo}, #{applicant}, #{layerName}, #{applyTime}
+        )
+    </insert>
+
+
+    <select id="findAuditList" resultType="AgOpenMapAuditList">
+        SELECT
+        *
+        FROM AG_OPENMAP_AUDITLIST t1
+        WHERE 1=1
+
+        <if test="tabType == '2'.toString() ">
+            AND  t1.auditor = #{loginName}
+        </if>
+
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(serialNo)">
+            AND  t1.serialNo LIKE CONCAT(CONCAT('%', #{serialNo}), '%')
+        </if>
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(applicant)">
+            AND t1.applicant LIKE CONCAT(CONCAT('%', #{applicant}), '%')
+        </if>
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(keyWord)">
+            AND  t1.layerName LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+        </if>
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(auditStatus)">
+            AND t1.auditStatus LIKE CONCAT(CONCAT('%', #{auditStatus}), '%')
+        </if>
+
+    </select>
+
+    <select id="findApplyItemBySerialNo" resultType="AgOpenMapApplyItem">
+        SELECT
+        *
+        FROM AG_OPENMAP_APPLYITEM t1
+        <if test="serialNo != null">
+            WHERE t1.serialNo = #{serialNo}
+        </if>
+    </select>
+
+
+    <!-- 获取所有对外开放的图层 -->
+    <select id="findOpenLayerById" resultType="AgOpenMapLayer" >
+        SELECT
+        <include refid="columns_AgOpenMapLayer"/>
+        t2.create_time createTime,
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                t2.owner "owner",
+            </when>
+            <otherwise>
+                t2.owner owner,
+            </otherwise>
+        </choose>
+
+
+        t2.illustration illustration,
+        t2.picture picture
+        FROM AG_LAYER t1 LEFT OUTER JOIN AG_METADATA t2 ON t1.metadata_id = t2.id
+        WHERE
+        t1.is_proxy = '1'
+        AND t1.is_external = '1'
+        AND t1.id = #{id}
+    </select>
+
+    <select id="findAuditListBySerialNo" resultType="AgOpenMapAuditList">
+        SELECT
+        *
+        FROM AG_OPENMAP_AUDITLIST t1
+        <if test="serialNo != null">
+            WHERE t1.serialNo = #{serialNo}
+        </if>
+    </select>
+
+    <update id="updateAuditList">
+        UPDATE AG_OPENMAP_AUDITLIST
+        SET
+        auditStatus = #{auditStatus},
+        auditor = #{auditor},
+        opinion = #{auditor}
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <update id="updateApplyItem">
+        UPDATE AG_OPENMAP_APPLYITEM
+        SET
+        currentProcessStatus = #{currentProcessStatus},
+        proxyURL = #{proxyURL},
+        auditor = #{auditor}
+        WHERE
+        id = #{id}
+    </update>
+
+
+
+    <update id="updateApplyItemByOldApplyItem" parameterType="AgOpenMapApplyItem">
+        UPDATE AG_OPENMAP_APPLYITEM
+        SET
+        currentProcessStatus = #{currentProcessStatus},
+        applicant = #{applicant},
+        loginName = #{loginName},
+        secrecy = #{secrecy},
+        obtainWay = #{obtainWay},
+        validityDate = #{validityDate},
+        workUnit = #{workUnit},
+        workAddress = #{workAddress},
+        applicantIDCard = #{applicantIDCard},
+        applicantMobile = #{applicantMobile},
+
+        <choose>
+            <when test="'${_defaultDatabaseId}' == 'mysql'">
+                applyTime = #{applyTime},
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'mysql'">
+               applyTime = to_date(#{applyTime},'YYYY-MM-DD HH24:MI:SS'),
+            </when>
+            <when test="'${_defaultDatabaseId}' == 'postgresql'">
+                applyTime = to_timestamp(#{applyTime},'YYYY-MM-DD HH24:MI:SS'),
+            </when>
+        </choose>
+
+        applyFor = #{applyFor},
+        proxyURL = #{proxyURL},
+        completed = #{completed}
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="findApplyFilesByApplyItemId" resultType="AgOpenMapAttachFile">
+        SELECT <include refid="columns_FileInfo"/>
+        FROM AG_OPENMAP_ATTACHFILE f
+        WHERE
+        f.applyItemId = #{applyItemId}
+    </select>
+
+
+    <update id="updateAuditListByOldAuditList" parameterType="AgOpenMapAuditList">
+        UPDATE  AG_OPENMAP_AUDITLIST
+        SET
+        applicant = #{applicant},
+        auditor = #{auditor},
+        auditStatus = #{auditStatus},
+        applyTime = #{applyTime}
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <select id="findCartItem" resultType="AgOpenMapCartItem">
+        SELECT *
+        FROM AG_OPENMAP_CARTITEM t1
+        WHERE
+        t1.loginName = #{loginName}
+        <if test="@org.apache.commons.lang.StringUtils@isNotEmpty(layerId)">
+            AND t1.layerId = #{layerId}
+        </if>
+    </select>
+
+
+    <insert id="saveCartItem" parameterType="AgOpenMapCartItem">
+        INSERT INTO AG_OPENMAP_CARTITEM (
+        id, layerId, loginName, layerName, thumbNail
+        )
+        VALUES (#{id}, #{layerId}, #{loginName}, #{layerName}, #{thumbNail})
+    </insert>
+
+    <delete id="delCartItem">
+        DELETE FROM AG_OPENMAP_CARTITEM
+        WHERE id = #{id}
+    </delete>
+
+
+
+
+    <delete id="delCartItemByLayerIdAndLoginName">
+        DELETE FROM AG_OPENMAP_CARTITEM
+        WHERE loginName = #{loginName}
+        AND layerId = #{layerId}
+    </delete>
+
+
+    <insert id="createApplyItemAndLayerIdList">
+        INSERT INTO ag_openmap_applyitem_layer(
+        applyItemId, layerId, loginName
+        )
+        VALUES (#{applyItemId}, #{layerId},#{loginName})
+    </insert>
+
+    <insert id="insertApplyItemAndLayerIdListBatch">
+
+            BEGIN
+
+        <foreach collection="layerIds" item="layerId" separator=";">
+            INSERT INTO ag_openmap_applyitem_layer(
+            applyItemId, layerId, loginName
+            )
+            VALUES
+            (#{applyItemId}, #{layerId},#{loginName})
+        </foreach>
+
+            ;END;
+
+    </insert>
+
+    <select id="findApplyItemByLayerIdAndLoginName" resultType="AgOpenMapApplyItem">
+        SELECT *
+        FROM AG_OPENMAP_APPLYITEM t1
+        WHERE
+        t1.loginName = #{loginName}
+
+        AND t1.id IN (
+        SELECT DISTINCT a.applyItemId
+        FROM ag_openmap_applyitem_layer a
+        WHERE a.loginName= #{loginName}
+        AND a.layerId = #{layerId}
+        )
+
+    </select>
+
+    <select id="getBeforeProxyId" resultType="string">
+        SELECT
+        DISTINCT t1.PROXY_URL
+        FROM AG_LAYER t1
+        WHERE
+        t1.id = #{layerId}
+    </select>
+
+    <select id="findUserApplyItemByLoginName" resultType="AgOpenMapApplyItem">
+        SELECT *
+        FROM AG_OPENMAP_APPLYITEM t1
+        WHERE
+        t1.loginName = #{loginName}
+    </select>
+
+    <select id="findApplyItemByLayerIds" resultType="AgOpenMapApplyItem">
+        SELECT *
+        FROM AG_OPENMAP_APPLYITEM t1
+        WHERE
+        t1.LAYERID IN
+        <foreach collection="layerIds" item="layerId" open="(" separator="," close=")">
+            #{layerId}
+        </foreach>
+    </select>
+
+    <delete id="delApplyItemByLayerIds">
+        DELETE FROM AG_OPENMAP_APPLYITEM
+        WHERE LAYERID IN
+        <foreach collection="layerIds" item="layerId" open="(" separator="," close=")">
+            #{layerId}
+        </foreach>
+    </delete>
+    <delete id="delApplyItemByApplyId">
+        DELETE FROM AG_OPENMAP_APPLYPROCESS
+        WHERE APPLYITEMID IN
+        <foreach collection="applyItemByLayerIds" item="apply" open="(" separator="," close=")">
+            #{apply.id}
+        </foreach>
+    </delete>
+
+    <delete id="delAttachfile">
+        DELETE FROM AG_OPENMAP_ATTACHFILE
+        WHERE APPLYITEMID IN
+        <foreach collection="applyItemByLayerIds" item="apply" open="(" separator="," close=")">
+            #{apply.id}
+        </foreach>
+    </delete>
+
+    <delete id="delAuditlistByNo">
+        DELETE FROM AG_OPENMAP_AUDITLIST
+        WHERE SERIALNO IN
+        <foreach collection="applyItemByLayerIds" item="apply" open="(" separator="," close=")">
+            #{apply.serialNo}
+        </foreach>
+    </delete>
+
+    <delete id="delApplyCartitemByLayerIds">
+        DELETE FROM AG_OPENMAP_CARTITEM
+        WHERE LAYERID IN
+        <foreach collection="layerIds" item="layerId" open="(" separator="," close=")">
+            #{layerId}
+        </foreach>
+
+    </delete>
+
+    <delete id="delApplyItemById">
+        DELETE FROM AG_OPENMAP_APPLYITEM
+        WHERE id = #{itemID}
+    </delete>
+
+    <delete id="delApplyProcessByItemId">
+        DELETE FROM AG_OPENMAP_APPLYPROCESS
+        WHERE applyItemId = #{itemID}
+
+    </delete>
+
+    <delete id="delApplyProxyService">
+        DELETE FROM AG_SERVICE_USERINFO t
+        WHERE t.user_id = #{userId}
+        AND t.service_id = #{serviceId}
+    </delete>
+
+    <!--获取所有允许外部访问的图层-->
+    <select id="findListOfExternal" resultMap="resultMapForOpenMapLayer">
+        SELECT
+        b.ID DIR_LAYER_ID,
+        a.*
+        FROM AG_LAYER a INNER  JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID AND a.IS_PROXY = '1' AND a.IS_EXTERNAL = '1'
+        WHERE  1=1
+        <if test="xpath != null and xpath != ''">
+            AND b.DIR_ID IN (SELECT ID FROM AG_DIR WHERE XPATH LIKE CONCAT(#{xpath}, '%') AND PARENT_ID != 'root')
+        </if>
+        <if test="keyWord != null and keyWord != ''">
+            AND (a.NAME LIKE CONCAT(CONCAT('%', #{keyWord}), '%') OR a.NAME_CN like CONCAT(CONCAT('%', #{keyWord}), '%'))
+        </if>
+    </select>
+
+    <!--获取当前用户申请过的图层-->
+    <select id="findListOfExternalByUser" resultMap="resultMapForOpenMapLayer">
+        SELECT
+        c.DIR_LAYER_ID,
+        d.CURRENTPROCESSSTATUS,
+        d.AUDIT_TIME,
+        d.VALIDITYDATE,
+        a.*
+        FROM AG_LAYER a INNER  JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID AND a.IS_PROXY = '1' AND a.IS_EXTERNAL = '1'
+        INNER JOIN AG_OPENMAP_APPLY_ITEM c ON c.DIR_LAYER_ID = b.ID
+        INNER JOIN AG_OPENMAP_APPLY  d ON d.ID = c.APPLY_ID
+        WHERE  APPLICANT_LOGINNAME = #{applicantLoginName}
+        <if test="xpath != null and xpath != ''">
+            AND b.DIR_ID IN (SELECT ID FROM AG_DIR WHERE XPATH LIKE CONCAT(#{xpath}, '%'))
+        </if>
+        <if test="keyWord != null and keyWord != ''">
+            AND (a.NAME LIKE CONCAT(CONCAT('%', #{keyWord}), '%') OR a.NAME_CN like CONCAT(CONCAT('%', #{keyWord}), '%'))
+        </if>
+        <if test="applyStatus != null and applyStatus != ''">
+            AND d.CURRENTPROCESSSTATUS = #{applyStatus}
+        </if>
+        ORDER BY APPLYTIME DESC
+    </select>
+
+    <!--获取当前用户申请过的图层并过滤掉重复的-->
+    <select id="findListOfExternalByUserWithDistinct" resultMap="resultMapForOpenMapLayer">
+        SELECT
+        b.ID AS DIR_LAYER_ID,
+        a.*
+        FROM AG_LAYER a INNER  JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID AND a.IS_PROXY = '1' AND a.IS_EXTERNAL = '1'
+        WHERE
+        b.ID IN (
+        select DISTINCT DIR_LAYER_ID
+        from AG_OPENMAP_APPLY c INNER JOIN  AG_OPENMAP_APPLY_ITEM d on c.ID = d.APPLY_ID
+        WHERE APPLICANT_LOGINNAME = #{applicantLoginName}
+        <if test="applyStatus != null and applyStatus != ''">
+            AND CURRENTPROCESSSTATUS = #{applyStatus}
+        </if>
+        )
+        <if test="xpath != null and xpath != ''">
+            AND b.DIR_ID IN (SELECT ID FROM AG_DIR WHERE XPATH LIKE CONCAT(#{xpath}, '%'))
+        </if>
+        <if test="keyWord != null and keyWord != ''">
+            AND (a.NAME LIKE CONCAT(CONCAT('%', #{keyWord}), '%') OR a.NAME_CN like CONCAT(CONCAT('%', #{keyWord}), '%'))
+        </if>
+    </select>
+
+    <!--获取当前用户持有的图层(持有的图层是指申请中的 或 通过审核且未过期的)-->
+    <select id="findValidListOfExternalByUser" resultMap="resultMapForOpenMapLayer">
+        SELECT
+        c.DIR_LAYER_ID,
+        d.CURRENTPROCESSSTATUS
+        FROM  AG_OPENMAP_APPLY_ITEM c
+        INNER JOIN AG_OPENMAP_APPLY  d ON d.ID = c.APPLY_ID
+        WHERE  APPLICANT_LOGINNAME = #{applicantLoginName}
+        AND (CURRENTPROCESSSTATUS =0 or (CURRENTPROCESSSTATUS=1 and CEIL(sysdate - AUDIT_TIME) <![CDATA[ <= ]]> to_number(VALIDITYDATE)))
+    </select>
+
+    <!--根据DirLayerId获取允许外部访问的图层-->
+    <select id="findOpenMapLayerByDirLayerId" resultMap="resultMapForOpenMapLayer">
+        SELECT
+        b.ID DIR_LAYER_ID,
+        a.*
+        FROM AG_LAYER a INNER  JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID AND a.IS_PROXY = '1' AND a.IS_EXTERNAL = '1'
+        WHERE  b.ID = #{dirLayerId}
+    </select>
+
+    <select id="findApplyByApplicantLoginNameAndDirLayerId" resultMap="resultMapForOpenMapApply">
+        SELECT
+             a.*
+        FROM AG_OPENMAP_APPLY a INNER JOIN AG_OPENMAP_APPLY_ITEM b ON a.ID = b.APPLY_ID
+        WHERE
+            a.APPLICANT_LOGINNAME = #{applicantLoginName} AND b.DIR_LAYER_ID = #{dirLayerId}
+        ORDER BY APPLYTIME DESC
+    </select>
+
+    <select id="findApplyByApplicantLoginName" resultMap="resultMapForOpenMapApply">
+        SELECT
+            *
+        FROM AG_OPENMAP_APPLY
+        WHERE
+            APPLICANT_LOGINNAME = #{applicantLoginName}
+    </select>
+
+    <select id="findApplyProcessByApplyId" resultType="AgOpenMapApplyProcess">
+        SELECT
+        <include refid="columns_AgOpenMapApplyProcess" />
+        FROM AG_OPENMAP_APPLYPROCESS
+        WHERE
+        APPLY_ID = #{applyId}
+        ORDER BY
+        processTime
+    </select>
+
+    <!--统计每个目录下的允许外部访问的图层的数量-->
+    <select id="getLayerCountGroupByDir" resultType="LayerCountByDir">
+        SELECT
+            b.DIR_ID as dirId,
+            count(*) as layerCount
+        FROM AG_LAYER a INNER  JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID AND a.IS_PROXY = '1' AND a.IS_EXTERNAL = '1'
+        GROUP BY b.DIR_ID
+    </select>
+
+    <!--按目录统计用户申请的的图层数量-->
+    <select id="getUserApplyLayerCountGroupByDir" resultType="LayerCountByDir">
+        SELECT
+            dirId,
+            count(*) as layerCount
+        FROM
+            (select distinct b.ID as dirLayerId, b.DIR_ID as dirId
+        FROM AG_LAYER a INNER  JOIN AG_DIR_LAYER b on a.ID = b.LAYER_ID AND a.IS_PROXY = '1' AND a.IS_EXTERNAL = '1'
+                        INNER  JOIN  AG_OPENMAP_APPLY_ITEM c on b.ID = c.DIR_LAYER_ID
+                        INNER  JOIN AG_OPENMAP_APPLY d on c.APPLY_ID = d.ID
+                 WHERE d.APPLICANT_LOGINNAME = #{loginName}) t
+        GROUP BY dirId
+    </select>
+
+    <insert id="addApply" parameterType="AgOpenMapApply">
+        INSERT INTO
+            AG_OPENMAP_APPLY(
+            ID,
+            APPLICANT,
+            CURRENTPROCESSSTATUS,
+            APPLYDOCID,
+            APPLICANT_LOGINNAME,
+            SECRECY,
+            OBTAINWAY,
+            VALIDITYDATE,
+            WORKUNIT,
+            APPLICANTIDCARD,
+            WORKADDRESS,
+            APPLICANTMOBILE,
+            APPLYTIME,
+            APPLYFOR,
+            OBTAINWAYDES,
+            IP,
+            AUDITOR_LOGINNAME,
+            AUDITOR_USERNAME,
+            AUDIT_OPINION,
+            AUDIT_TIME
+        )
+        VALUES (
+                   #{id},
+                   #{applicant},
+                   #{currentProcessStatus},
+                   #{applyDocId},
+                   #{applicantLoginName},
+                   #{secrecy},
+                   #{obtainWay},
+                   #{validityDate},
+                   #{workUnit},
+                   #{applicantIdCard},
+                   #{workAddress},
+                   #{applicantMobile},
+                   #{applyTime},
+                   #{applyFor},
+                   #{obtainWayDesc},
+                   #{ip},
+                   #{auditorLoginName},
+                   #{auditorUserName},
+                   #{auditOpinion},
+                   #{auditTime}
+               )
+    </insert>
+
+    <select id="findApplyById" resultMap="resultMapForOpenMapApply">
+        SELECT
+            *
+        FROM AG_OPENMAP_APPLY
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findApplyItemByApplyId" resultMap="resultMapForOpenMapApplyItem">
+        SELECT
+        *
+        FROM AG_OPENMAP_APPLY_ITEM
+        WHERE APPLY_ID = #{applyId}
+    </select>
+
+    <select id="findApplyLayerNameByApplyId" resultType="String">
+        SELECT
+          d.NAME
+        FROM AG_OPENMAP_APPLY_ITEM b
+        INNER JOIN AG_DIR_LAYER c ON b.DIR_LAYER_ID = c.ID
+        INNER JOIN AG_LAYER d ON  c.LAYER_ID = d.ID
+        WHERE
+         b.APPLY_ID = #{applyId}
+    </select>
+
+    <select id="findApplyAttachFileByApplyId" resultMap="resultMapForOpenMapApplyAttachFile">
+        SELECT
+        *
+        FROM AG_OPENMAP_ATTACHFILE
+        WHERE
+        APPLY_ID = #{applyId}
+    </select>
+
+    <select id="findApplyAttachFileByApplyIds" resultMap="resultMapForOpenMapApplyAttachFile">
+        SELECT *
+        FROM AG_OPENMAP_ATTACHFILE
+        WHERE
+        APPLY_ID IN
+        <foreach collection="applyIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateApplyForRepeatApply" parameterType="AgOpenMapApply">
+        UPDATE AG_OPENMAP_APPLY
+        <set>
+            <if test="applicant != null">
+                APPLICANT = #{applicant},
+            </if>
+            <if test="currentProcessStatus != null">
+                CURRENTPROCESSSTATUS = #{currentProcessStatus},
+            </if>
+            <if test="applyDocId != null">
+                APPLYDOCID = #{applyDocId},
+            </if>
+            <if test="applicantLoginName != null">
+                APPLICANT_LOGINNAME = #{applicantLoginName},
+            </if>
+            <if test="secrecy != null">
+                SECRECY = #{secrecy},
+            </if>
+            <if test="obtainWay != null">
+                OBTAINWAY = #{obtainWay},
+            </if>
+            <if test="validityDate != null">
+                VALIDITYDATE = #{validityDate},
+            </if>
+            <if test="workUnit != null">
+                WORKUNIT = #{workUnit},
+            </if>
+            <if test="applicantIdCard != null">
+                APPLICANTIDCARD = #{applicantIdCard},
+            </if>
+            <if test="workAddress != null">
+                WORKADDRESS = #{workAddress},
+            </if>
+            <if test="applicantMobile != null">
+                APPLICANTMOBILE = #{applicantMobile},
+            </if>
+            <if test="applyTime != null">
+                APPLYTIME = #{applyTime},
+            </if>
+            <if test="applyFor != null">
+                APPLYFOR = #{applyFor},
+            </if>
+            <if test="obtainWayDesc != null">
+                OBTAINWAYDES = #{obtainWayDesc},
+            </if>
+            <if test="ip != null">
+                IP = #{ip}
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updateApplyForAudit" parameterType="AgOpenMapApply">
+        UPDATE AG_OPENMAP_APPLY
+        SET
+        CURRENTPROCESSSTATUS = #{currentProcessStatus},
+        AUDITOR_LOGINNAME = #{auditorLoginName},
+        AUDITOR_USERNAME = #{auditorUserName},
+        <if test="auditOpinion != null">
+            AUDIT_OPINION = #{auditOpinion},
+        </if>
+        AUDIT_TIME = #{auditTime}
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="findCartItemByLoginName" resultMap="resultMapForOpenMapCartItem">
+        SELECT *
+        FROM AG_OPENMAP_CARTITEM
+        WHERE
+        loginName = #{loginName}
+    </select>
+
+    <delete id="delCartItemByDirLayerIdAndLoginName">
+        DELETE FROM AG_OPENMAP_CARTITEM
+        WHERE LOGINNAME = #{loginName}
+        AND DIR_LAYER_ID = #{dirLayerId}
+    </delete>
+
+    <select id="findApplyItemByApplicantLoginName" resultMap="resultMapForOpenMapApplyItem">
+        SELECT
+               b.*
+        FROM AG_OPENMAP_APPLY a INNER JOIN AG_OPENMAP_APPLY_ITEM b ON a.ID = b.APPLY_ID
+        WHERE
+        a.APPLICANT_LOGINNAME = #{applicantLoginName}
+    </select>
+
+    <delete id="deleteAttachfileByApplyId">
+        DELETE FROM AG_OPENMAP_ATTACHFILE
+        WHERE APPLY_ID = #{applyId}
+    </delete>
+
+
+    <select id="findAuditListRest" resultMap="resultMapForOpenMapAudit">
+        SELECT
+        distinct a.*
+        FROM AG_OPENMAP_APPLY a INNER JOIN AG_OPENMAP_APPLY_ITEM b ON a.ID = b.APPLY_ID
+        INNER JOIN AG_DIR_LAYER c ON b.DIR_LAYER_ID = c.ID
+        INNER JOIN AG_LAYER d ON  c.LAYER_ID = d.ID
+        WHERE  1=1
+        <if test="auditorLoginName != null and auditorLoginName != ''">
+            AND  a.AUDITOR_LOGINNAME = #{auditorLoginName}
+        </if>
+        <if test="keyWord != null and keyWord != ''">
+            AND (
+            d.NAME LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+            OR d.NAME_CN like CONCAT(CONCAT('%', #{keyWord}), '%')
+            OR a.applicant LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+            OR a.ID LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+            OR a.WORKUNIT LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+            OR a.AUDITOR_USERNAME LIKE CONCAT(CONCAT('%', #{keyWord}), '%')
+            )
+        </if>
+        <if test="auditStatus != null and auditStatus != ''">
+            AND a.CURRENTPROCESSSTATUS = #{auditStatus}
+        </if>
+        ORDER BY APPLYTIME DESC
+    </select>
+
+    <update id="updateApplyItemRest">
+        UPDATE AG_OPENMAP_APPLY_ITEM
+        SET
+            PROXY_URL = #{proxyUrl}
+        WHERE
+            id = #{id}
+    </update>
+
+    <delete id="delApplyItemByApplyIdRest">
+        DELETE FROM AG_OPENMAP_APPLY_ITEM
+        WHERE APPLY_ID = #{applyId}
+    </delete>
+
+</mapper>

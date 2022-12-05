@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgDataOverviewMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgDataOverview" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="DATA_NAME" property="dataName" jdbcType="VARCHAR" />
+    <result column="SUBJECT_TYPE" property="subjectType" jdbcType="VARCHAR" />
+    <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+    <result column="DATA_SIZE" property="dataSize" jdbcType="BIGINT" />
+    <result column="DATASOURCE_TYPE" property="datasourceType" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="SUBJECT_ID" property="subjectId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DATA_NAME, SUBJECT_TYPE, DATA_TYPE, DATA_SIZE, DATASOURCE_TYPE, CREATE_TIME,SUBJECT_ID
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from AG_DATA_OVERVIEW
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.String" >
+    delete from AG_DATA_OVERVIEW
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteBySubjectIds" parameterType="java.lang.String" >
+    delete from AG_DATA_OVERVIEW
+    where SUBJECT_ID IN
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
+
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgDataOverview" >
+    insert into AG_DATA_OVERVIEW (ID, DATA_NAME, SUBJECT_TYPE,
+      DATA_TYPE, DATA_SIZE, DATASOURCE_TYPE, 
+      CREATE_TIME,SUBJECT_ID)
+    values (#{id,jdbcType=VARCHAR}, #{dataName,jdbcType=VARCHAR}, #{subjectType,jdbcType=VARCHAR}, 
+      #{dataType,jdbcType=VARCHAR}, #{dataSize,jdbcType=DECIMAL}, #{datasourceType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP},#{subjectId,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertBatch">
+    <choose >
+      <when test="_databaseId == 'oracle'">
+        BEGIN
+        <foreach collection="list" item="item" separator=";">
+          insert into AG_DATA_OVERVIEW (ID, DATA_NAME, SUBJECT_TYPE,
+          DATA_TYPE, DATA_SIZE, DATASOURCE_TYPE,
+          CREATE_TIME,SUBJECT_ID)
+          values (#{item.id,jdbcType=VARCHAR}, #{item.dataName,jdbcType=VARCHAR}, #{item.subjectType,jdbcType=VARCHAR},
+          #{item.dataType,jdbcType=VARCHAR}, #{item.dataSize,jdbcType=DECIMAL}, #{item.datasourceType,jdbcType=VARCHAR},
+          #{item.createTime,jdbcType=TIMESTAMP},#{item.subjectId,jdbcType=VARCHAR})
+        </foreach>
+        ;END;
+      </when>
+      <when test="_databaseId == 'mysql'">
+        insert into AG_DATA_OVERVIEW (ID, DATA_NAME, SUBJECT_TYPE,
+        DATA_TYPE, DATA_SIZE, DATASOURCE_TYPE,
+        CREATE_TIME,SUBJECT_ID)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+          (#{item.id,jdbcType=VARCHAR}, #{item.dataName,jdbcType=VARCHAR}, #{item.subjectType,jdbcType=VARCHAR},
+          #{item.dataType,jdbcType=VARCHAR}, #{item.dataSize,jdbcType=DECIMAL}, #{item.datasourceType,jdbcType=VARCHAR},
+          #{item.createTime,jdbcType=TIMESTAMP},#{item.subjectId,jdbcType=VARCHAR})
+        </foreach>
+      </when>
+      <when test="_databaseId == 'postgresql'">
+        insert into AG_DATA_OVERVIEW (ID, DATA_NAME, SUBJECT_TYPE,
+        DATA_TYPE, DATA_SIZE, DATASOURCE_TYPE,
+        CREATE_TIME,SUBJECT_ID)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+          (#{item.id,jdbcType=VARCHAR}, #{item.dataName,jdbcType=VARCHAR}, #{item.subjectType,jdbcType=VARCHAR},
+          #{item.dataType,jdbcType=VARCHAR}, #{item.dataSize,jdbcType=DECIMAL}, #{item.datasourceType,jdbcType=VARCHAR},
+          #{item.createTime,jdbcType=TIMESTAMP},#{item.subjectId,jdbcType=VARCHAR})
+        </foreach>
+      </when>
+    </choose>
+
+  </insert>
+
+  <update id="updateAgDataOverview" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgDataOverview" >
+    update AG_DATA_OVERVIEW
+    <set >
+      <if test="dataName != null" >
+        DATA_NAME = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        SUBJECT_TYPE = #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null" >
+        DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSize != null" >
+        DATA_SIZE = #{dataSize,jdbcType=DECIMAL},
+      </if>
+      <if test="datasourceType != null" >
+        DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subjectId != null" >
+        SUBJECT_ID = #{subjectId,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findAll" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgDataOverview">
+      select t1.*,t.SUBJECT_NAME subjectName,t.XPATH from (SELECT *
+      FROM ag_data_subject a
+      where a.xpath = #{xpath} or a.xpath like CONCAT(#{xpath},'/%')
+      ) t, AG_DATA_OVERVIEW t1
+      where  t.ID=t1.SUBJECT_ID
+      <if test="dataName != null and dataName !=''">
+          and t1.DATA_NAME LIKE CONCAT(CONCAT('%', TRIM(#{dataName})), '%')
+      </if>
+      <if test="dataType != null and dataType !=''">
+          and t1.DATA_TYPE = #{dataType}
+      </if>
+      ORDER BY t1.CREATE_TIME desc
+  </select>
+
+  <select id="find" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> from AG_DATA_OVERVIEW
+  </select>
+
+</mapper>

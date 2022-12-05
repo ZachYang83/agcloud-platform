@@ -1,0 +1,934 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.augurit.agcloud.opus.common.mapper.OpuRsMenuMapper" >
+
+  <sql id="OpuRsMenu_All_Columns_Properties" >
+        menu.MENU_ID  menuId,
+        menu.MENU_CODE  menuCode,
+        menu.MENU_NAME  menuName,
+        menu.MENU_ICON_CSS  menuIconCss,
+        menu.NET_TMN_ID  netTmnId,
+        menu.APP_SOFT_ID  appSoftId,
+        menu.FUNC_ID  funcId,
+        menu.PARENT_MENU_ID  parentMenuId,
+        menu.MENU_LEVEL  menuLevel,
+        menu.MENU_SEQ  menuSeq,
+        menu.MENU_SORT_NO  menuSortNo,
+        menu.IS_ACTIVE  isActive,
+        menu.IS_LEAF  isLeaf,
+        menu.SUB_COUNT  subCount,
+        menu.ACTIVE_SUB_COUNT  activeSubCount,
+        menu.PAGE_OPEN_MODE  pageOpenMode,
+        menu.SMALL_IMG_PATH  smallImgPath,
+        menu.MIDDLE_IMG_PATH  middleImgPath,
+        menu.BIG_IMG_PATH  bigImgPath,
+        menu.MENU_MEMO  menuMemo,
+        menu.MENU_DELETED  menuDeleted,
+        menu.CREATER  creater,
+        menu.CREATE_TIME  createTime,
+        menu.MODIFIER  modifier,
+        menu.MODIFY_TIME  modifyTime,
+        menu.MENU_INVOKE_ACTIVITY  menuInvokeActivity,
+        menu.MENU_INVOKE_TYPE  menuInvokeType,
+        menu.IS_SINGLE_URL  isSingleUrl,
+        menu.AUTO_SWITCH  autoSwitch,
+        menu.MENU_INNER_URL  menuInnerUrl,
+        menu.MENU_GOV_URL  menuGovUrl,
+        menu.MENU_OUTER_URL  menuOuterUrl,
+        menu.MENU_TAG_URL menuTagUrl,
+        menu.IS_RECENTLY_ADD  isRecentlyAdd,
+        menu.HUGE_IMG_PATH hugeImgPath,
+        menu.IS_IMG_ICON isImgIcon
+  </sql>
+
+  <sql id="OpuRsMenu_All_Columns">
+        MENU_ID ,
+        MENU_CODE ,
+        MENU_NAME ,
+        MENU_ICON_CSS ,
+        NET_TMN_ID ,
+        APP_SOFT_ID ,
+        FUNC_ID ,
+        PARENT_MENU_ID ,
+        MENU_LEVEL ,
+        MENU_SEQ ,
+        MENU_SORT_NO ,
+        IS_ACTIVE ,
+        IS_LEAF ,
+        SUB_COUNT ,
+        ACTIVE_SUB_COUNT ,
+        PAGE_OPEN_MODE ,
+        SMALL_IMG_PATH ,
+        MIDDLE_IMG_PATH ,
+        BIG_IMG_PATH ,
+        MENU_MEMO ,
+        MENU_DELETED ,
+        CREATER ,
+        CREATE_TIME ,
+        MODIFIER ,
+        MODIFY_TIME ,
+        MENU_INVOKE_ACTIVITY ,
+        MENU_INVOKE_TYPE ,
+        IS_SINGLE_URL ,
+        AUTO_SWITCH ,
+        MENU_INNER_URL ,
+        MENU_GOV_URL ,
+        MENU_OUTER_URL,
+        MENU_TAG_URL,
+        IS_RECENTLY_ADD,
+        HUGE_IMG_PATH,
+        IS_IMG_ICON
+  </sql>
+
+  <sql id="OpuRsMenu_All_Properties">
+      #{menuId},
+      #{menuCode},
+      #{menuName},
+      #{menuIconCss},
+      #{netTmnId},
+      #{appSoftId},
+      #{funcId},
+      #{parentMenuId},
+      #{menuLevel},
+      #{menuSeq},
+      #{menuSortNo},
+      #{isActive},
+      #{isLeaf},
+      #{subCount},
+      #{activeSubCount},
+      #{pageOpenMode},
+      #{smallImgPath},
+      #{middleImgPath},
+      #{bigImgPath},
+      #{menuMemo},
+      #{menuDeleted},
+      #{creater},
+      #{createTime},
+      #{modifier},
+      #{modifyTime,jdbcType=TIMESTAMP},
+      #{menuInvokeActivity},
+      #{menuInvokeType},
+      #{isSingleUrl},
+      #{autoSwitch},
+      #{menuInnerUrl},
+      #{menuGovUrl},
+      #{menuOuterUrl},
+      #{menuTagUrl},
+      #{isRecentlyAdd},
+      #{hugeImgPath},
+      #{isImgIcon}
+  </sql>
+
+  <insert id="insertMenu" parameterType="OpuRsMenu" >
+    insert into OPU_RS_MENU (
+      <include refid="OpuRsMenu_All_Columns" />
+    )
+    values (
+      <include refid="OpuRsMenu_All_Properties" />
+    )
+  </insert>
+
+
+    <update id="deleteMenuByMenuId">
+        update OPU_RS_MENU set MENU_DELETED = '1' where MENU_ID = #{id}
+    </update>
+  
+  <!-- 通过主键逻辑删除菜单及所有子菜单 -->
+  <update id="deleteMenuCascadeByMenuId">
+    update OPU_RS_MENU set MENU_DELETED = '1' where MENU_SEQ like CONCAT(CONCAT('%.',#{id}),'.%')
+  </update>
+  
+  <update id="updateMenu" parameterType="OpuRsMenu">
+      update OPU_RS_MENU
+      <set >
+          <if test="menuId != null" >
+              MENU_ID = #{menuId},
+          </if>
+          <if test="menuCode != null" >
+              MENU_CODE = #{menuCode},
+          </if>
+          <if test="menuName != null" >
+              MENU_NAME = #{menuName},
+          </if>
+          <if test="menuIconCss != null" >
+              MENU_ICON_CSS = #{menuIconCss},
+          </if>
+          <if test="netTmnId != null" >
+              NET_TMN_ID = #{netTmnId},
+          </if>
+          <if test="appSoftId != null" >
+              APP_SOFT_ID = #{appSoftId},
+          </if>
+          <if test="funcId != null" >
+              FUNC_ID = #{funcId},
+          </if>
+          <if test="parentMenuId != null" >
+              PARENT_MENU_ID = #{parentMenuId},
+          </if>
+          <if test="menuLevel != null" >
+              MENU_LEVEL = #{menuLevel},
+          </if>
+          <if test="menuSeq != null" >
+              MENU_SEQ = #{menuSeq},
+          </if>
+          <if test="menuSortNo != null" >
+              MENU_SORT_NO = #{menuSortNo},
+          </if>
+          <if test="isActive != null" >
+              IS_ACTIVE = #{isActive},
+          </if>
+          <if test="isLeaf != null" >
+              IS_LEAF = #{isLeaf},
+          </if>
+          <if test="subCount != null" >
+              SUB_COUNT = #{subCount},
+          </if>
+          <if test="activeSubCount != null" >
+              ACTIVE_SUB_COUNT = #{activeSubCount},
+          </if>
+          <if test="pageOpenMode != null" >
+              PAGE_OPEN_MODE = #{pageOpenMode},
+          </if>
+          <if test="smallImgPath != null" >
+              SMALL_IMG_PATH = #{smallImgPath},
+          </if>
+          <if test="middleImgPath != null" >
+              MIDDLE_IMG_PATH = #{middleImgPath},
+          </if>
+          <if test="bigImgPath != null" >
+              BIG_IMG_PATH = #{bigImgPath},
+          </if>
+          <if test="menuMemo != null" >
+              MENU_MEMO = #{menuMemo},
+          </if>
+          <if test="menuDeleted != null" >
+              MENU_DELETED = #{menuDeleted},
+          </if>
+          <if test="creater != null" >
+              CREATER = #{creater},
+          </if>
+          <if test="createTime != null" >
+              CREATE_TIME = #{createTime},
+          </if>
+          <if test="modifier != null" >
+              MODIFIER = #{modifier},
+          </if>
+          <if test="modifyTime != null" >
+              MODIFY_TIME = #{modifyTime},
+          </if>
+          <if test="menuInvokeActivity != null" >
+              MENU_INVOKE_ACTIVITY = #{menuInvokeActivity},
+          </if>
+          <if test="menuInvokeType != null" >
+              MENU_INVOKE_TYPE = #{menuInvokeType},
+          </if>
+          <if test="isSingleUrl != null" >
+              IS_SINGLE_URL = #{isSingleUrl},
+          </if>
+          <if test="autoSwitch != null" >
+              AUTO_SWITCH = #{autoSwitch},
+          </if>
+          <if test="menuInnerUrl != null" >
+              MENU_INNER_URL = #{menuInnerUrl},
+          </if>
+          <if test="menuGovUrl != null" >
+              MENU_GOV_URL = #{menuGovUrl},
+          </if>
+          <if test="menuOuterUrl != null" >
+              MENU_OUTER_URL = #{menuOuterUrl},
+          </if>
+          <if test="menuTagUrl != null " >
+              MENU_TAG_URL = #{menuTagUrl},
+          </if>
+          <if test="isRecentlyAdd != null and isRecentlyAdd!='' " >
+              IS_RECENTLY_ADD = #{isRecentlyAdd},
+          </if>
+          <if test="hugeImgPath!=null">
+              HUGE_IMG_PATH = #{hugeImgPath},
+          </if>
+          <if test="isImgIcon != null and isImgIcon!='' " >
+              IS_IMG_ICON = #{isImgIcon},
+          </if>
+      </set>
+      where MENU_ID = #{menuId}
+  </update>
+  
+  <!-- 当功能的URL改变的时候同步修改关联此功能的菜单的URL -->
+  <update id="updateMenuUrlByFuncId">
+       update OPU_RS_MENU set MENU_INVOKE_URL = #{url} where FUNC_ID = #{funcId}
+  </update>
+
+  <select id="getMenuByMenuId" resultType="OpuRsMenu" parameterType="string">
+        select
+          <include refid="OpuRsMenu_All_Columns_Properties"/>
+        FROM OPU_RS_MENU menu
+        where menu.MENU_DELETED = '0'
+          and menu.MENU_ID = #{menuId}
+  </select>
+
+  <!-- 通过应用ID,模块ID,功能ID获取菜单集合 -->
+  <select id="listActiveMenusByAppIdAndFuncIdAndTmnId" resultType="OpuRsMenu">
+        select
+          <include refid="OpuRsMenu_All_Columns_Properties"/>
+        from OPU_RS_MENU menu
+        where MENU_DELETED = '0'
+          and IS_ACTIVE = '1'
+          and APP_SOFT_ID = #{appId}
+          and FUNC_ID = #{funcId}
+          and NET_TMN_ID = #{tmnId}
+  </select>
+
+  <!-- 通过终端ID获取未删除的启用和禁用的菜单集合 -->
+  <select id="listAllMenusByNetTmnId" resultType="OpuRsMenu">
+    select
+        <include refid="OpuRsMenu_All_Columns_Properties"/>,
+        appSoft.SOFT_NAME appName,
+        func.FUNC_NAME funcName
+    from OPU_RS_MENU menu
+    left join opu_rs_app_soft appSoft on appSoft.APP_SOFT_ID = menu.APP_SOFT_ID
+    left join opu_rs_func func on func.FUNC_ID = menu.FUNC_ID
+    where  menu.MENU_DELETED = '0'
+      and  menu.NET_TMN_ID = #{netTmnId}
+      order by menu.MENU_SORT_NO ASC ,menu.CREATE_TIME ASC
+  </select>
+
+    <!-- 获取某个终端的不包含当前菜单级子级菜单的菜单树数据 -->
+   <select id="listOtherMenusByNetTmnIdAndMenuId" resultType="OpuRsMenu">
+        SELECT
+            <include refid="OpuRsMenu_All_Columns_Properties"/>
+        FROM OPU_RS_MENU menu
+        WHERE MENU_DELETED = '0'
+          AND NET_TMN_ID = #{netTmnId}
+          AND MENU_SEQ NOT LIKE CONCAT(CONCAT('%.',#{menuId}),'.%')
+          ORDER BY MENU_SORT_NO ASC ,CREATE_TIME ASC
+   </select>
+
+  <!-- 获取功能对应的菜单集合 -->
+  <select id="listActiveMenuIdsByFuncIds" resultType="string">
+    select
+      MENU_ID as menuId
+    from
+      OPU_RS_MENU menu
+    where
+      MENU_DELETED = '0' and IS_ACTIVE = '1' and  FUNC_ID in
+      <foreach collection="array"  item="funcId" open="and ("   separator="or"  close=")" >
+          #{funcId}
+      </foreach>
+  </select>
+
+  <!-- 获取某个终端下的功能对应的菜单集合-->
+  <select id="listActiveMenuIdsByFuncIdsAndTmnId" resultType="OpuRsMenu">
+    select
+      MENU_ID as menuId
+    from
+      OPU_RS_MENU menu
+    where
+      MENU_DELETED = '0' and IS_ACTIVE = '1' and NET_TMN_ID = #{tmnId} and FUNC_ID in
+      <foreach collection="array"  item="funcId" open="and ("   separator="or"  close=")" >
+          #{funcId}
+      </foreach>
+  </select>
+
+  <select id="listActiveMenusByMenuIds" resultType="OpuRsMenu">
+    select
+      <include refid="OpuRsMenu_All_Columns_Properties" />
+    from
+      OPU_RS_MENU menu
+    where
+      MENU_DELETED = '0' and IS_ACTIVE = '1' and MENU_ID in
+      <foreach collection="menuIds"  item="menuId" open="and ("   separator="or"  close=")" >
+         #{menuId}
+      </foreach>
+    order by MENU_SORT_NO asc
+  </select>
+
+  <!-- 获取菜单集合  -->
+  <select id="listActiveMenusByRoleIdsAndTmnId" resultType="OpuRsMenu" >
+    select distinct
+      <include refid="OpuRsMenu_All_Columns_Properties"/>
+    from
+      OPU_RS_MENU menu, OPU_RS_ROLE_FUNC rolefunc
+    where
+      menu.FUNC_ID=rolefunc.FUNC_ID
+      and menu.MENU_DELETED = '0'
+      and menu.IS_ACTIVE = '1'
+      and menu.NET_TMN_ID = #{tmnId}
+      and rolefunc.ROLE_ID in
+      <foreach collection="roleIds" item="roleId" open="and ("   separator="or" close=")" >
+         #{roleId}
+      </foreach>
+    order by menu.MENU_SORT_NO asc
+  </select>
+
+  <!-- 通过菜单编号获取菜单对象 -->
+  <select id="getMenuByMenuCode" resultType="OpuRsMenu">
+    select
+      <include refid="OpuRsMenu_All_Columns_Properties"/>
+    from
+      OPU_RS_MENU menu
+    where menu.MENU_DELETED = '0'
+      and menu.MENU_CODE = #{menuCode}
+  </select>
+
+  <!--  获取某个终端的菜单的直接子菜单数(不包含间接子菜单) -->
+  <select id="listSubMenuListByTmnId" resultType="OpuRsMenu" parameterType="string">
+        select
+          PARENT_MENU_ID as id, count(PARENT_MENU_ID) as subCount
+        from
+          OPU_RS_MENU
+        where MENU_DELETED = '0'
+          and PARENT_MENU_ID is not null
+          and NET_TMN_ID = #{tmnId}
+          group by PARENT_MENU_ID
+  </select>
+
+  <!--  获取某个终端的菜单的已经启用的直接子菜单数(不包含间接子菜单) -->
+  <select id="listEnableSubMenuListByTmnId" resultType="OpuRsMenu"  parameterType="string" >
+        select
+            PARENT_MENU_ID as id  ,count(PARENT_MENU_ID) as  subCount
+        from   OPU_RS_MENU
+        where  MENU_DELETED = '0'
+        and  PARENT_MENU_ID is not null
+        and  IS_ACTIVE = '1'
+        and  NET_TMN_ID = #{tmnId}
+        group by   PARENT_MENU_ID
+  </select>
+
+  <!--  获取某个终端的所有节点数 -->
+  <select id="getAllMenuCountByTmnId" resultType="java.lang.Integer"  parameterType="java.lang.String">
+        select
+            count(*) from
+        OPU_RS_MENU
+        where  MENU_DELETED = '0'
+        and  NET_TMN_ID = #{tmnId}
+  </select>
+
+  <!--  获取某个终端的顶级节点数 -->
+  <select id="getTopMenuCountByTmnId" resultType="java.lang.Integer"  parameterType="java.lang.String">
+        select count(*) from   OPU_RS_MENU
+        where  MENU_DELETED = '0'
+        and  ( PARENT_MENU_ID  is  null OR PARENT_MENU_ID = '' )
+        and  NET_TMN_ID = #{tmnId}
+  </select>
+
+    <select id="listTopMenuListByTmnId" resultType="OpuRsMenu" >
+        select
+            <include refid="OpuRsMenu_All_Columns_Properties"/>
+        from OPU_RS_MENU menu
+        where  MENU_DELETED = '0'
+        and  ( PARENT_MENU_ID  is  null OR PARENT_MENU_ID = '' )
+        and  NET_TMN_ID = #{tmnId}
+        order by menu.MENU_SORT_NO asc ,menu.CREATE_TIME asc
+    </select>
+
+  <!--  获取终端关联菜单层级 -->
+  <select id="getMenuLevelByTmnId" resultType="java.lang.Integer"  parameterType="java.lang.String">
+    select
+        max(MENU_LEVEL)
+    from   OPU_RS_MENU
+    where  MENU_DELETED = '0'
+    and  NET_TMN_ID = #{tmnId}
+  </select>
+
+  <!--  获取某个终端的启用的顶级节点数 -->
+  <select id="getEnableTopMenuCount" resultType="int"  parameterType="string">
+        select
+            count(*)
+        from OPU_RS_MENU
+        where MENU_DELETED = '0'
+        and  PARENT_MENU_ID is null
+        and IS_ACTIVE = '1'
+        and NET_TMN_ID = #{tmnId}
+  </select>
+
+  <!--  获取某个菜单的未删除的启用和禁用的直接子菜单集合(不包含间接子菜单) -->
+  <select id="listAllSubRelChildMenu" resultType="OpuRsMenu"  parameterType="string">
+        select
+            <include refid="OpuRsMenu_All_Columns_Properties"/>,
+            tmn.TMN_NAME as tmnName,
+            soft.SOFT_NAME as appName,
+            func.FUNC_NAME as funcName
+        from OPU_RS_MENU menu
+        left join  agx_rs_tmn tmn on tmn.TMN_ID = menu.NET_TMN_ID
+        left join  opu_rs_func func on func.FUNC_ID = menu.FUNC_ID
+        left join  opu_rs_app_soft soft on soft.APP_SOFT_ID = menu.APP_SOFT_ID
+        from  OPU_RS_MENU menu
+        where menu.MENU_DELETED = '0'
+          and menu.PARENT_MENU_ID  = #{menuId}
+  </select>
+
+  <!--  获取某个菜单的所有未删除的启用和禁用的子菜单集合(包含间接子菜单) -->
+  <select id="listAllRelChildMenu" resultType="OpuRsMenu"  parameterType="string">
+    select
+          <include refid="OpuRsMenu_All_Columns_Properties"/>,
+          tmn.TMN_NAME as tmnName,
+          soft.SOFT_NAME as appName,
+          func.FUNC_NAME as funcName
+    from OPU_RS_MENU menu
+    LEFT JOIN  agx_rs_tmn tmn ON tmn.TMN_ID = menu.NET_TMN_ID
+    LEFT JOIN  opu_rs_func func ON func.FUNC_ID = menu.FUNC_ID
+    LEFT JOIN  opu_rs_app_soft soft ON soft.APP_SOFT_ID = menu.APP_SOFT_ID
+    where
+          menu.MENU_DELETED = '0'
+      and menu.MENU_SEQ like CONCAT(CONCAT('%.',#{menuId}),'.%')
+      and menu.MENU_ID != #{menuId}
+      order by menu.MENU_SORT_NO ASC ,menu.CREATE_TIME ASC
+  </select>
+  
+  <select id="getAllRelChildMenuCount" resultType="java.lang.Integer">
+    select
+       count(*)
+    from OPU_RS_MENU
+    where
+        MENU_DELETED = '0'
+    and MENU_SEQ like CONCAT(CONCAT('%.',#{menuId}),'.%')
+    and MENU_ID != #{menuId}
+  </select>
+
+  <!--  获取某个终端的未删除的启用和禁用的顶级菜单的集合 -->
+<!--  <select id="getTopMenuListByTmnId" resultType="OpuRsMenu"  parameterType="string">-->
+<!--    SELECT-->
+<!--        <include refid="OpuRsMenu_All_Columns_Properties" />-->
+<!--    FROM  OPU_RS_MENU menu-->
+<!--    <where>-->
+<!--            menu.MENU_DELETED = '0'-->
+<!--        AND ( menu.PARENT_MENU_ID IS NULL OR menu.PARENT_MENU_ID = '')-->
+<!--        AND menu.NET_TMN_ID = #{tmnId}-->
+<!--    </where>-->
+<!--  </select>-->
+
+
+  <!--  根据父ID查询所有的活动的子菜单 -->
+  <select id="listActiveMenuByParentId" resultType="OpuRsMenu"  parameterType="string">
+    SELECT
+        <include refid="OpuRsMenu_All_Columns_Properties" />
+    FROM OPU_RS_MENU menu
+    WHERE menu.MENU_DELETED = '0'
+    AND IS_ACTIVE = '1'
+    AND PARENT_MENU_ID = #{parentMenuId}
+  </select>
+
+  <!--  根据父ID查询所有的活动的子菜单 -->
+  <select id="listActiveMenuByMenuLevel" resultType="OpuRsMenu">
+    select
+        <include refid="OpuRsMenu_All_Columns_Properties" />
+    from
+    OPU_RS_MENU menu
+    where
+    MENU_DELETED = '0'
+    and  IS_ACTIVE = '1'
+    and MENU_LEVEL <![CDATA[<=]]> ${menuLevel}
+    ORDER BY MENU_SORT_NO ASC
+  </select>
+  
+  <select id="getMenuSortNoByParentMenuIdAndTmnId" resultType="java.lang.Integer">
+      SELECT
+        MAX(MENU_SORT_NO) AS sortMax
+      FROM  opu_rs_menu
+      <where>
+          AND  MENU_DELETED = '0'
+          AND  NET_TMN_ID = #{tmnId}
+          <if test="parentMenuId!=null and parentMenuId!=''">
+              AND  PARENT_MENU_ID = #{parentMenuId}
+          </if>
+          <if test="parentMenuId==null or parentMenuId==''">
+               AND ( PARENT_MENU_ID IS NULL OR PARENT_MENU_ID ='' )
+          </if>
+      </where>
+  </select>
+    
+    <select id="getMenuByTmnIdAndFuncId" resultType="OpuRsMenu">
+        select
+            <include refid="OpuRsMenu_All_Columns_Properties" />
+        from  OPU_RS_MENU menu
+        where  menu.MENU_DELETED = '0'
+          and  menu.NET_TMN_ID = #{tmnId}
+          and  menu.FUNC_ID = #{funcId}
+    </select>
+
+    <select id="listOpuRsMenus" resultType="OpuRsMenu">
+        select
+            <include refid="OpuRsMenu_All_Columns_Properties"/>,
+            pmenu.MENU_NAME parentMenuName
+        from OPU_RS_MENU menu
+        left join OPU_RS_MENU pmenu on pmenu.MENU_ID = menu.PARENT_MENU_ID
+        <where>
+            and menu.MENU_DELETED = '0'
+            <if test="menuCode != null" >
+            and menu.MENU_CODE = #{menuCode}
+            </if>
+            <if test="menuName != null" >
+            and menu.MENU_NAME = #{menuName}
+            </if>
+            <if test="menuIconCss != null" >
+            and menu.MENU_ICON_CSS = #{menuIconCss}
+            </if>
+            <if test="netTmnId != null" >
+            and menu.NET_TMN_ID = #{netTmnId}
+            </if>
+            <if test="appSoftId != null" >
+            and menu.APP_SOFT_ID = #{appSoftId}
+            </if>
+            <if test="funcId != null" >
+            and menu.FUNC_ID = #{funcId}
+            </if>
+            <if test="parentMenuId != null" >
+            and menu.PARENT_MENU_ID = #{parentMenuId}
+            </if>
+            <if test="menuLevel != null" >
+            and menu.MENU_LEVEL = #{menuLevel}
+            </if>
+            <if test="menuSeq != null" >
+            and menu.MENU_SEQ = #{menuSeq}
+            </if>
+            <if test="menuSortNo != null" >
+            and menu.MENU_SORT_NO = #{menuSortNo}
+            </if>
+            <if test="isActive != null" >
+            and menu.IS_ACTIVE = #{isActive}
+            </if>
+            <if test="isLeaf != null" >
+            and menu.IS_LEAF = #{isLeaf}
+            </if>
+            <if test="subCount != null" >
+            and menu.SUB_COUNT = #{subCount}
+            </if>
+            <if test="activeSubCount != null" >
+            and menu.ACTIVE_SUB_COUNT = #{activeSubCount}
+            </if>
+            <if test="pageOpenMode != null" >
+            and menu.PAGE_OPEN_MODE = #{pageOpenMode}
+            </if>
+            <if test="smallImgPath != null" >
+            and menu.SMALL_IMG_PATH = #{smallImgPath}
+            </if>
+            <if test="middleImgPath != null" >
+            and menu.MIDDLE_IMG_PATH = #{middleImgPath}
+            </if>
+            <if test="bigImgPath != null" >
+            and menu.BIG_IMG_PATH = #{bigImgPath}
+            </if>
+            <if test="menuMemo != null" >
+            and menu.MENU_MEMO = #{menuMemo}
+            </if>
+            <if test="menuDeleted != null" >
+            and menu.MENU_DELETED = #{menuDeleted}
+            </if>
+            <if test="creater != null" >
+            and menu.CREATER = #{creater}
+            </if>
+            <if test="createTime != null" >
+            and menu.CREATE_TIME = #{createTime}
+            </if>
+            <if test="modifier != null" >
+            and menu.MODIFIER = #{modifier}
+            </if>
+            <if test="modifyTime != null" >
+            and menu.MODIFY_TIME = #{modifyTime}
+            </if>
+            <if test="menuInvokeActivity != null" >
+            and menu.MENU_INVOKE_ACTIVITY = #{menuInvokeActivity}
+            </if>
+            <if test="menuInvokeType != null" >
+            and menu.MENU_INVOKE_TYPE = #{menuInvokeType}
+            </if>
+            <if test="isSingleUrl != null" >
+            and menu.IS_SINGLE_URL = #{isSingleUrl}
+            </if>
+            <if test="autoSwitch != null" >
+            and menu.AUTO_SWITCH = #{autoSwitch}
+            </if>
+            <if test="menuInnerUrl != null" >
+            and menu.MENU_INNER_URL = #{menuInnerUrl}
+            </if>
+            <if test="menuGovUrl != null" >
+            and menu.MENU_GOV_URL = #{menuGovUrl}
+            </if>
+            <if test="menuOuterUrl != null" >
+            and menu.MENU_OUTER_URL = #{menuOuterUrl}
+            </if>
+            <if test="menuTagUrl != null and menuTagUrl!='' " >
+            and menu.MENU_TAG_URL = #{menuTagUrl}
+            </if>
+            <if test="isRecentlyAdd != null and isRecentlyAdd!='' " >
+            and menu.IS_RECENTLY_ADD = #{isRecentlyAdd}
+            </if>
+            <if test="hugeImgPath != null and hugeImgPath!='' " >
+            and menu.HUGE_IMG_PATH = #{hugeImgPath}
+            </if>
+            <if test="isImgIcon != null and isImgIcon!='' " >
+            and menu.IS_IMG_ICON = #{isImgIcon}
+            </if>
+            <if test="isNeedChild != null and isNeedChild!='' " >
+            and menu.MENU_SEQ like concat(concat('%.',#{menuId}),'.%')
+            </if>
+            <if test="keyword!=null and keyword!='' ">
+            and (
+                menu.MENU_CODE like concat('%',concat(#{keyword},'%')) or
+                menu.MENU_NAME like concat('%',concat(#{keyword},'%')) or
+                menu.MENU_ICON_CSS like concat('%',concat(#{keyword},'%')) or
+                menu.SMALL_IMG_PATH like concat('%',concat(#{keyword},'%')) or
+                menu.MENU_MEMO like concat('%',concat(#{keyword},'%'))
+            )
+            </if>
+        </where>
+        order by menu.MENU_LEVEL asc, menu.MENU_SORT_NO asc ,menu.CREATE_TIME asc
+    </select>
+
+    <select id="listUserMenus" resultType="OpuRsMenu">
+        select
+            <include refid="OpuRsMenu_All_Columns_Properties"/>
+        from OPU_RS_MENU menu
+        where menu.NET_TMN_ID in (
+            select NET_TMN_ID
+            from opu_rs_net_tmn
+            where TMN_ID = #{tmnId}
+            and NET_ID in (
+                select distinct NET_ID
+                from OPU_RS_NET
+                where ORG_ID = #{orgId}
+                and IS_DELETED = '0'
+                and IS_ACTIVE = '1'
+                and IS_OPUS = '1'
+                <if test="netName!=null and netName!=''">
+                and NET_NAME like concat('%',concat(#{netName},'%'))
+                </if>
+            )
+        )
+        and menu.APP_SOFT_ID in (
+            select appSoft.APP_SOFT_ID
+            from OPU_RS_APP_INST appInst,OPU_RS_APP_SOFT appSoft
+            where appInst.APP_SOFT_ID = appSoft.APP_SOFT_ID
+            <if test="appSoftCode!=null and appSoftCode!=''">
+            and appSoft.SOFT_CODE = #{appSoftCode}
+            </if>
+            and SERV_ID in (
+                select SERV_ID from OPU_RS_SERV
+                where MAC_ID in (
+                    select MAC_ID from OPU_RS_MAC
+                    where NET_ID in (
+                        select net.NET_ID from OPU_RS_NET net
+                        where(
+                            net.NET_ID in (
+                                select NET_ID from OPU_RS_NET
+                                where ORG_ID = #{orgId}
+                                and IS_DELETED = '0'
+                                and IS_ACTIVE = '1'
+                                and IS_OPUS = '1'
+                                <if test="netName!=null and netName!=''">
+                                and NET_NAME like concat('%',concat(#{netName},'%'))
+                                </if>
+                            )
+                            or net.PARENT_NET_ID in (
+                                select NET_ID from OPU_RS_NET
+                                where ORG_ID = #{orgId}
+                                and IS_DELETED = '0'
+                                and IS_ACTIVE = '1'
+                                and IS_OPUS = '1'
+                                <if test="netName!=null and netName!=''">
+                                and NET_NAME like concat('%',concat(#{netName},'%'))
+                                </if>
+                            )
+                        )
+                        and net.ORG_ID = #{orgId}
+                        and net.IS_DELETED = '0'
+                        and net.IS_ACTIVE = '1'
+                    )
+                )
+            )
+        )
+        <if test="userId!=null and userId!=''">
+        and menu.FUNC_ID in (
+            select distinct FUNC_ID
+            from OPU_RS_ROLE_FUNC
+            where ROLE_ID in (
+                select distinct roleUser.ROLE_ID
+                from OPU_AC_ROLE_USER roleUser,OPU_RS_ROLE rsRole
+                where roleUser.ROLE_ID = rsRole.ROLE_ID
+                and roleUser.USER_ID = #{userId}
+                and roleUser.ORG_ID = #{orgId}
+                and rsRole.ROLE_DELETED = '0'
+            )
+        )
+        </if>
+        and menu.MENU_DELETED = '0'
+        and menu.IS_ACTIVE = '1'
+        order by menu.MENU_LEVEL asc,menu.MENU_SORT_NO asc
+    </select>
+
+    <select id="listNoRsNetUserMenu" resultType="OpuRsMenu">
+        select
+            <include refid="OpuRsMenu_All_Columns_Properties"/>
+        from OPU_RS_MENU menu
+        where menu.NET_TMN_ID in (
+            select NET_TMN_ID from opu_rs_net_tmn
+            where TMN_ID = #{tmnId}
+            and NET_ID in (
+                select distinct NET_ID from OPU_RS_NET
+                where ORG_ID = #{orgId}
+                  and IS_DELETED = '0'
+                  and IS_ACTIVE = '1'
+                  and IS_OPUS = '1'
+                  <if test="netName!=null and netName!=''">
+                  and NET_NAME like concat('%',concat(#{netName},'%'))
+                  </if>
+            )
+        )
+        <if test="appSoftCodes!=null and appSoftCodes.length!=0">
+        and menu.APP_SOFT_ID in (
+            select appSoft.APP_SOFT_ID from OPU_RS_APP_SOFT appSoft
+            <where>
+                and SOFT_DELETED = '0'
+                and ORG_ID = #{orgId}
+                and appSoft.SOFT_CODE in
+                <foreach collection="appSoftCodes" item="appSoftCode" index="index" open="(" close=")" separator=",">
+                    #{appSoftCode}
+                </foreach>
+            </where>
+        )
+        </if>
+        <if test="userId!=null and userId!=''">
+        and menu.FUNC_ID in (
+            select distinct FUNC_ID from OPU_RS_ROLE_FUNC
+            where ROLE_ID in (
+                select distinct roleUser.ROLE_ID
+                 from OPU_AC_ROLE_USER roleUser,OPU_RS_ROLE rsRole
+                where roleUser.ROLE_ID = rsRole.ROLE_ID
+                  and roleUser.USER_ID = #{userId}
+                  and roleUser.ORG_ID = #{orgId}
+                  and rsRole.ROLE_DELETED = '0'
+            )
+        )
+        </if>
+        and menu.MENU_DELETED = '0'
+        and menu.IS_ACTIVE = '1'
+        order by menu.MENU_LEVEL asc,menu.MENU_SORT_NO asc
+    </select>
+
+    <select id="listAllMenusByRoleIds" resultType="OpuRsMenu">
+        select
+           <include refid="OpuRsMenu_All_Columns_Properties"/>
+        from OPU_RS_MENU menu
+        <where>
+            and menu.FUNC_ID in (
+                select distinct FUNC_ID
+                from OPU_RS_ROLE_FUNC
+                where ROLE_ID in
+                <foreach collection="roleIds" item="roleId" open="("  separator=","  close=")">
+                    #{roleId}
+                </foreach>
+            )
+            and menu.MENU_DELETED = '0'
+            and menu.IS_ACTIVE = '1'
+        </where>
+        order by menu.MENU_LEVEL asc,menu.MENU_SORT_NO asc
+    </select>
+    
+    <update id="changeIsLeafStatus" parameterType="java.lang.String">
+        update OPU_RS_MENU set IS_LEAF = case IS_LEAF when '0' then '1' else '0' end
+        where MENU_ID = #{menuId}
+    </update>
+
+    <update id="changeIsSingleUrlStatus" parameterType="java.lang.String">
+        update OPU_RS_MENU set IS_SINGLE_URL = case IS_SINGLE_URL when '0' then '1' else '0' end
+        where MENU_ID = #{menuId}
+    </update>
+
+    <update id="changeAutoSwitchStatus" parameterType="java.lang.String">
+        update OPU_RS_MENU set AUTO_SWITCH = case AUTO_SWITCH when '0' then '1' else '0' end
+        where MENU_ID = #{menuId}
+    </update>
+
+    <update id="changeIsRecentlyAddStatus" parameterType="java.lang.String">
+        update OPU_RS_MENU set IS_RECENTLY_ADD = case IS_RECENTLY_ADD when '0' then '1' else '0' end
+        where MENU_ID = #{menuId}
+    </update>
+
+    <update id="changeIsImgIconStatus" parameterType="java.lang.String">
+        update OPU_RS_MENU set IS_IMG_ICON = case IS_IMG_ICON when '0' then '1' else '0' end
+        where MENU_ID = #{menuId}
+    </update>
+    <select id="listNoRsNetUserTopMenu" resultType="OpuRsMenu">
+        select
+        <include refid="OpuRsMenu_All_Columns_Properties"/>
+        from OPU_RS_MENU menu
+        where menu.NET_TMN_ID in (
+        select NET_TMN_ID from opu_rs_net_tmn
+        where TMN_ID = #{tmnId}
+        and NET_ID in (
+        select distinct NET_ID from OPU_RS_NET
+        where ORG_ID = #{orgId}
+        and IS_DELETED = '0'
+        and IS_ACTIVE = '1'
+        and IS_OPUS = '1'
+        <if test="netName!=null and netName!=''">
+            and NET_NAME like concat('%',concat(#{netName},'%'))
+        </if>
+        )
+        )
+        <if test="appSoftCodes!=null and appSoftCodes.length!=0">
+            and menu.APP_SOFT_ID in (
+            select appSoft.APP_SOFT_ID from OPU_RS_APP_SOFT appSoft
+            <where>
+                and SOFT_DELETED = '0'
+                and ORG_ID = #{orgId}
+                and appSoft.SOFT_CODE in
+                <foreach collection="appSoftCodes" item="appSoftCode" index="index" open="(" close=")" separator=",">
+                    #{appSoftCode}
+                </foreach>
+            </where>
+            )
+        </if>
+        <if test="userId!=null and userId!=''">
+            and menu.FUNC_ID in (
+            select distinct FUNC_ID from OPU_RS_ROLE_FUNC
+            where ROLE_ID in (
+            select distinct roleUser.ROLE_ID
+            from OPU_AC_ROLE_USER roleUser,OPU_RS_ROLE rsRole
+            where roleUser.ROLE_ID = rsRole.ROLE_ID
+            and roleUser.USER_ID = #{userId}
+            and roleUser.ORG_ID = #{orgId}
+            and rsRole.ROLE_DELETED = '0'
+            )
+            )
+        </if>
+        and menu.MENU_DELETED = '0'
+        and menu.IS_ACTIVE = '1'
+        and ( menu.PARENT_MENU_ID is null or menu.PARENT_MENU_ID = '' )
+        order by menu.MENU_LEVEL asc,menu.MENU_SORT_NO asc
+    </select>
+
+    <select id="listUserMenusByUserId" resultType="OpuUserMenu">
+        SELECT
+              ru.USER_ID userId,
+              ru.ORG_ID orgId,
+              rm.MENU_INNER_URL menuInnerUrl
+        FROM
+            opu_ac_role_user ru,
+            opu_rs_role_func rf,
+            opu_rs_menu rm
+        where
+         rm.MENU_DELETED = '0'
+         and ru.ROLE_ID = rf.ROLE_ID
+         and rm.FUNC_ID = rf.FUNC_ID
+         and ru.USER_ID = #{userId}
+        GROUP BY ru.USER_ID,ru.ORG_ID,rm.MENU_INNER_URL
+    </select>
+
+    <select id="listAllUserMenus" resultType="OpuUserMenu">
+        SELECT
+              ru.USER_ID userId,
+              ru.ORG_ID orgId,
+              rm.MENU_INNER_URL menuInnerUrl
+        FROM
+            opu_ac_role_user ru,
+            opu_rs_role_func rf,
+            opu_rs_menu rm
+        where
+         rm.MENU_DELETED = '0'
+         and ru.ROLE_ID = rf.ROLE_ID
+         and rm.FUNC_ID = rf.FUNC_ID
+        GROUP BY ru.USER_ID,ru.ORG_ID,rm.MENU_INNER_URL
+    </select>
+</mapper>

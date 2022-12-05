@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgWidgetAssetsProjectCustomMapper" >
+
+    <sql id="Base_Column_List" >
+    id, app_soft_id, unique_idf, create_time, modify_time, remark
+    </sql>
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgWidgetAssetsProject" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="app_soft_id" property="appSoftId" jdbcType="VARCHAR" />
+        <result column="unique_idf" property="uniqueIdf" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectByAppSoftId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from ag_widget_assets_project
+        where app_soft_id = #{appSoftId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getUniqueIdBySoftCode" parameterType="java.lang.String" resultType="java.lang.String">
+    select unique_idf from ag_widget_assets_project where app_soft_id=
+    (SELECT app_soft_id from opu_rs_app_soft where soft_code=#{softCode,jdbcType=VARCHAR})
+    </select>
+
+     <select id="getAppSoftIdBySoftCode" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT app_soft_id from opu_rs_app_soft where soft_code=#{softCode,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

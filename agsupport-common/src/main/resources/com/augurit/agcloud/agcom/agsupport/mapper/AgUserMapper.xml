@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgUserMapper">
+
+    <sql id="allColumns">
+        ID id,
+        LOGIN_NAME loginName,
+        PASSWORD as password,
+        USER_NAME userName,
+        IS_ACTIVE isActive,
+        TEL tel,
+        QQ qq,
+        EMAIL email,
+        OFFICE_TEL officeTel
+    </sql>
+
+    <!--获取所有用户-->
+    <select id="findList" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user
+        WHERE
+        1 = 1
+        <if test="userName != null">
+            AND
+            (user_name LIKE CONCAT(CONCAT('%',TRIM(#{userName})),'%')
+            OR
+            login_name LIKE CONCAT(CONCAT('%',TRIM(#{userName})),'%'))
+        </if>
+        ORDER BY user_name
+    </select>
+
+
+    <select id="findListByIds" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user t
+        WHERE id in
+        <foreach collection="ids" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+        <if test="agUser.userName != null">
+            AND t.user_name LIKE CONCAT(CONCAT('%', TRIM(#{agUser.userName})),'%')
+        </if>
+        ORDER BY t.user_name
+    </select>
+    <!--按角色查找-->
+    <select id="findListByRole" resultType="AgUser">
+        SELECT
+        t.id id,
+        t.login_name loginName,
+        t.password password,
+        t.user_name userName,
+        t.is_active isActive,
+        t.tel tel,
+        t.qq qq,
+        t.email email,
+        t.office_tel officeTel,
+        a.id userRoleId
+        FROM
+        ag_user t,
+        (
+        SELECT
+        t1.*
+        FROM
+        ag_user_role t1
+        WHERE
+        t1.role_id = #{roleId}
+        ) a
+        WHERE
+        a.user_id = t.id
+        <if test="agUser.userName != null">
+            AND
+            (user_name LIKE CONCAT(CONCAT('%', TRIM(#{agUser.userName})),'%')
+            OR
+            login_name LIKE CONCAT(CONCAT('%', TRIM(#{agUser.userName})),'%'))
+        </if>
+    </select>
+
+    <!--按多个角色查找-->
+    <select id="findListByRoles" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (user_id)
+        FROM
+        ag_user_role
+        WHERE
+        role_id IN
+        <foreach collection="roleIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <!--按微件查找-->
+    <select id="findListByFunc" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (user_id)
+        FROM
+        ag_user_role
+        WHERE
+        role_id IN (
+        SELECT
+        role_id
+        FROM
+        ag_role_function
+        WHERE
+        function_id = #{funcId}
+        )
+        )
+    </select>
+
+    <!--按角色微件id集合查找用户-->
+    <select id="findListByRoleFunc" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (user_id)
+        FROM
+        ag_user_role
+        WHERE
+        role_id IN (
+        SELECT
+        role_id
+        FROM
+        ag_role_function
+        WHERE
+        id = #{roleFuncId}
+        )
+        )
+    </select>
+
+    <!--按角色菜单id集合查找用户-->
+    <select id="findListByRoleMenu" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        (user_id)
+        FROM
+        ag_user_role
+        WHERE
+        role_id IN (
+        SELECT
+        role_id
+        FROM
+        ag_role_menu
+        WHERE
+        id = #{roleMenuId}
+        )
+        )
+    </select>
+
+
+    <!--按用户图层id集合查找用户-->
+    <select id="findListByUserLayer" resultType="java.lang.String">
+        SELECT DISTINCT
+        user_id
+        FROM
+        ag_user_layer
+        WHERE
+        id = #{userLayerId}
+
+    </select>
+
+    <!--按目录图层id集合查找用户-->
+    <select id="findListByDirLayers" resultType="java.lang.String">
+        SELECT DISTINCT
+        user_id
+        FROM
+        ag_user_layer
+        WHERE
+        dir_layer_id IN
+        <foreach collection="dirLayerIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+    <!--按图层id查找用户Id-->
+    <select id="findListByLayer" resultType="java.lang.String">
+        SELECT DISTINCT
+        user_id
+        FROM
+        ag_user_layer
+        WHERE
+        dir_layer_id IN (
+        SELECT
+        id
+        FROM
+        ag_dir_layer
+        WHERE
+        layer_id = #{layerId}
+        )
+    </select>
+
+    <!--查找用户-->
+    <select id="findUsers" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_user
+        WHERE
+        id IN (
+        SELECT DISTINCT
+        user_id
+        FROM
+        ag_user_role
+        )
+    </select>
+
+    <!--按目录xpath查找用户-->
+    <select id="findListByDirXpath" resultType="java.lang.String">
+                        SELECT DISTINCT
+                            user_id
+                        FROM
+                            ag_user_layer
+                        WHERE
+                            dir_layer_id IN (
+                                SELECT
+                                    id
+                                FROM
+                                    ag_dir_layer
+                                WHERE
+                                    dir_id IN (
+                                        SELECT
+                                            id
+                                        FROM
+                                            ag_dir
+                                        WHERE xpath = #{xpath}
+                                        OR xpath LIKE CONCAT(#{xpath}, '/%')
+                                    )
+                            )
+
+
+    </select>
+
+    <select id="findListByParams" resultType="java.lang.String">
+        SELECT DISTINCT
+        user_id
+        FROM
+        ag_user_layer
+        WHERE
+        dir_layer_id IN (
+        SELECT
+        id
+        FROM
+        ag_dir_layer
+        WHERE
+        layer_id IN (
+        SELECT
+        id
+        FROM
+        ag_layer
+        WHERE
+        param_id IN
+        <foreach collection="paramIds" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        )
+        )
+
+
+    </select>
+
+    <!--按登录名称查找-->
+    <select id="findByName" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user
+        WHERE
+        login_name = #{loginName}
+    </select>
+    <!--按登录名称查找-->
+    <select id="findById" resultType="AgUser">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user
+        WHERE
+        id = #{id}
+    </select>
+
+    <!--保存-->
+    <insert id="save">
+        INSERT
+        INTO ag_user (
+          id,login_name,password,user_name,is_active,tel,qq,office_tel,email
+        ) VALUES (
+          #{id},#{loginName},#{password},#{userName},#{isActive},#{tel},#{qq},#{officeTel},#{email}
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        UPDATE ag_user
+        <set>
+            <if test="loginName != null">
+                login_name = #{loginName},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="qq != null">
+                qq = #{qq},
+
+            </if>
+            <if test="officeTel != null">
+                office_tel = #{officeTel},
+
+            </if>
+            <if test="email != null">
+                email = #{email}
+
+            </if>
+
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            ag_user
+        WHERE
+            id = #{id}
+    </delete>
+</mapper>

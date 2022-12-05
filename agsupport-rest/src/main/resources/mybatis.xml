@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+		PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="_defaultDatabaseId" value="oracle"/><!--使用的数据库类型(目前仅支持oracle,mysql,)-->
+	</properties>
+	<settings>
+		<!-- xml配置对于NULL值默认作为字符串来处理 -->
+		<setting name="jdbcTypeForNull" value="VARCHAR"/>
+		<setting name="logImpl" value="LOG4J"/>
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	<typeAliases>
+		<package name="com.augurit.agcloud.bsc.domain"/>
+		<package name="com.augurit.agcloud.meta.domain"/>
+		<package name="com.augurit.agcloud.opus.common.domain"/>
+		<package name="com.augurit.agcloud.agcom.agsupport.domain"/>
+		<package name="com.augurit.agcloud.opus.domain"/>
+		<package name="com.augurit.agcloud.agx.common.domain"/>
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!--<property name="dialect" value="mysql"/>-->
+			<property name="offsetAsPageNum" value="true"/>
+			<property name="rowBoundsWithCount" value="true"/>
+		</plugin>
+	</plugins>
+</configuration>

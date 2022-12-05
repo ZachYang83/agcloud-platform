@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgUserProjectMapper">
+    <sql id="allColumns">
+        ID id,
+        USER_ID userId,
+        PROJECT_ID projectId
+    </sql>
+    <insert id="save">
+        INSERT INTO ag_user_project (
+        id,user_id,project_id
+        ) VALUES (
+        #{id},#{UserId},#{ProjectId}
+        )
+    </insert>
+    <select id="findByUserIdAndProjectId" resultType="AgUserProject">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user_project
+        WHERE
+        project_id = #{projectId}
+        AND
+        user_id = #{userId}
+    </select>
+    <delete id="delete">
+        DELETE FROM ag_user_project
+        WHERE id = #{id}
+    </delete>
+    <select id="findListByProjectId" resultType="AgUserProject">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user_project
+        WHERE
+        project_id = #{projectId}
+    </select>
+    <select id="findListByUserId" resultType="AgUserProject">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_user_project
+        WHERE
+        user_id = #{userId}
+    </select>
+
+</mapper>

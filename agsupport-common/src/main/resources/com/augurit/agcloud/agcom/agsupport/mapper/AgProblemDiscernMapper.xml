@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgProblemDiscernMapper">
+
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgProblemDiscern">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="PROBLEM_IMG" jdbcType="BINARY" property="problemImg"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="IMG_ID" jdbcType="VARCHAR" property="imgId"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="P_TYPE" jdbcType="VARCHAR" property="pType"/>
+    </resultMap>
+
+    <!-- <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+                type="com.augurit.agcloud.agcom.agsupport.domain.AgProblemDiscern">
+         <result column="CONFIG_VALUE" jdbcType="VARCHAR" property="configValue"/>
+     </resultMap>-->
+
+    <sql id="Base_Column_List">
+        ID, PROBLEM_IMG, DESCRIPTION, IMG_ID, CREATE_TIME, MODIFY_TIME, REMARK, P_TYPE
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROBLEM_DISCERN
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 物理删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+       delete from AG_PROBLEM_DISCERN
+       where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <!-- 物理删除 批量删除 -->
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete from AG_PROBLEM_DISCERN
+        where ID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 逻辑删除 -->
+    <!--<update id="deleteByPrimaryKey" parameterType="java.lang.String">
+        update AG_PROBLEM_DISCERN
+        set IS_DELETE = '1',
+        MODIFY_TIME = CURRENT_TIMESTAMP
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>-->
+
+    <!-- 逻辑删除 批量删除 -->
+    <!--<update id="deleteByIds" parameterType="java.lang.String">
+        update AG_PROBLEM_DISCERN
+        set IS_DELETE = '1',
+        MODIFY_TIME = CURRENT_TIMESTAMP
+        where ID in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>-->
+
+    <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProblemDiscern">
+        insert into AG_PROBLEM_DISCERN (ID, PROBLEM_IMG, DESCRIPTION, IMG_ID, CREATE_TIME, MODIFY_TIME, REMARK)
+        values (#{id,jdbcType=VARCHAR}, #{problemImg,jdbcType=BINARY}, #{description,jdbcType=VARCHAR},
+          #{imgId,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
+          #{remark,jdbcType=VARCHAR},#{pType,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProblemDiscern">
+        insert into AG_PROBLEM_DISCERN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="problemImg != null and problemImg != '' ">
+                PROBLEM_IMG,
+            </if>
+            <if test="description != null">
+                DESCRIPTION,
+            </if>
+            <if test="imgId != null">
+                IMG_ID,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="pType != null">
+                P_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="problemImg != null">
+                #{problemImg,jdbcType=BINARY},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="imgId != null">
+                #{imgId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="pType != null">
+                #{pType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProblemDiscern">
+        update AG_PROBLEM_DISCERN
+        <set>
+            <if test="problemImg != null and problemImg != ''">
+                PROBLEM_IMG = #{problemImg,jdbcType=BINARY},
+            </if>
+            <if test="description != null">
+                DESCRIPTION = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="imgId != null">
+                IMG_ID = #{imgId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="pType != null">
+                P_TYPE = #{pType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgProblemDiscern">
+    update AG_PROBLEM_DISCERN
+    set
+      PROBLEM_IMG = #{problemImg,jdbcType=BINARY},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      IMG_ID = #{imgId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      P_TYPE = #{pType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+    <!--按条件查询-->
+    <select id="findList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROBLEM_DISCERN
+        where 1 = 1
+        <if test="description != null">
+            AND DESCRIPTION LIKE CONCAT(CONCAT('%', TRIM(#{description})), '%')
+        </if>
+        order by CREATE_TIME DESC ,MODIFY_TIME DESC
+    </select>
+
+<!--    parameterType="java.lang.String"-->
+    <select id="findByImgId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROBLEM_DISCERN
+        where IMG_ID = #{imgId,jdbcType=VARCHAR} and P_TYPE = #{pType,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findListByImgId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from AG_PROBLEM_DISCERN
+        where IMG_ID = #{imgId,jdbcType=VARCHAR} and P_TYPE = #{pType,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

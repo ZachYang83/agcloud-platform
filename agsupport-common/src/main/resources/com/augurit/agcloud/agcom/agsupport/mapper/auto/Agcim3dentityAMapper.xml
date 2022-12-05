@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.Agcim3dentityAMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dentityA" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="objectid" property="objectid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="BIGINT" />
+    <result column="infotype" property="infotype" jdbcType="VARCHAR" />
+    <result column="profession" property="profession" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="catagory" property="catagory" jdbcType="VARCHAR" />
+    <result column="familyname" property="familyname" jdbcType="VARCHAR" />
+    <result column="familytype" property="familytype" jdbcType="VARCHAR" />
+    <result column="materialid" property="materialid" jdbcType="VARCHAR" />
+    <result column="elementattributes" property="elementattributes" jdbcType="VARCHAR" />
+    <result column="host" property="host" jdbcType="VARCHAR" />
+    <result column="geometry" property="geometry" jdbcType="VARCHAR" />
+    <result column="topologyelements" property="topologyelements" jdbcType="VARCHAR" />
+    <result column="boundingbox" property="boundingbox" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, objectid, name, version, infotype, profession, level, catagory, familyname, familytype, 
+    materialid, elementattributes, host, geometry, topologyelements, boundingbox
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dentityAExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from agcim3dentity_a
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dentityAExample" >
+    delete from agcim3dentity_a
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dentityA" >
+    insert into agcim3dentity_a (id, objectid, name, 
+      version, infotype, profession, 
+      level, catagory, familyname, 
+      familytype, materialid, elementattributes, 
+      host, geometry, topologyelements, 
+      boundingbox)
+    values (#{id,jdbcType=VARCHAR}, #{objectid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{version,jdbcType=BIGINT}, #{infotype,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{catagory,jdbcType=VARCHAR}, #{familyname,jdbcType=VARCHAR}, 
+      #{familytype,jdbcType=VARCHAR}, #{materialid,jdbcType=VARCHAR}, #{elementattributes,jdbcType=VARCHAR}, 
+      #{host,jdbcType=VARCHAR}, #{geometry,jdbcType=VARCHAR}, #{topologyelements,jdbcType=VARCHAR}, 
+      #{boundingbox,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dentityA" >
+    insert into agcim3dentity_a
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="objectid != null" >
+        objectid,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="infotype != null" >
+        infotype,
+      </if>
+      <if test="profession != null" >
+        profession,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="catagory != null" >
+        catagory,
+      </if>
+      <if test="familyname != null" >
+        familyname,
+      </if>
+      <if test="familytype != null" >
+        familytype,
+      </if>
+      <if test="materialid != null" >
+        materialid,
+      </if>
+      <if test="elementattributes != null" >
+        elementattributes,
+      </if>
+      <if test="host != null" >
+        host,
+      </if>
+      <if test="geometry != null" >
+        geometry,
+      </if>
+      <if test="topologyelements != null" >
+        topologyelements,
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="objectid != null" >
+        #{objectid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="infotype != null" >
+        #{infotype,jdbcType=VARCHAR},
+      </if>
+      <if test="profession != null" >
+        #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="catagory != null" >
+        #{catagory,jdbcType=VARCHAR},
+      </if>
+      <if test="familyname != null" >
+        #{familyname,jdbcType=VARCHAR},
+      </if>
+      <if test="familytype != null" >
+        #{familytype,jdbcType=VARCHAR},
+      </if>
+      <if test="materialid != null" >
+        #{materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="elementattributes != null" >
+        #{elementattributes,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null" >
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="geometry != null" >
+        #{geometry,jdbcType=VARCHAR},
+      </if>
+      <if test="topologyelements != null" >
+        #{topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        #{boundingbox,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dentityAExample" resultType="java.lang.Integer" >
+    select count(*) from agcim3dentity_a
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update agcim3dentity_a
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.objectid != null" >
+        objectid = #{record.objectid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=BIGINT},
+      </if>
+      <if test="record.infotype != null" >
+        infotype = #{record.infotype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profession != null" >
+        profession = #{record.profession,jdbcType=VARCHAR},
+      </if>
+      <if test="record.level != null" >
+        level = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.catagory != null" >
+        catagory = #{record.catagory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.familyname != null" >
+        familyname = #{record.familyname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.familytype != null" >
+        familytype = #{record.familytype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materialid != null" >
+        materialid = #{record.materialid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.elementattributes != null" >
+        elementattributes = #{record.elementattributes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.host != null" >
+        host = #{record.host,jdbcType=VARCHAR},
+      </if>
+      <if test="record.geometry != null" >
+        geometry = #{record.geometry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topologyelements != null" >
+        topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boundingbox != null" >
+        boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update agcim3dentity_a
+    set id = #{record.id,jdbcType=VARCHAR},
+      objectid = #{record.objectid,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=BIGINT},
+      infotype = #{record.infotype,jdbcType=VARCHAR},
+      profession = #{record.profession,jdbcType=VARCHAR},
+      level = #{record.level,jdbcType=VARCHAR},
+      catagory = #{record.catagory,jdbcType=VARCHAR},
+      familyname = #{record.familyname,jdbcType=VARCHAR},
+      familytype = #{record.familytype,jdbcType=VARCHAR},
+      materialid = #{record.materialid,jdbcType=VARCHAR},
+      elementattributes = #{record.elementattributes,jdbcType=VARCHAR},
+      host = #{record.host,jdbcType=VARCHAR},
+      geometry = #{record.geometry,jdbcType=VARCHAR},
+      topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+      boundingbox = #{record.boundingbox,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

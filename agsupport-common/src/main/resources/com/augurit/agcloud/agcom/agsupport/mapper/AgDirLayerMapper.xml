@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgDirLayerMapper">
+
+    <sql id="allColumns">
+        ID id,
+        DIR_ID dirId,
+        LAYER_ID layerId,
+        ADD_FLAG addFlag,
+        ORDER_NM orderNm
+    </sql>
+
+    <!--查询所有-->
+    <select id="findAll" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_dir_layer
+    </select>
+    <!--根据dirId，layerId查询记录-->
+    <select id="findByDirIdAndLayerId" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_dir_layer
+        WHERE
+          dir_id = #{dirId}
+        AND
+          layer_id = #{layerId}
+    </select>
+
+    <!--根据dirId，layerIds查询记录-->
+    <select id="findByDirIdAndLayerIds" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_dir_layer
+        WHERE
+        dir_id = #{dirId}
+        AND
+        layer_id in
+        <foreach collection="layerIds" item="layerId" separator="," open="(" close=")">
+            #{layerId}
+        </foreach>
+    </select>
+
+    <!--根据dirId-->
+    <select id="findByDirId" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_dir_layer
+        WHERE
+        dir_id = #{dirId}
+        ORDER BY ORDER_NM
+    </select>
+
+    <!--按用户权限查询目录图层-->
+    <select id="findByIdAndUserId" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_dir_layer
+        WHERE
+            id IN (
+                SELECT DISTINCT
+                    dir_layer_id
+                FROM
+                    ag_user_layer
+                WHERE
+                    user_id = #{userId}
+            )
+        AND
+            id = #{id}
+    </select>
+    <select id="findByIdAndUsers" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_dir_layer
+        WHERE
+            id IN (
+                SELECT DISTINCT
+                    dir_layer_id
+                FROM
+                    ag_user_layer
+                WHERE
+                    user_id IN
+                    <foreach collection="userList" item="user" separator="," open="(" close=")">
+                        #{user.id}
+                    </foreach>
+            )
+        AND
+            id = #{id}
+    </select>
+
+    <select id="findByIds" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_dir_layer
+        WHERE id IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        ORDER BY order_nm
+    </select>
+
+    <select id="findById" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_dir_layer
+        WHERE id=#{id}
+    </select>
+
+    <!--按目录xpath查找-->
+    <select id="findListByDirXpath" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_dir_layer
+        WHERE
+            dir_id IN (
+                SELECT
+                    id
+                FROM
+                    ag_dir
+                WHERE
+                    xpath = #{xpath}
+                OR xpath LIKE CONCAT(#{xpath},'/%')
+            )
+    </select>
+
+    <!--按图层id查找-->
+    <select id="findListByLayerId" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_dir_layer
+        WHERE
+            layer_id = #{layerId}
+    </select>
+
+    <!--按用户id查找-->
+    <select id="findListByUserId" resultType="AgDirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_dir_layer
+        WHERE
+            id IN (
+                SELECT
+                    dir_layer_id
+                FROM
+                    ag_user_layer
+                WHERE
+                    user_id = #{userId}
+            )
+    </select>
+    
+    <!--获取最大顺序-->
+    <select id="getMaxOrder" resultType="java.lang.String">
+        SELECT
+        max(order_nm)
+        FROM ag_dir_layer
+    </select>
+    <!--保存目录图层关联-->
+    <insert id="save">
+        INSERT INTO ag_dir_layer (
+          id,dir_id,layer_id,add_flag,order_nm
+        ) VALUES (
+          #{id},#{dirId},#{layerId},#{addFlag},#{orderNm}
+        )
+    </insert>
+
+    <!--批量修改-->
+    <update id="updateBatch">
+        <if test="_databaseId == 'oracle'">
+            BEGIN
+        </if>
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE ag_dir_layer
+            <set>
+                <if test="item.dirId != null">
+                    dir_id = #{item.dirId},
+                </if>
+                <if test="item.layerId != null">
+                    layer_id = #{item.layerId},
+                </if>
+                <if test="item.addFlag != null">
+                    add_flag = #{item.addFlag},
+                </if>
+                <if test="item.orderNm != null">
+                    order_nm = #{item.orderNm}
+                </if>
+            </set>
+            WHERE
+                id = #{item.id}
+        </foreach>
+        <if test="_databaseId == 'oracle'">
+            ;END;
+        </if>
+    </update>
+
+    <delete id="delete">
+        DELETE FROM ag_dir_layer
+        WHERE
+          id = #{id}
+    </delete>
+
+    <delete id="deleteBatchByIds">
+        DELETE FROM ag_dir_layer
+        WHERE
+        id IN
+        <foreach collection="agDirLayers" item="agDirLayer" open="(" separator="," close=")">
+            #{agDirLayer.id}
+        </foreach>
+    </delete>
+
+</mapper>

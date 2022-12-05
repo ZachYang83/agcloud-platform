@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.opus.common.mapper.OpuRsAppMapper">
+
+    <resultMap type="OpuRsAppInst" id="opuRsAppResultMap">
+
+        <id property="appInstId" column="appInstId"/>
+        <result property="appSoftId" column="appSoftId"/>
+        <result property="servId" column="servId"/>
+        <result property="instCode" column="instCode"/>
+        <result property="instInnerUrl" column="instInnerUrl"/>
+        <result property="instDeleted" column="instDeleted"/>
+        <result property="instMemo" column="instMemo"/>
+        <result property="isRegistered" column="isRegistered"/>
+        <result property="instStatus" column="instStatus"/>
+        <result property="statusUpdateTime" column="statusUpdateTime"/>
+        <result property="protocolHeader" column="protocolHeader"/>
+
+        <association property="appSoft" javaType="OpuRsAppSoft">
+            <id property="appSoftId" column="appSoftId"/>
+            <result property="orgId" column="orgId"/>
+            <result property="softCode" column="softCode"/>
+            <result property="softName" column="softName"/>
+            <result property="softWebContext" column="softWebContext"/>
+            <result property="protocolHeader" column="protocolHeader"/>
+            <result property="softType" column="softType"/>
+            <result property="isCloudSoft" column="isCloudSoft"/>
+            <result property="softDeleted" column="softDeleted"/>
+            <result property="softMemo" column="softMemo"/>
+            <result property="cloudSoftId" column="cloudSoftId"/>
+            <result property="clientId" column="clientId"/>
+            <result property="clientSecret" column="clientSecret"/>
+            <result property="statusUpdateTime" column="statusUpdateTime"/>
+            <result property="softStatus" column="softStatus"/>
+            <result property="useLoadBalence" column="useLoadBalence"/>
+            <result property="isSingleUrl" column="isSingleUrl"/>
+            <result property="autoSwitch" column="autoSwitch"/>
+            <result property="softInnerUrl" column="softInnerUrl"/>
+            <result property="softGovUrl" column="softGovUrl"/>
+            <result property="softOuterUrl" column="softOuterUrl"/>
+            <result property="isAdmin" column="isAdmin"/>
+            <result property="isImgIcon" column="isImgIcon"/>
+            <result property="softIconCss" column="softIconCss"/>
+            <result property="smallImgPath" column="smallImgPath"/>
+            <result property="middleImgPath" column="middleImgPath"/>
+            <result property="bigImgPath" column="bigImgPath"/>
+            <result property="hugeImgPath" column="hugeImgPath"/>
+        </association>
+
+    </resultMap>
+
+    <sql id="All_Columns_Properties">
+        <include refid="OpuRsAppInst_All_Columns_Properties"/>,
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+    </sql>
+
+    <sql id="OpuRsAppInst_All_Columns_Properties">
+      app.APP_INST_ID as appInstId,
+      app.APP_SOFT_ID as appSoftId,
+      app.SERV_ID as servId,
+      app.INST_CODE as instCode,
+      app.INST_INNER_URL as instInnerUrl,
+      app.INST_DELETED as instDeleted,
+      app.INST_MEMO as instMemo,
+      app.IS_REGISTERED as isRegistered,
+      app.INST_STATUS as instStatus,
+      app.STATUS_UPDATE_TIME as statusUpdateTime,
+      app.CREATER as creater,
+      app.CREATE_TIME as createTime,
+      app.MODIFIER as modifier,
+      app.MODIFY_TIME as modifyTime,
+      app.PROTOCOL_HEADER as protocolHeader
+  </sql>
+
+    <sql id="OpuRsAppInst_All_Columns">
+        APP_INST_ID,
+        APP_SOFT_ID,
+        SERV_ID,
+        INST_CODE,
+        INST_INNER_URL,
+        INST_DELETED,
+        INST_MEMO,
+        IS_REGISTERED,
+        INST_STATUS,
+        <if test="statusUpdateTime != null">
+            STATUS_UPDATE_TIME,
+        </if>
+        CREATER,
+        <if test="createTime != null">
+            CREATE_TIME,
+        </if>
+        MODIFIER,
+        <if test="modifyTime != null">
+            MODIFY_TIME,
+        </if>
+        PROTOCOL_HEADER
+    </sql>
+
+    <sql id="OpuRsAppInst_All_Properties">
+        #{appInstId},
+        #{appSoftId},
+        #{servId},
+        #{instCode},
+        #{instInnerUrl},
+        #{instDeleted},
+        #{instMemo},
+        #{isRegistered},
+        #{instStatus},
+        <if test="statusUpdateTime != null'">
+            #{statusUpdateTime},
+        </if>
+        #{creater},
+        <if test="createTime != null">
+            #{createTime},
+        </if>
+        #{modifier},
+        <if test="modifyTime != null">
+            #{modifyTime},
+        </if>
+        #{protocolHeader}
+    </sql>
+
+    <sql id="OpuRsAppSoft_All_Columns_Properties">
+        appSoft.APP_SOFT_ID as appSoftId,
+        appSoft.ORG_ID as orgId,
+        appSoft.SOFT_CODE as softCode,
+        appSoft.SOFT_NAME as softName,
+        appSoft.SOFT_WEB_CONTEXT as softWebContext,
+        appSoft.PROTOCOL_HEADER as protocolHeader,
+        appSoft.SOFT_TYPE as softType,
+        appSoft.IS_CLOUD_SOFT as isCloudSoft,
+        appSoft.SOFT_DELETED as softDeleted,
+        appSoft.SOFT_MEMO as softMemo,
+        appSoft.CREATER as creater,
+        appSoft.CREATE_TIME as createTime,
+        appSoft.MODIFIER as modifier,
+        appSoft.MODIFY_TIME as modifyTime,
+        appSoft.CLOUD_SOFT_ID as cloudSoftId,
+        appSoft.CLIENT_ID as clientId,
+        appSoft.CLIENT_SECRET as clientSecret,
+        appSoft.STATUS_UPDATE_TIME as statusUpdateTime,
+        appSoft.SOFT_STATUS as softStatus,
+        appSoft.USE_LOAD_BALENCE as useLoadBalence,
+        appSoft.IS_SINGLE_URL as isSingleUrl,
+        appSoft.AUTO_SWITCH as autoSwitch,
+        appSoft.SOFT_INNER_URL as softInnerUrl,
+        appSoft.SOFT_GOV_URL as softGovUrl,
+        appSoft.SOFT_OUTER_URL as softOuterUrl,
+        appSoft.IS_ADMIN as isAdmin,
+        appSoft.IS_IMG_ICON as isImgIcon,
+        appSoft.SOFT_ICON_CSS as softIconCss,
+        appSoft.SMALL_IMG_PATH as smallImgPath,
+        appSoft.MIDDLE_IMG_PATH as middleImgPath,
+        appSoft.BIG_IMG_PATH as bigImgPath,
+        appSoft.HUGE_IMG_PATH as hugeImgPath
+  </sql>
+
+    <sql id="OpuRsAppSoft_All_Columns">
+        APP_SOFT_ID,
+        ORG_ID,
+        SOFT_CODE,
+        SOFT_NAME,
+        SOFT_WEB_CONTEXT,
+        PROTOCOL_HEADER,
+        SOFT_TYPE,
+        IS_CLOUD_SOFT,
+        SOFT_DELETED,
+        SOFT_MEMO,
+        CREATER,
+        <if test="createTime != null">
+            CREATE_TIME,
+        </if>
+        MODIFIER,
+        <if test="modifyTime != null">
+            MODIFY_TIME,
+        </if>
+        CLOUD_SOFT_ID,
+        CLIENT_ID,
+        CLIENT_SECRET,
+        <if test="statusUpdateTime != null">
+            STATUS_UPDATE_TIME,
+        </if>
+        SOFT_STATUS,
+        USE_LOAD_BALENCE,
+        IS_SINGLE_URL,
+        AUTO_SWITCH,
+        SOFT_INNER_URL,
+        SOFT_GOV_URL,
+        SOFT_OUTER_URL,
+        IS_ADMIN,
+        IS_IMG_ICON,
+        SMALL_IMG_PATH,
+        MIDDLE_IMG_PATH,
+        BIG_IMG_PATH,
+        HUGE_IMG_PATH,
+        SOFT_ICON_CSS
+  </sql>
+
+    <sql id="OpuRsAppSoft_All_Properties">
+      #{appSoftId},
+      #{orgId},
+      #{softCode},
+      #{softName},
+      #{softWebContext},
+      #{protocolHeader},
+      #{softType},
+      #{isCloudSoft},
+      #{softDeleted},
+      #{softMemo},
+      #{creater},
+      <if test="createTime != null">
+          #{createTime},
+      </if>
+      #{modifier},
+      <if test="modifyTime != null">
+          #{modifyTime},
+      </if>
+      #{cloudSoftId},
+      #{clientId},
+      #{clientSecret},
+      <if test="statusUpdateTime != null">
+          #{statusUpdateTime},
+      </if>
+      #{softStatus},
+      #{useLoadBalence},
+      #{isSingleUrl},
+      #{autoSwitch},
+      #{softInnerUrl},
+      #{softGovUrl},
+      #{softOuterUrl},
+      #{isAdmin},
+      #{isImgIcon},
+      #{smallImgPath},
+      #{middleImgPath},
+      #{bigImgPath},
+      #{hugeImgPath},
+      #{softIconCss}
+  </sql>
+
+    <insert id="insertAppInst" parameterType="OpuRsAppInst">
+        insert into OPU_RS_APP_INST (
+        <include refid="OpuRsAppInst_All_Columns"/>
+        )
+        values (
+        <include refid="OpuRsAppInst_All_Properties"/>
+        )
+    </insert>
+
+    <update id="deleteAppByAppId">
+      update  OPU_RS_APP_INST set INST_DELETED='1' where APP_INST_ID = #{appInstId}
+  </update>
+
+    <update id="updateAppInst" parameterType="OpuRsAppInst">
+        update OPU_RS_APP_INST
+        <set>
+            <if test="appInstId != null">
+                APP_INST_ID = #{appInstId},
+            </if>
+            <if test="appSoftId != null">
+                APP_SOFT_ID = #{appSoftId},
+            </if>
+            <if test="servId != null">
+                SERV_ID = #{servId},
+            </if>
+            <if test="instCode != null">
+                INST_CODE = #{instCode},
+            </if>
+            <if test="instInnerUrl != null">
+                INST_INNER_URL = #{instInnerUrl},
+            </if>
+            <if test="instDeleted != null">
+                INST_DELETED = #{instDeleted},
+            </if>
+            <if test="instMemo != null">
+                INST_MEMO = #{instMemo},
+            </if>
+            <if test="isRegistered != null">
+                IS_REGISTERED = #{isRegistered},
+            </if>
+            <if test="instStatus != null">
+                INST_STATUS = #{instStatus},
+            </if>
+            <if test="statusUpdateTime != null">
+                STATUS_UPDATE_TIME = #{statusUpdateTime},
+            </if>
+            <if test="creater != null">
+                CREATER = #{creater},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime},
+            </if>
+            <if test="modifier != null">
+                MODIFIER = #{modifier},
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME = #{modifyTime},
+            </if>
+            <if test="protocolHeader != null">
+                PROTOCOL_HEADER = #{protocolHeader},
+            </if>
+        </set>
+        where APP_INST_ID = #{appInstId}
+    </update>
+
+    <select id="getAppByAppId" resultMap="opuRsAppResultMap">
+        select
+        <include refid="All_Columns_Properties"/>
+        from
+        OPU_RS_APP_INST app,
+        OPU_RS_APP_SOFT appSoft
+        where
+        app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and app.APP_INST_ID = #{appInstId}
+    </select>
+
+    <select id="listAppsByAppSoftCode" resultType="OpuRsAppInst">
+        select
+        <include refid="OpuRsAppInst_All_Columns_Properties"/>
+        from
+        OPU_RS_APP_INST app, OPU_RS_APP_SOFT appSoft
+        where
+        app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and appSoft.SOFT_CODE = #{appSoftCode}
+    </select>
+
+    <select id="listAppInstByOrgId" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from OPU_RS_APP_SOFT appSoft
+        where appSoft.SOFT_DELETED = '0'
+        and appSoft.ORG_ID = #{orgId}
+        order by appSoft.SOFT_CODE
+    </select>
+
+    <select id="listUnConfirmedAppsByOrgId" resultType="OpuRsAppInst">
+        select
+        <include refid="OpuRsAppInst_All_Columns_Properties"/>
+        from OPU_RS_APP_INST app, OPU_RS_APP_SOFT appSoft
+        where app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and app.IS_REGISTERED = '0'
+        and appSoft.ORG_ID = #{orgId}
+    </select>
+
+    <update id="confirmRegisteredAppsByOrgId" parameterType="OpuRsAppInst">
+        update OPU_RS_APP_INST set IS_REGISTERED = '1'
+        where  APP_INST_ID in (
+              select
+                 app.APP_INST_ID
+              from  OPU_RS_APP_INST app, OPU_RS_APP_SOFT appSoft
+              where app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+              and app.INST_DELETED = '0'
+              and appSoft.SOFT_DELETED = '0'
+              and app.IS_REGISTERED = '0'
+              and appSoft.ORG_ID = #{orgId}
+        )
+  </update>
+
+    <!--2 根据主键ID查询单个实体 -->
+    <select id="getAppSoftByAppSoftId" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from
+        OPU_RS_APP_SOFT appSoft
+        where
+        APP_SOFT_ID = #{appSoftId}
+    </select>
+
+    <select id="getAppSoftByAppId" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from
+        OPU_RS_APP_INST app, OPU_RS_APP_SOFT appSoft
+        where
+        app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and app.APP_INST_ID = #{appInstId}
+    </select>
+
+    <!--5 新增实体对象 -->
+    <insert id="insertAppSoft" parameterType="OpuRsAppSoft">
+        insert into OPU_RS_APP_SOFT (
+        <include refid="OpuRsAppSoft_All_Columns"/>
+        )
+        values (
+        <include refid="OpuRsAppSoft_All_Properties"/>
+        )
+    </insert>
+
+    <!--6 修改实体对象 -->
+    <update id="updateAppSoft" parameterType="OpuRsAppSoft">
+        update OPU_RS_APP_SOFT
+        <set>
+            <if test="appSoftId != null and appSoftId!='' ">
+                APP_SOFT_ID = #{appSoftId},
+            </if>
+            <if test="orgId != null and orgId!=''">
+                ORG_ID = #{orgId},
+            </if>
+            <if test="softCode != null and softCode!=''">
+                SOFT_CODE = #{softCode},
+            </if>
+            <if test="softName != null and softName!=''">
+                SOFT_NAME = #{softName},
+            </if>
+            <if test="softWebContext != null and softWebContext!='' ">
+                SOFT_WEB_CONTEXT = #{softWebContext},
+            </if>
+            <if test="protocolHeader != null and protocolHeader!='' ">
+                PROTOCOL_HEADER = #{protocolHeader},
+            </if>
+            <if test="softType != null and softType!='' ">
+                SOFT_TYPE = #{softType},
+            </if>
+            <if test="isCloudSoft != null and isCloudSoft!='' ">
+                IS_CLOUD_SOFT = #{isCloudSoft},
+            </if>
+            <if test="softDeleted != null and softDeleted!='' ">
+                SOFT_DELETED = #{softDeleted},
+            </if>
+            <if test="softMemo != null ">
+                SOFT_MEMO = #{softMemo},
+            </if>
+            <if test="creater != null and creater!='' ">
+                CREATER = #{creater},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime},
+            </if>
+            <if test="modifier != null and modifier!='' ">
+                MODIFIER = #{modifier},
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME = #{modifyTime},
+            </if>
+            <if test="cloudSoftId != null and cloudSoftId!='' ">
+                CLOUD_SOFT_ID = #{cloudSoftId},
+            </if>
+            <if test="clientId != null and clientId!='' ">
+                CLIENT_ID = #{clientId},
+            </if>
+            <if test="clientSecret != null and clientSecret!='' ">
+                CLIENT_SECRET = #{clientSecret},
+            </if>
+            <if test="statusUpdateTime != null">
+                STATUS_UPDATE_TIME = #{statusUpdateTime},
+            </if>
+            <if test="softStatus != null and softStatus!='' ">
+                SOFT_STATUS = #{softStatus},
+            </if>
+            <if test="useLoadBalence != null and useLoadBalence!='' ">
+                USE_LOAD_BALENCE = #{useLoadBalence},
+            </if>
+            <if test="isSingleUrl != null and isSingleUrl!='' ">
+                IS_SINGLE_URL = #{isSingleUrl},
+            </if>
+            <if test="autoSwitch != null and autoSwitch!='' ">
+                AUTO_SWITCH = #{autoSwitch},
+            </if>
+            <if test="softInnerUrl != null ">
+                SOFT_INNER_URL = #{softInnerUrl},
+            </if>
+            <if test="softGovUrl != null ">
+                SOFT_GOV_URL = #{softGovUrl},
+            </if>
+            <if test="softOuterUrl != null ">
+                SOFT_OUTER_URL = #{softOuterUrl},
+            </if>
+            <if test="isAdmin != null and isAdmin!='' ">
+                IS_ADMIN = #{isAdmin},
+            </if>
+            <if test="isImgIcon != null and isImgIcon!='' ">
+                IS_IMG_ICON = #{isImgIcon},
+            </if>
+            <if test="softIconCss != null ">
+                SOFT_ICON_CSS = #{softIconCss},
+            </if>
+            <if test="smallImgPath != null ">
+                SMALL_IMG_PATH = #{smallImgPath},
+            </if>
+            <if test="middleImgPath != null ">
+                MIDDLE_IMG_PATH = #{middleImgPath},
+            </if>
+            <if test="bigImgPath != null ">
+                BIG_IMG_PATH = #{bigImgPath},
+            </if>
+            <if test="hugeImgPath != null ">
+                HUGE_IMG_PATH = #{hugeImgPath},
+            </if>
+        </set>
+        where APP_SOFT_ID = #{appSoftId}
+    </update>
+
+    <!--7 删除实体对象,根据主键ID -->
+    <delete id="deleteAppSoftByAppSoftId" parameterType="java.lang.String">
+    UPDATE OPU_RS_APP_SOFT SET SOFT_DELETED = '1'
+    WHERE APP_SOFT_ID = #{appSoftId}
+  </delete>
+
+    <!-- 获取某个web服务器下的应用的集合 -->
+    <select id="listAllAppsByServId" resultMap="opuRsAppResultMap">
+        select
+        <include refid="All_Columns_Properties"/>
+        from
+        OPU_RS_APP_INST app,
+        OPU_RS_APP_SOFT appSoft
+        where
+        app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and app.SERV_ID = #{servId}
+    </select>
+
+    <select id="listAppsByServIdAndAppInstIds" resultMap="opuRsAppResultMap">
+        select
+        <include refid="All_Columns_Properties"/>
+        from
+        OPU_RS_APP_INST app,
+        OPU_RS_APP_SOFT appSoft
+        <where>
+            app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+            and app.INST_DELETED = '0'
+            and appSoft.SOFT_DELETED = '0'
+            and app.IS_REGISTERED = '1'
+            and app.SERV_ID = #{servId}
+            <if test="appInstIds != null and appInstIds.length > 0">
+                and app.APP_INST_ID in
+                <foreach collection="appInstIds" item="appInstId" open="and (" separator="or" close=")">
+                    #{appInstId}
+                </foreach>
+            </if>
+        </where>
+        order by app.CREATE_TIME asc
+    </select>
+
+    <!-- 获取某个web服务器下的ADS应用的集合(包含禁用和启用) -->
+    <select id="listAgCloudAppsByServId" resultMap="opuRsAppResultMap">
+        select
+        <include refid="All_Columns_Properties"/>
+        from
+        OPU_RS_APP_INST app,
+        OPU_RS_APP_SOFT appSoft
+        where
+        app.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and appSoft.IS_CLOUD_SOFT = '1'
+        and app.SERV_ID = #{servId}
+    </select>
+
+    <!-- 分页获取某个网络入口下的应用的集合 -->
+    <select id="listAppsByNetIdAndKeyword" resultMap="opuRsAppResultMap">
+        select
+        <include refid="All_Columns_Properties"/>
+        from
+        OPU_RS_NET net,
+        OPU_RS_MAC mac,
+        OPU_RS_SERV serv,
+        OPU_RS_APP_INST app,
+        OPU_RS_APP_SOFT appSoft
+        where
+        net.NET_ID = mac.NET_ID
+        and mac.MAC_ID = serv.MAC_ID
+        and serv.SERV_ID = app.SERV_ID
+        and net.IS_DELETED='0'
+        and mac.IS_DELETED='0'
+        and serv.IS_DELETED='0'
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        and net.NET_ID = #{netId}
+        <if test="keyword !=null and keyword != ''">
+            and ( appSoft.SOFT_CODE like CONCAT(CONCAT('%',#{keyword}),'%')
+            or appSoft.SOFT_NAME like CONCAT(CONCAT('%',#{keyword}),'%')
+            or appSoft.SOFT_WEB_CONTEXT like CONCAT(CONCAT('%',#{keyword}),'%')
+            )
+        </if>
+    </select>
+
+    <!-- 获取某个网路入口集合对应的应用集合 -->
+    <select id="listAppsByNetIds" resultMap="opuRsAppResultMap">
+        select
+        <include refid="All_Columns_Properties"/>
+        from
+        OPU_RS_NET net,
+        OPU_RS_MAC mac,
+        OPU_RS_SERV serv,
+        OPU_RS_APP_INST app,
+        OPU_RS_APP_SOFT appSoft
+        where
+        net.NET_ID = mac.NET_ID
+        and mac.MAC_ID = serv.MAC_ID
+        and serv.SERV_ID = app.SERV_ID
+        and net.IS_DELETED='0'
+        and mac.IS_DELETED='0'
+        and serv.IS_DELETED='0'
+        and app.INST_DELETED = '0'
+        and appSoft.SOFT_DELETED = '0'
+        <if test="list != null and list.size() > 0">
+            and net.NET_ID in
+            <foreach collection="list" index="index" item="netId" open="(" separator="," close=")">
+                #{netId}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 获取某个网路入口集合对应的应用集合 -->
+    <select id="listAppSoftsByOrgIdAndNetId" resultType="OpuRsAppSoft">
+        SELECT
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        FROM OPU_RS_APP_INST appInst,OPU_RS_APP_SOFT appSoft
+        WHERE appInst.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        AND SERV_ID IN (
+        SELECT DISTINCT SERV_ID FROM OPU_RS_SERV
+        WHERE MAC_ID IN (
+        SELECT DISTINCT MAC_ID FROM OPU_RS_MAC
+        WHERE NET_ID IN (
+        SELECT DISTINCT net.NET_ID FROM OPU_RS_NET net
+        WHERE
+        ( net.NET_ID = #{netId} OR net.PARENT_NET_ID = #{netId} )
+        AND net.ORG_ID = #{orgId}
+        AND net.IS_DELETED = '0'
+        )
+        AND IS_DELETED = '0'
+        )
+        AND IS_DELETED = '0'
+        )
+        AND appInst.INST_DELETED = '0'
+        AND appSoft.SOFT_DELETED = '0'
+        ORDER BY appSoft.CREATE_TIME asc,appSoft.MODIFY_TIME asc
+    </select>
+
+    <!-- 获取某个组织下某个用户的应用集合 -->
+    <select id="listAppSoftsByOrgIdAndUserIdAndNetName" resultType="OpuRsAppSoft">
+        SELECT DISTINCT
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        FROM OPU_RS_APP_SOFT appSoft,OPU_RS_APP_INST appInst
+        WHERE appSoft.SOFT_DELETED = '0'
+        AND appInst.APP_SOFT_ID = appSoft.APP_SOFT_ID
+        AND appInst.SERV_ID in (
+        select SERV_ID from OPU_RS_SERV
+        where MAC_ID in (
+        select MAC_ID from OPU_RS_MAC
+        where NET_ID in (
+        select net.NET_ID from OPU_RS_NET net
+        where(
+        net.NET_ID in (
+        select NET_ID from OPU_RS_NET
+        where ORG_ID = #{orgId}
+        and IS_DELETED = '0'
+        and IS_ACTIVE = '1'
+        and IS_OPUS = '1'
+        and NET_NAME like concat('%',concat(#{netName},'%'))
+        )
+        or net.PARENT_NET_ID in (
+        select NET_ID from OPU_RS_NET
+        where ORG_ID = #{orgId}
+        and IS_DELETED = '0'
+        and IS_ACTIVE = '1'
+        and IS_OPUS = '1'
+        and NET_NAME like concat('%',concat(#{netName},'%'))
+        )
+        )
+        and net.ORG_ID = #{orgId}
+        and net.IS_DELETED = '0'
+        and net.IS_ACTIVE = '1'
+        )
+        )
+        )
+        AND appSoft.ORG_ID = #{orgId}
+        AND appSoft.APP_SOFT_ID IN (
+        SELECT r.APP_ID FROM OPU_RS_ROLE r
+        LEFT JOIN OPU_AC_ROLE_USER ru ON ru.ROLE_ID = r.ROLE_ID
+        WHERE ru.USER_ID = #{userId}
+        )
+        ORDER BY appSoft.CREATE_TIME asc,appSoft.MODIFY_TIME asc
+    </select>
+
+    <select id="listAppSoftsByOrgIdAndUserId" resultType="OpuRsAppSoft">
+        select distinct
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from OPU_RS_APP_SOFT appSoft
+        where appSoft.SOFT_DELETED = '0'
+        and appSoft.ORG_ID = #{orgId}
+        and appSoft.APP_SOFT_ID in (
+        select r.APP_ID from OPU_RS_ROLE r
+        left join OPU_AC_ROLE_USER ru on ru.ROLE_ID = r.ROLE_ID
+        where ru.USER_ID = #{userId}
+        )
+        order by appSoft.CREATE_TIME asc,appSoft.MODIFY_TIME asc
+    </select>
+
+    <select id="listUserApp" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from OPU_RS_APP_SOFT appSoft
+        where appSoft.APP_SOFT_ID IN
+        (
+        SELECT APP_ID
+        FROM OPU_AC_ROLE_USER aru
+        WHERE USER_ID = #{userId}
+        AND ORG_ID = #{orgId}
+        )
+        and appSoft.SOFT_DELETED = '0'
+        and appSoft.ORG_ID = #{orgId}
+        <if test="isAgcloud!='' and isAgcloud!=null">
+            and IS_CLOUD_SOFT = #{isAgcloud}
+        </if>
+    </select>
+
+    <update id="disableAppByAppIds">
+        <if test="list != null and list.size() > 0">
+            UPDATE OPU_RS_APP_INST SET IS_ACTIVE = '0' WHERE APP_INST_ID IN
+            <foreach collection="list" index="index" item="appInstId" open="(" separator="," close=")">
+                #{appInstId}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="batchDisableAppByAppIds">
+        UPDATE OPU_RS_APP_INST SET IS_ACTIVE = '0'
+        <if test="list != null and list.size() > 0">
+            WHERE APP_INST_ID IN
+            <foreach collection="list" index="index" item="appInstId" open="(" separator="," close=")">
+                #{appInstId}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="batchEnableAppByAppIds">
+        UPDATE OPU_RS_APP_INST SET IS_ACTIVE = '1'
+        <if test="list != null and list.size() > 0">
+            WHERE APP_INST_ID IN
+            <foreach collection="list" index="index" item="appInstId" open="(" separator="," close=")">
+                #{appInstId}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="disableAppByAppId" parameterType="java.lang.String">
+      update OPU_RS_APP_INST SET  IS_ACTIVE = '0'  WHERE   APP_INST_ID = #{appInstId}
+  </update>
+
+    <update id="enableAppByAppId" parameterType="java.lang.String">
+      update OPU_RS_APP_INST SET  IS_ACTIVE = '1'  WHERE   APP_INST_ID = #{appInstId}
+  </update>
+
+    <select id="listOpuRsAppSoft" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from OPU_RS_APP_SOFT appSoft
+        <where>
+            SOFT_DELETED = '0'
+            <if test="appSoftId != null and appSoftId!='' ">
+                and APP_SOFT_ID = #{appSoftId}
+            </if>
+            <if test="orgId != null and orgId!=''">
+                and ORG_ID = #{orgId}
+            </if>
+            <if test="softCode != null and softCode!=''">
+                and SOFT_CODE = #{softCode}
+            </if>
+            <if test="softName != null and softName!=''">
+                and SOFT_NAME = #{softName}
+            </if>
+            <if test="softWebContext != null and softWebContext!='' ">
+                and SOFT_WEB_CONTEXT = #{softWebContext}
+            </if>
+            <if test="protocolHeader != null and protocolHeader!='' ">
+                and PROTOCOL_HEADER = #{protocolHeader}
+            </if>
+            <if test="softType != null and softType!='' ">
+                and SOFT_TYPE = #{softType}
+            </if>
+            <if test="isCloudSoft != null and isCloudSoft!='' ">
+                and IS_CLOUD_SOFT = #{isCloudSoft}
+            </if>
+            <if test="softDeleted != null and softDeleted!='' ">
+                and SOFT_DELETED = #{softDeleted}
+            </if>
+            <if test="softMemo != null and softMemo!='' ">
+                and SOFT_MEMO = #{softMemo}
+            </if>
+            <if test="creater != null and creater!='' ">
+                and CREATER = #{creater}
+            </if>
+            <if test="createTime != null">
+                and CREATE_TIME = #{createTime}
+            </if>
+            <if test="modifier != null and modifier!='' ">
+                and MODIFIER = #{modifier}
+            </if>
+            <if test="modifyTime != null">
+                and MODIFY_TIME = #{modifyTime}
+            </if>
+            <if test="cloudSoftId != null and cloudSoftId!='' ">
+                and CLOUD_SOFT_ID = #{cloudSoftId}
+            </if>
+            <if test="clientId != null and clientId!='' ">
+                and CLIENT_ID = #{clientId}
+            </if>
+            <if test="clientSecret != null and clientSecret!='' ">
+                and CLIENT_SECRET = #{clientSecret}
+            </if>
+            <if test="statusUpdateTime != null">
+                and STATUS_UPDATE_TIME = #{statusUpdateTime}
+            </if>
+            <if test="softStatus != null and softStatus!='' ">
+                and SOFT_STATUS = #{softStatus}
+            </if>
+            <if test="useLoadBalence != null and useLoadBalence!='' ">
+                and USE_LOAD_BALENCE = #{useLoadBalence}
+            </if>
+            <if test="isSingleUrl != null and isSingleUrl!='' ">
+                and IS_SINGLE_URL = #{isSingleUrl}
+            </if>
+            <if test="autoSwitch != null and autoSwitch!='' ">
+                and AUTO_SWITCH = #{autoSwitch}
+            </if>
+            <if test="softInnerUrl != null and softInnerUrl!='' ">
+                and SOFT_INNER_URL = #{softInnerUrl}
+            </if>
+            <if test="softGovUrl != null and softGovUrl!='' ">
+                and SOFT_GOV_URL = #{softGovUrl}
+            </if>
+            <if test="softOuterUrl != null and softOuterUrl!='' ">
+                and SOFT_OUTER_URL = #{softOuterUrl}
+            </if>
+            <if test="isAdmin != null and isAdmin!='' ">
+                and IS_ADMIN = #{isAdmin}
+            </if>
+            <if test="keyword!=null and keyword!=''">
+                and (
+                SOFT_CODE like CONCAT(CONCAT('%',#{keyword}),'%') or
+                SOFT_NAME like CONCAT(CONCAT('%',#{keyword}),'%') or
+                SOFT_WEB_CONTEXT like CONCAT(CONCAT('%',#{keyword}),'%')
+                )
+            </if>
+        </where>
+        order by CREATE_TIME desc ,MODIFY_TIME desc
+    </select>
+
+    <select id="uniqueAppInstCodeCheck" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(*)
+        FROM OPU_RS_APP_INST
+        <where>
+            INST_DELETED = '0'
+            <if test="appInstId!='' and appInstId!=null">
+                and APP_INST_ID != #{appInstId}
+            </if>
+            <if test="instCode!=null and instCode!=null">
+                and INST_CODE = #{instCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="uniqueAppSoftCodeCheck" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(*)
+        FROM OPU_RS_APP_SOFT
+        <where>
+            SOFT_DELETED = '0'
+            and SOFT_CODE = #{softCode}
+            and ORG_ID = #{orgId}
+            <if test="appSoftId!='' and appSoftId!=null">
+                and APP_SOFT_ID != #{appSoftId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAppSoftBySoftCodeAndOrgId" resultType="OpuRsAppSoft">
+        select
+        <include refid="OpuRsAppSoft_All_Columns_Properties"/>
+        from OPU_RS_APP_SOFT appSoft
+        where appSoft.SOFT_DELETED = '0'
+        and appSoft.ORG_ID = #{orgId}
+        and appSoft.SOFT_CODE = #{softCode}
+    </select>
+
+</mapper>

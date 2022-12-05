@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgLayerExtendMapper">
+
+    <sql id="allColumns">
+        ID id,
+        NAME "name",
+        VALUE "value",
+        PARENT_ID parentId
+    </sql>
+    <!--根据图层id扩展字段-->
+    <select id="findListByParentId" resultType="AgLayerExtend">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_layer_extend
+        WHERE
+          parent_id = #{parentId}
+    </select>
+    <!--删除图层扩展字段-->
+    <delete id="deleteByParentId">
+        DELETE FROM ag_layer_extend
+        WHERE parent_id = #{parentId}
+    </delete>
+    <!--保存扩展字段-->
+    <insert id="save">
+        INSERT INTO ag_layer_extend (
+          id,name,value,parent_id
+        ) VALUES (
+          #{id},#{name},#{value},#{parentId}
+        )
+    </insert>
+    <!--批量保存扩展字段-->
+    <insert id="saveBatch" parameterType="java.util.List">
+        <if test="_databaseId == 'oracle'">
+            BEGIN
+        </if>
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO ag_layer_extend (
+              id,name,value,parent_id
+            ) VALUES (
+              #{item.id},#{item.name},#{item.value},#{item.parentId}
+            )
+        </foreach>
+        <if test="_databaseId == 'oracle'">
+            ;END;
+        </if>
+    </insert>
+</mapper>

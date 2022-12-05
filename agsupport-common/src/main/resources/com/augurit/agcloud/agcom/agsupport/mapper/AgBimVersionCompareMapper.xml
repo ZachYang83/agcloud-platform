@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimVersionCompareMapper">
+    <sql id="allColumns">
+         ID id,
+         BIM_FILE_ID bimFileId,
+         BIM_VERSION_ID1 bimVersionId1,
+         BIM_VERSION_ID2 bimVersionId2,
+         RESULT_FILE_PATH resultFilePath,
+         CREATE_TIME createTime,
+         UPDATE_TIME updateTime,
+         RESULT_CONTENT resultContent
+    </sql>
+
+    <!--根据bim模型查找比对记录-->
+    <select id="getByBimFileId" resultType="com.augurit.agcloud.agcom.agsupport.domain.AgBimVersionCompare" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION_COMPARE WHERE BIM_FILE_ID = #{bimFileId}
+    </select>
+
+    <!--保存比对记录-->
+    <insert id="save" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimVersionCompare">
+        INSERT INTO AG_BIM_VERSION_COMPARE (
+          ID,
+          BIM_FILE_ID,
+          BIM_VERSION_ID1,
+          BIM_VERSION_ID2,
+          RESULT_FILE_PATH,
+          CREATE_TIME,
+          UPDATE_TIME,
+          RESULT_CONTENT
+        ) VALUES (
+          #{id},
+          #{bimFileId},
+          #{bimVersionId1},
+          #{bimVersionId2},
+          #{resultFilePath},
+          #{createTime},
+          #{updateTime},
+          #{resultContent}
+        )
+    </insert>
+
+    <!--更新记录-->
+    <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimVersionCompare">
+        UPDATE "AG_BIM_VERSION_COMPARE"
+        <set>
+            <if test="null != bimFileId">
+                BIM_FILE_ID = #{bimFileId},
+            </if>
+            <if test="null != bimVersionId1">
+                BIM_VERSION_ID1 = #{bimVersionId1},
+            </if>
+            <if test="null != bimVersionId2">
+                BIM_VERSION_ID2 = #{bimVersionId2},
+            </if>
+            <if test="null != resultFilePath">
+                RESULT_FILE_PATH = #{resultFilePath},
+            </if>
+            <if test="null != createTime">
+                CREATE_TIME = #{createTime},
+            </if>
+            <if test="null != updateTime">
+                UPDATE_TIME = #{updateTime},
+            </if>
+            <if test="null != resultContent">
+                RESULT_CONTENT = #{resultContent},
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+
+    <!--根据以下三个参数查找唯一记录-->
+    <select id="getByUnique" resultType="com.augurit.agcloud.agcom.agsupport.domain.AgBimVersionCompare" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_VERSION_COMPARE
+        WHERE
+        BIM_FILE_ID = #{bimFileId}
+        AND
+        (BIM_VERSION_ID1 = #{bimVersionId1} AND BIM_VERSION_ID2 = #{bimVersionId2})
+    </select>
+
+</mapper>

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>应用管理</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- 本地开发使用 -->
+    <link rel="stylesheet" href="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/metronic-5/vendors.bundle.css" th:href="@{/agcloud/framework/js-lib/metronic-5/vendors.bundle.css}">
+    <link rel="stylesheet" href="/framework-ui/src/main/resources/static/agcloud/framework/ui-private/default/common/css/metronic.css" th:href="@{/agcloud/framework/ui-private/default/common/css/metronic.css}">
+    <link rel="stylesheet" href="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/element-2/element.css" th:href="@{/agcloud/framework/js-lib/element-2/element.css}">
+    <link rel="stylesheet" href="/framework-ui/src/main/resources/static/agcloud/framework/ui-private/default/common/css/layout.css" th:href="@{/agcloud/framework/ui-private/default/common/css/layout.css}">
+    <link rel="stylesheet" href="/framework-ui/src/main/resources/static/agcloud/framework/ui-private/default/blue/css/theme.css" th:href="@{/agcloud/framework/ui-private/default/blue/css/theme.css}">
+
+    <link rel="stylesheet" href="../../../../../static/agcloud/opus/admin/appm/css/index.css" th:href="@{/agcloud/opus/admin/appm/css/index.css}">
+    <script>
+        var ctx = '[[@{/}]]';
+        // var ctx = 'http://192.168.30.120:7081/opus-admin/';
+        // var ctx = 'http://192.168.30.133:7080/opus-admin/';
+    </script>
+</head>
+<body class="m-scrollable" >
+<div id="managementPage"
+     class="clearfix"
+     v-cloak
+     v-loading="loading">
+    <!--左侧树 start-->
+    <div class="tree-left">
+        <el-input
+                class="search-org2"
+                placeholder="搜索应用"
+                v-model="filterText1"
+                @change="">
+            <i slot="suffix" class="el-input__icon el-icon-close" @click="clearClass();filterText1=''"></i>
+        </el-input>
+        <div>
+            <el-tabs v-model="treeActive" type="card" @tab-click="tabCilck()">
+                <el-tab-pane label="用户端" name="user" ></el-tab-pane>
+                <el-tab-pane label="管理端" name="mange"></el-tab-pane>
+            </el-tabs>
+        </div>
+
+        <div class="tree" :style="{height:treeLeftHeight + 'px'}">
+            <el-tree
+                    :data="treeData1"
+                    class="filter-tree tree1"
+                    default-expand-all
+                    :expand-on-click-node="false"
+                    highlight-current
+                    node-key="id"
+                    :filter-node-method="filterNodeOrg"
+                    :default-expanded-keys="treeShowNode"
+                    ref="treeLeft1"
+                    @node-click="clickTreeNode">
+            </el-tree>
+            <el-tree
+                    :data="treeData2"
+                    class="filter-tree tree2"
+                    default-expand-all
+                    :expand-on-click-node="false"
+                    highlight-current
+                    node-key="id"
+                    :filter-node-method="filterNodeOrg"
+                    :default-expanded-keys="treeShowNode"
+                    ref="treeLeft2"
+                    @node-click="clickTreeNode">
+            </el-tree>
+        </div>
+    </div>
+    <!--左侧树 end-->
+    <!--右侧content start-->
+    <div class="tree-right">
+        <div class="right-title">
+            <span class="depart-name">{{funName}}</span>
+            <i class="el-icon-edit" @click="editEnter" v-show="editBtn"></i>
+            <i class="flaticon-questions-circular-button float-right"></i>
+        </div>
+        <div class="right-content">
+            <div class="appList" v-if="appList">
+                <div class="right-btn-group opt-btn">
+                    <button type="button" class="btn btn-primary" @click="addAppSoft()" v-show="self">新增</button>
+                    <!-- <button type="button" class="btn btn-secondary" @click="editSoft()">编辑</button> -->
+                    <button type="button" class="btn btn-outline-danger" @click="deleteSoft()">删除</button>
+                    <button type="button" class="btn btn-secondary" @click="synCloudApps()" v-show="synCloudApp">同步云应用</button>
+                    <button type="button" class="btn btn-secondary" @click="synApps()" v-show="synApp">同步自建应用</button>
+
+                    <el-input
+                            class="search-org1"
+                            placeholder="请输入关键字"
+                            v-model="keyword"
+                            @change="">
+                        <i slot="suffix" class="el-input__icon el-icon-close" @click="clearClass();keyword=''"></i>
+                    </el-input>
+                </div>
+
+                <el-table :data="tableData2" class="scrollable" style="margin-top: 10px;width: 100%;" @selection-change="handleSelectionChange2"  highlight-current-row @row-click="handleCurrentChange5"  row-key="id" :height="fullHeight-120">
+                    <el-table-column type="selection" align="center" width="50"></el-table-column>
+                    <el-table-column prop="softName" label="应用名称"></el-table-column>
+                    <el-table-column prop="softCode"  label="应用编号"></el-table-column>
+                    <!-- <el-table-column prop="isCloudSoft"  label="是否AGCLOUD" align="center" width="120" v-show="false">
+                       <template slot-scope="scope">
+                        <p v-if="scope.row.isCloudSoft == 1">是</p>
+                        <p v-else>否</p>
+                      </template>
+                    </el-table-column> -->
+                    <el-table-column prop="softWebContext"  label=" WEB工程名"></el-table-column>
+                    <!-- <el-table-column prop="protocolHeader"  label=" 网络协议头" width="100" v-show="false"></el-table-column> -->
+                    <el-table-column prop="softInnerUrl"  label=" 内部访问地址"></el-table-column>
+                    <el-table-column prop="softOuterUrl"  label="外部访问地址"></el-table-column>
+                    <el-table-column label="操作" align="center" width="120px">
+                        <template slot-scope="scope">
+                            <el-button type="text" class="btn-table" @click="roleControl(scope.row)">
+                                进入
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <!--  <el-pagination
+                       background
+                       align="right"
+                       :pager-count="5"
+                       @size-change="handleSizeChange2"
+                       @current-change="handleCurrentChange2"
+                       :page-sizes="[10, 20, 30, 50]"
+                       :page-size="pageSize2"
+                       :current-page="page2"
+                       layout="total,sizes, prev, pager, next, jumper"
+                       :total="total2">
+                     </el-pagination> -->
+            </div>
+            <el-tabs v-model="active" v-if = 'apps' @tab-click="tabClick">
+                <el-tab-pane label="模块功能" name="module"
+                             class="m-scrollable base-info"
+                             data-scrollable="true"
+                             :data-height="fullHeight-120">
+                    <!-- start-->
+                    <div class="all-staff">
+                        <div class="right-btn-group opt-btn">
+                            <button type="button" class="btn btn-primary" @click="isData();" :title='btnTitle'>新增</button>
+                            <!-- <button type="button" class="btn btn-secondary" @click="editTypeData()">编辑</button> -->
+                            <button type="button" class="btn btn-outline-danger" @click="delFuncAndModule()">删除</button>
+                            <el-input
+                                    class="search-org1"
+                                    placeholder="请输入关键字"
+                                    v-model="keyword2"
+                                    @change="">
+                                <i slot="suffix" class="el-input__icon el-icon-close" @click="clearClass();keyword2=''"></i>
+                            </el-input>
+                        </div>
+                        <el-table :data="tableData" :expand-row-keys="expands" class="scrollable" row-key="id" style="margin-top: 10px;width: 100%;" :row-class-name="tableRowClassName" @selection-change="handleSelectionChange"  @row-click="handleCurrentChange6" :height="fullHeight-170">
+                            <el-table-column type="selection" align="center"width="50"></el-table-column>
+                            <el-table-column prop="data.funcCode" label="编码" width="300">
+                                <template slot-scope="scope">
+                                    <div  style="cursor: pointer;" :data="scope.row.xcode">
+                                        <template>
+                                            <span >{{ scope.row.data.funcCode }}</span>
+                                        </template>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="data.funcName" label="名称" width="200"></el-table-column>
+                            <el-table-column prop="data.funcType" width="120" label="类型">
+                                <template slot-scope="scope">
+                                    {{scope.row.data.funcType=='func'? '功能':scope.row.data.funcType=='modu'?'模块':scope.row.data.funcType=='widget'?'微件':'工具栏'}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="data.isImgIcon" width="120" label="图标">
+                                <template slot-scope="scope">
+                                    <div v-if="!scope.row.data.isImgIcon||scope.row.data.isImgIcon=='0'">{{!scope.row.data.funcIconCss ? '-' : scope.row.data.funcIconCss }}</div>
+                                    <div v-else-if="scope.row.data.smallImgPath==null">{{!scope.row.data.funcIconCss ? '-' : scope.row.data.funcIconCss }}</div>
+                                    <div class="smallIcons" v-else>
+                                        <span :style="'background:url('+scope.row.data.smallImgPath+') no-repeat;padding:16px;'"></span>
+                                    </div>
+                                    <!-- <div>
+                                        <span v-if="!scope.row.data.isImgIcon||scope.row.data.isImgIcon=='0'">{{!scope.row.data.funcIconCss ? '-' : scope.row.data.funcIconCss }}</span>
+                                        <span v-else-if="scope.row.data.smallImgPath==null">{{!scope.row.data.funcIconCss ? '-' : scope.row.data.funcIconCss }}</span>
+                                        <span v-else :style="'background:url('+scope.row.data.smallImgPath+') no-repeat;padding:16px;display: inline-block;'"></span>
+                                    </div> -->
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="data.funcInvokeUrl" label="路径"></el-table-column>
+                            <!-- <el-table-column prop="data.parentFuncName" label="父级菜单" width="150"></el-table-column>
+                            <el-table-column prop="data.funcLevel" label="当前层级" align="center"  width="120"></el-table-column> -->
+                            <el-table-column prop="data.isActiveFunc" label="是否启用" align="center"  width="120">
+                                <template slot-scope="scope">
+                  <span class="m-switch m-switch--sm m-switch--icon">
+                    <label>
+                      <input type="checkbox" :value="scope.row.data.isActiveFunc" :checked="(scope.row.data.isActiveFunc == '1')?true:false" @change="changeEnableType(scope.row.data,$event)">
+                      <span></span>
+                    </label>
+                  </span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" align="center" width="150px">
+                                <template slot-scope="scope">
+                                    <!-- <el-button type="text" class="btn-table" @click.native="SaAbtn=false;showManInfo(scope.row.data, 'edit')">
+                                        编辑
+                                    </el-button> -->
+                                    <el-button type="text" class="btn-table" @click.native="deleteFunc(scope.row.data)">
+                                        删除
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+
+                        </el-table>
+                        <!-- <el-table
+                          :data="tableData"
+                          style="width: 100%;margin-bottom: 20px;"
+                          border
+                          row-key="id">
+                          <el-table-column
+                            prop="date"
+                            label="日期"
+                            width="180">
+                          </el-table-column>
+                          <el-table-column
+                            prop="name"
+                            label="姓名"
+                            width="180">
+                          </el-table-column>
+                          <el-table-column
+                            prop="address"
+                            label="地址">
+                          </el-table-column>
+                        </el-table> -->
+                        <!-- <el-pagination
+                          background
+                          align="right"
+                          :pager-count="5"
+                          @size-change="handleSizeChange"
+                          @current-change="handleCurrentChange"
+                          :page-sizes="[10, 20, 30, 50]"
+                          :page-size="pageSize"
+                          :current-page="page"
+                          layout="total,sizes, prev, pager, next, jumper"
+                          :total="total">
+                        </el-pagination> -->
+                    </div>
+                    <!-- end-->
+                </el-tab-pane>
+                <el-tab-pane label="角色授权" name="role"
+                             class="m-scrollable base-info"
+                             data-scrollable="true"
+                             :data-height="fullHeight-100"
+                             style="height:900px">
+                    <div class="roleAuthor">
+                        <div class="role-left">
+                            <div class="role-title">角色列表</div>
+                            <div class="right-btn-group opt-btn">
+                                <button type="button" class="btn btn-primary" @click="addRole()">新增</button>
+                                <!-- <button type="button" class="btn btn-secondary" @click="editRole()">编辑</button> -->
+                                <button type="button" class="btn btn-outline-danger" @click="deleteRole()">删除</button>
+                                <!-- <button type="button" class="btn btn-secondary" @click="getRole">刷新</button> -->
+                            </div>
+                            <el-table :data="tableData3" ref="singleTable" class="scrollable" style="margin-top: 10px;width: 100%;" @selection-change="handleSelectionChange3" highlight-current-row @row-click="handleCurrentChange7">
+                                <el-table-column type="selection" align="center"></el-table-column>
+                                <el-table-column prop="roleCode" label="角色编号"></el-table-column>
+                                <el-table-column prop="roleName" label="角色名称"></el-table-column>
+                            </el-table>
+                            <!--   <el-pagination
+                               background
+                               align="right"
+                               :pager-count="5"
+                               @size-change="handleSizeChange3"
+                               @current-change="handleCurrentChange3"
+                               :page-sizes="[10, 20, 30, 50]"
+                               :page-size="pageSize3"
+                               :current-page="page3"
+                               layout="total,sizes, prev, pager, next, jumper"
+                               :total="total3">
+                             </el-pagination> -->
+                        </div>
+                        <div class="role-right">
+                            <div class="role-title">功能树</div>
+                            <div class="right-btn-group opt-btn">
+                                <button type="button" class="btn btn-primary" @click="saveRoleAndFunc()">保存</button>
+                                <el-input
+                                        class="search-org"
+                                        placeholder="搜索功能"
+                                        v-model="filterText"
+                                        @change="">
+                                    <i slot="suffix" class="el-input__icon el-icon-close" @click="filterText=''"></i>
+                                </el-input>
+                            </div>
+                            <el-tree
+                                    :data="treeData3"
+                                    class="filter-tree tree3 scrollable"
+                                    :style="{height:fullHeight-200+'px'}"
+                                    default-expand-all
+                                    :expand-on-click-node="false"
+                                    highlight-current
+                                    node-key="id"
+                                    show-checkbox
+                                    check-strictly
+                                    :filter-node-method="filterNodeOrg"
+                                    @check-change="handleCheckChange"
+                                    :default-expanded-keys="treeShowNode"
+                                    ref="treeLeft3"
+                            >
+                            </el-tree>
+                        </div>
+                    </div>
+                </el-tab-pane>
+                <!-- <el-tab-pane label="网络拓扑" name="net"
+                             class="m-scrollable base-info"
+                             data-scrollable="true"
+                             :data-height="fullHeight-100">
+                </el-tab-pane> -->
+            </el-tabs>
+        </div>
+    </div>
+    <!--右侧content end-->
+    <!--左侧树右键展开-->
+    <div class="right-click-opt" @mouseleave="hideClickOpt">
+        <p>添加下级单位</p>
+        <p>添加下级部门</p>
+        <p>添加工作组</p>
+        <p>查看和修改</p>
+        <p >删除</p>
+    </div>
+    <!--左侧树右键展开 end-->
+    <!--右侧弹出层 start-->
+    <div class="right-sidebar" :class="showRightSlider?'show':''">
+        <div class="right-sidebar-content">
+            <span class="right-sidebar-close" @click="showRightSlider = false"><i class="la la-close"></i></span>
+            <el-tabs v-model="sidebarActive" @tab-click="tabClick2" :class="setPic?'hide2':'' +setPic2?'hide3':'' + allowed?'notAllowed':'' +'tabs'">
+                <el-tab-pane :label="moduleLabel" name="baseInfo"
+                             class="m-scrollable base-info"
+                             data-scrollable="true"
+                             :data-height="fullHeight-100"
+                             ref="tabPane"
+                >
+                    <div v-show="addIconAndEdit" class="funEdit">
+                        <el-form label-position="right" label-width="140px" :model="formData1" ref="formData1" :rules="rules">
+                            <el-form-item :label="code" required prop="funcCode">
+                                <el-input v-model="formData1.funcCode"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="toolBarId" v-if="isToolBar" required prop="toolBarId">
+                                <el-input v-model="formData1.toolBarId"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="name" required prop="funcName">
+                                <el-input v-model="formData1.funcName"></el-input>
+                            </el-form-item>
+                            <!-- 页面位置 -->
+                            <el-form-item label="页面位置：" required >
+                                <el-select v-model="formData1.pagePosition"  @change="forceUpdate">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option label="左上" value="LeftUpper"></el-option>
+                                    <el-option label="左下" value="LeftLower"></el-option>
+                                    <el-option label="右上" value="RightUpper"></el-option>
+                                    <el-option label="右下" value="RightLower"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="微件类型：" v-if="funASoft" required prop="widgetType">
+                                <el-select v-model="formData1.widgetType" @change="forceUpdate">
+                                    <el-option :label="item.itemName" :value="item.itemCode" v-for="item in option1"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <!-- 调用类型 -->
+                            <el-form-item :label="callType"  v-if="funASoft">
+                                <el-select v-model="formData1.funcInvokeType"  @change="forceUpdate">
+                                    <el-option label="相对路径" value="0"></el-option>
+                                    <el-option label="APP调用路径" value="d"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <!-- 访问路径 -->
+                            <el-form-item :label="invokeUrl"  v-if="funASoft" required prop="funcInvokeUrl">
+                                <el-input v-model="formData1.funcInvokeUrl"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="toolBarInvokeUrl"  v-if="isToolBar"  prop="toolBarInvokeUrl">
+                                <el-input v-model="formData1.toolBarInvokeUrl"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="onload"  v-if="isToolBar"  prop="onload">
+                                <el-input v-model="formData1.onload"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="icon"  v-if="isToolBar"  prop="icon">
+                                <el-input v-model="formData1.icon"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="src"  v-if="isToolBar"  prop="src">
+                                <el-input v-model="formData1.src"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="widgetId"  v-if="isToolBar"  prop="widgetId">
+                                <el-input v-model="formData1.widgetId"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="请求动态参数："  v-if="funASoft">
+                                <el-select v-model="formData1.funcInvokeParam"  @change="forceUpdate">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option label="用户账户" value="u"></el-option>
+                                    <el-option label="组织编号" value="o"></el-option>
+                                    <el-option label="当前时间" value="t"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="使用CSS图标: " prop="isImgIcon" v-show="isAdd">
+                                <el-select v-model="formData1.isImgIcon"  @change="usedPic">
+                                    <el-option label="是" value="0"></el-option>
+                                    <el-option label="否" value="1"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="图标样式：" v-show="iconCss">
+                                <el-input v-model="formData1.funcIconCss"></el-input>
+                            </el-form-item>
+                            <el-form-item label="设置小图标: " v-show="!setPic">
+                                <input type="hidden" v-model="formData1.smallImgPath" name="smallImgPath" />
+                                <el-input :disabled="allowed" v-model="formData1.smallImgPath" ref="smallImgPath" name="smallImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='smallIcon';getIcon('16','small')" style="margin: 0 auto;display:inline-block;" :disabled="allowed">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="设置中图标: " v-show="!setPic">
+                                <input type="hidden" v-model="formData1.middleImgPath" name="middleImgPath" />
+                                <el-input :disabled="allowed" v-model="formData1.middleImgPath" ref="middleImgPath" name="middleImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='middleIcon';getIcon('24','middle')" style="margin: 0 auto;display:inline-block;" :disabled="allowed">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="设置大图标: " v-show="!setPic">
+                                <input type="hidden" v-model="formData1.bigImgPath" name="bigImgPath" />
+                                <el-input :disabled="allowed" v-model="formData1.bigImgPath" ref="bigImgPath" name="bigImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='bigIcon';getIcon('32','big')" style="margin: 0 auto;display:inline-block;" :disabled="allowed">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="设置超大图标: " v-show="!setPic">
+                                <input type="hidden" v-model="formData1.hugeImgPath" name="hugeImgPath" />
+                                <el-input :disabled="allowed" v-model="formData1.hugeImgPath" ref="hugeImgPath" name="hugeImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='hugeIcon';getIcon('64','huge')" style="margin: 0 auto;display:inline-block;" :disabled="allowed">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+
+                            <el-form-item label="是否创建菜单：" v-if="creatBtn"  prop="isCreateMenu">
+                                <el-select v-model="formData1.isCreateMenu" @change="forceUpdate">
+                                    <el-option key="1" label="是" value="1" ></el-option>
+                                    <el-option key="0" label="否" value="0" ></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="菜单所属终端："  v-if="tmn" required prop="netTmnId">
+                                <el-select v-model="formData1.netTmnId" @change="forceUpdate">
+                                    <el-option :label="item.tmnName" :value="item.netTmnId" :key="item.netTmnId" v-for="item in option4"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="所属层级："  v-if="edit">
+                                <el-input v-model="formData1.funcLevel"></el-input>
+                            </el-form-item>
+                            <el-form-item label="所在排序：" v-if="edit">
+                                <el-input v-model="formData1.funcSortNo"></el-input>
+                            </el-form-item>
+                            <el-form-item label="备注：">
+                                <el-input v-model="formData1.funcMemo" type="textarea" row="5"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div class="right-sidebar-footer">
+                            <button type="button" class="btn btn-primary" @click="saveFunc();">保存</button>
+                            <button type="button" class="btn btn-primary" @click="getOtherParent()"v-show="setparentBtn">设置父级</button>
+                            <button type="button" class="btn btn-outline-danger" v-if="delBtn" @click="deleteFunc('')">删除</button>
+                            <!-- <button type="button" class="btn btn-primary" @click="saveAndAdd()" v-show="SaAbtn">保存并新增</button> -->
+                        </div>
+                    </div>
+                    <div class="setParent" v-show="setParent">
+                        <div class="tree" :style="{height:fullHeight-120+'px'}">
+                            <el-tree
+                                    :data="treeData4"
+                                    class="filter-tree tree4"
+                                    default-expand-all
+                                    :expand-on-click-node="false"
+                                    highlight-current
+                                    node-key="id"
+                                    check-strictly
+                                    show-checkbox
+                                    @check-change="handleClick4"
+                                    @node-click="nodeClick4"
+                                    :default-expanded-keys="treeShowNode"
+                                    ref="treeLeft4"
+                            >
+                            </el-tree>
+                        </div>
+                        <div class="right-sidebar-footer">
+                            <button type="button" class="btn btn-primary" @click="setOtherParent()">保存</button>
+                            <button type="button" class="btn btn-secondary" @click="cancle()">取消</button>
+                        </div>
+                    </div>
+                    <div  v-show="roleAuthor1">
+                        <el-form label-position="right" label-width="140px" :model="formData2" ref="formData2" :rules="rules2">
+                            <el-form-item label="角色编号" required prop="roleCode">
+                                <el-input v-model="formData2.roleCode"></el-input>
+                            </el-form-item>
+                            <el-form-item label="角色名称" required prop="roleName">
+                                <el-input v-model="formData2.roleName"></el-input>
+                            </el-form-item>
+                            <el-form-item label="角色类别"  prop="roleType">
+                                <el-input v-model="formData2.roleType"></el-input>
+                            </el-form-item>
+                            <el-form-item label="排列顺序号"  prop="roleSortNo">
+                                <el-input v-model="formData2.roleSortNo"></el-input>
+                            </el-form-item>
+                            <el-form-item label="备注说明"  prop="roleMemo">
+                                <el-input type="textarea" v-model="formData2.roleMemo" row="4"></el-input>
+                            </el-form-item>
+                            <el-form-item label="name"  prop="roleId" v-show="false">
+                                <el-input v-model="formData2.roleId"></el-input>
+                            </el-form-item>
+                            <el-form-item label="name"  prop="appId"  v-show="false">
+                                <el-input v-model="formData2.appId"></el-input>
+                            </el-form-item>
+                            <el-form-item label="name"  prop="roleDeleted"  v-show="false">
+                                <el-input v-model="formData2.roleDeleted"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div class="right-sidebar-footer" style="float:right;">
+                            <button type="button" class="btn btn-primary" @click="saveRole()">保存</button>
+                            <button type="button" class="btn btn-secondary" @click="showRightSlider=false;">取消</button>
+                        </div>
+                    </div>
+                    <div class="addSoft" v-show="addSoft">
+                        <el-form label-position="right" label-width="140px" :model="formData3" ref="formData3" :rules="rules3" :data-height="fullHeight-120">
+                            <el-form-item label="" prop="appSoftId" v-show="false">
+                                <el-input v-model="formData3.appSoftId"></el-input>
+                            </el-form-item>
+                            <el-form-item label="应用工程名称：" required prop="softName">
+                                <el-input v-model="formData3.softName"></el-input>
+                            </el-form-item>
+                            <el-form-item label="应用工程编号：" required prop="softCode" >
+                                <el-input v-model="formData3.softCode"></el-input>
+                            </el-form-item>
+                            <el-form-item label="WEB工程名：" required prop="softWebContext" >
+                                <el-input v-model="formData3.softWebContext"></el-input>
+                            </el-form-item>
+                            <el-form-item label="应用工程ID："  prop="clientId" >
+                                <el-input v-model="formData3.clientId"></el-input>
+                            </el-form-item>
+                            <el-form-item label="应用工程秘钥：" prop="clientSecret">
+                                <el-input v-model="formData3.clientSecret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="网络协议头：" required  prop="protocolHeader">
+                                <el-select v-model="formData3.protocolHeader" @change="forceUpdate">
+                                    <el-option label="http://" value="http://"></el-option>
+                                    <el-option label="https://" value="https://"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="内网访问地址：" required prop="softInnerUrl">
+                                <el-input v-model="formData3.softInnerUrl"></el-input>
+                            </el-form-item>
+                            <el-form-item label="政务网访问地址："  prop="softGovUrl">
+                                <el-input v-model="formData3.softGovUrl"></el-input>
+                            </el-form-item>
+                            <el-form-item label="外网访问地址："  prop="softOuterUrl">
+                                <el-input v-model="formData3.softOuterUrl"></el-input>
+                            </el-form-item>
+                            <el-form-item label="是否AGCLOUD：" prop="isCloudSoft" v-show="false">
+                                <el-select v-model="formData3.isCloudSoft" @change="forceUpdate">
+                                    <el-option label="是" value="1"></el-option>
+                                    <el-option label="否" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="是否单URL访问：" required prop="isSingleUrl" v-show="!setPic2">
+                                <el-select v-model="formData3.isSingleUrl" @change="forceUpdate">
+                                    <el-option label="是" value="1"></el-option>
+                                    <el-option label="否" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="自动切换地址：" required prop="autoSwitch" v-show="!setPic2">
+                                <el-select v-model="formData3.autoSwitch" @change="forceUpdate">
+                                    <el-option label="是" value="1"></el-option>
+                                    <el-option label="否" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="是否负载均衡：" required prop="useLoadBalence" v-show="!setPic2">
+                                <el-select v-model="formData3.useLoadBalence" @change="forceUpdate">
+                                    <el-option label="是" value="1"></el-option>
+                                    <el-option label="否" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="应用服务状态：" required prop="softStatus" v-show="!setPic2">
+                                <el-select v-model="formData3.softStatus" @change="forceUpdate">
+                                    <el-option label="正常" value="1"></el-option>
+                                    <el-option label="异常" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="使用CSS图标: " prop="isImgIcon" v-show="softCss">
+                                <el-select v-model="formData3.isImgIcon"  @change="usedPic2">
+                                    <el-option label="是" value="0"></el-option>
+                                    <el-option label="否" value="1"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="图标样式：" v-show="iconCss2">
+                                <el-input v-model="formData3.softIconCss"></el-input>
+                            </el-form-item>
+                            <el-form-item label="设置小图标: " v-show="!setPic2">
+                                <input type="hidden" v-model="formData3.smallImgPath" name="smallImgPath" />
+                                <el-input :disabled="allowed2" v-model="formData3.smallImgPath" ref="smallImgPath" name="smallImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='smallIcon';getIcon2('16','small')" style="margin: 0 auto;display:inline-block;" :disabled="allowed2">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="设置中图标: " v-show="!setPic2">
+                                <input type="hidden" v-model="formData3.middleImgPath" name="middleImgPath" />
+                                <el-input :disabled="allowed2" v-model="formData3.middleImgPath" ref="middleImgPath" name="middleImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='middleIcon';getIcon2('24','middle')" style="margin: 0 auto;display:inline-block;" :disabled="allowed2">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="设置大图标: " v-show="!setPic2">
+                                <input type="hidden" v-model="formData3.bigImgPath" name="bigImgPath" />
+                                <el-input :disabled="allowed2" v-model="formData3.bigImgPath" ref="bigImgPath" name="bigImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='bigIcon';getIcon2('32','big')" style="margin: 0 auto;display:inline-block;" :disabled="allowed2">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="设置超大图标: " v-show="!setPic2">
+                                <input type="hidden" v-model="formData3.hugeImgPath" name="hugeImgPath" />
+                                <el-input :disabled="allowed2" v-model="formData3.hugeImgPath" ref="hugeImgPath" name="hugeImgPath" >
+                                    <template slot="append">
+                                        <el-button type="text" class="btn-table" @click="sidebarActive='hugeIcon';getIcon2('64','huge')" style="margin: 0 auto;display:inline-block;" :disabled="allowed2">选择</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="备注说明：" prop="softMemo">
+                                <el-input type="textarea" v-model="formData3.softMemo" row="5"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div class="right-sidebar-footer" style="float:right;">
+                            <button type="button" class="btn btn-primary" @click="saveSoft()">保存</button>
+                            <button type="button" class="btn btn-secondary" @click="showRightSlider=false;isAddSoftBtn=false;">取消</button>
+                        </div>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="设置小图标" name="smallIcon" :disabled="notAllowed">
+                    <p class="tips">提示：请双击图标选择。</p>
+                    <p class="noIcon noIcon1">暂无小图标</p>
+                    <ul class="icon smallBox">
+                        <li v-for="item in icons1" :data-url="item.fullName" class="small" :style="{background:'url('+item.fullName+') no-repeat 1px 1px'}" @dblClick="iconClick($event);"></li>
+                    </ul>
+                </el-tab-pane>
+                <el-tab-pane label="设置中图标" name="middleIcon"  :disabled="notAllowed">
+                    <p class="tips">提示：请双击图标选择。</p>
+                    <p class="noIcon noIcon2">暂无中图标</p>
+                    <ul class="icon middleBox">
+                        <li v-for="item in icons2" :data-url="item.fullName" class="middle" :style="{background:'url('+item.fullName+') no-repeat 1px 1px'}" @dblClick="iconClick($event);"></li>
+                    </ul>
+                </el-tab-pane>
+                <el-tab-pane label="设置大图标" name="bigIcon" :disabled="notAllowed" >
+                    <p class="tips">提示：请双击图标选择。</p>
+                    <p class="noIcon noIcon3">暂无大图标</p>
+                    <ul class="icon bigBox">
+                        <li v-for="item in icons3" :data-url="item.fullName" class="big" :style="{background:'url('+item.fullName+') no-repeat 1px 1px'}" @dblClick="iconClick($event);"></li>
+                    </ul>
+                </el-tab-pane>
+                <el-tab-pane label="设置超大图标" name="hugeIcon"  :disabled="notAllowed">
+                    <p class="tips">提示：请双击图标选择。</p>
+                    <p class="noIcon noIcon4">暂无超大图标</p>
+                    <ul class="icon hugeBox">
+                        <li v-for="item in icons4" :data-url="item.fullName" class="huge" :style="{background:'url('+item.fullName+') no-repeat 1px 1px'}" @dblClick="iconClick($event);"></li>
+                    </ul>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+    </div>
+    <el-dialog :title="dialogTitie" :visible.sync="dialogEditTable" class="dialog dialogType" top="22vh" width="44%">
+        <ul>
+            <li  @click="selectType('add','module');">
+                <h5>模块</h5>
+            </li>
+            <li  @click="selectType('add','func');">
+                <h5>功能</h5>
+            </li>
+            <li  @click="selectType('add','toolBar');">
+                <h5>工具栏</h5>
+            </li>
+            <li  @click="selectType('add','widget');">
+                <h5>微件</h5>
+            </li>
+        </ul>
+    </el-dialog>
+    <!-- <div class="right-sidebar-overlay" v-show="showRightSlider" @click="showRightSlider = false"></div> -->
+    <!--右侧弹出层 end-->
+</div>
+</body>
+
+<!-- 本地开发使用 -->
+<script src="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/metronic-5/vendors.bundle.js" th:src="@{/agcloud/framework/js-lib/metronic-5/vendors.bundle.js}" type="text/javascript"></script>
+<script src="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/metronic-5/scripts.bundle.js" th:src="@{/agcloud/framework/js-lib/metronic-5/scripts.bundle.js}" type="text/javascript"></script>
+<script src="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/vue-v2/vue.js" th:src="@{/agcloud/framework/js-lib/vue-v2/vue.js}"></script>
+<script src="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/element-2/element.js" th:src="@{/agcloud/framework/js-lib/element-2/element.js}"></script>
+<script src="/framework-ui/src/main/resources/static/agcloud/framework/js-lib/agcloud-lib/js/common.js" th:src="@{/agcloud/framework/js-lib/agcloud-lib/js/common.js}"></script>
+
+<script src="../../../../../static/agcloud/opus/admin/appm/js/index.js" type="text/javascript" th:src="@{/agcloud/opus/admin/appm/js/index.js}"></script>
+</html>

@@ -1,0 +1,18 @@
+group 'com.augurit.agcloud.agcom'
+version '5.0.0'
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    compile project(":agsupport-syslog")
+    compile "com.augurit.agcloud:agcloud-agx-common:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-opus-common:5.0.1"
+    compile('org.springframework.kafka:spring-kafka')
+    compile "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
+    compile  ('com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8')
+    compile fileTree(include: ['*.jar'], dir: 'src/main/webapp/WEB-INF/lib')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+

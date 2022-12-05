@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgMarkerMapper">
+
+    <sql id="allColumns">
+        ID id,
+        USER_NAME userName,
+        USER_ID   userId,
+        CREAT_TIME creatTime,
+        IMAGE_PATH imagePath,
+        IMAGE_Name imageName,
+        REMAKES remakes,
+        IMAGE_BASE imageBase,
+        EXTENT extent
+    </sql>
+    <sql id="USERMARK">
+        ID id,
+        USER_ID   userId,
+        MARK_ID   markId,
+        VIEW_STATE viewState,
+        SHARE_TIME shareTime,
+        SHARE_USER shareUser
+    </sql>
+
+    <select id="getMarkers" resultType="AgMarker">
+        <!-- SELECT
+         <include refid="allColumns"/>
+         FROM
+         ag_mark
+         WHERE
+         id IN (
+         SELECT DISTINCT
+         (mark_id)
+         FROM
+         ag_mark_user
+         WHERE
+         user_id = #{userId}
+         )
+        ORDER BY  CREAT_TIME desc-->
+        SELECT
+        b.ID id,
+        b.USER_NAME userName,
+        b.USER_ID userId,
+        b.CREAT_TIME creatTime,
+        b.IMAGE_PATH imagePath,
+        b.IMAGE_Name imageName,
+        b.REMAKES remakes,
+        b.IMAGE_BASE imageBase,
+        b.EXTENT extent,
+        a.VIEW_STATE viewState,
+        a.SHARE_TIME shareTime
+        FROM
+        (SELECT USER_ID, MARK_ID, VIEW_STATE,SHARE_TIME FROM AG_MARK_USER WHERE USER_ID = #{userId}) a,
+        AG_MARK b
+        WHERE
+        a.MARK_ID = b.ID
+        ORDER BY SHARE_TIME DESC
+    </select>
+    <select id="getMarkerbyId" resultType="AgMarker">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_mark
+        WHERE
+        id = #{id}
+    </select>
+    <select id="getUserMarker" resultType="AgUserMarker">
+        SELECT
+        <include refid="USERMARK"/>
+        FROM
+        ag_mark_user
+        WHERE
+        user_id = #{userId} AND mark_id = #{markId}
+    </select>
+
+    <!--修改机构-->
+    <update id="updateMarker">
+        UPDATE ag_mark
+        <set>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="creatTime != null">
+                creat_time = #{creatTime},
+            </if>
+            <if test="imagePath != null">
+                image_path = #{imagePath},
+            </if>
+            <if test="imageName != null">
+                image_name = #{imageName},
+            </if>
+            <if test="remakes != null">
+                remakes = #{remakes},
+            </if>
+            <if test="imageBase != null">
+                image_base = #{imageBase},
+            </if>
+            <if test="extent != null">
+                extent = #{extent},
+            </if>
+
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+    <insert id="saveMarker">
+        INSERT INTO ag_mark(
+        id, USER_NAME, USER_ID, CREAT_TIME, IMAGE_PATH,IMAGE_Name, REMAKES,IMAGE_BASE,EXTENT
+        ) VALUES (
+        #{id}, #{userName},#{userId}, #{creatTime}, #{imagePath},#{imageName} ,#{remakes},#{imageBase},#{extent}
+        )
+    </insert>
+    <insert id="saveUserMarker">
+        INSERT
+        INTO  ag_mark_user (
+        id, USER_ID, MARK_ID,VIEW_STATE,SHARE_TIME,SHARE_USER
+        ) VALUES (
+        #{id}, #{userId}, #{markId},#{viewState},#{shareTime,jdbcType=TIMESTAMP},#{shareUser}
+        )
+    </insert>
+    <update id="updateUserMarker">
+        UPDATE ag_mark_user
+        <set>
+            <if test="viewState != null">
+                VIEW_STATE= #{viewState},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+    <delete id="deleteMarker">
+        DELETE FROM ag_mark
+        WHERE
+        id = #{id}
+    </delete>
+    <delete id="deleteUserMarker">
+        DELETE FROM ag_mark_user
+        WHERE
+        user_id = #{userId} AND mark_id = #{markId}
+    </delete>
+    <delete id="deleteUserMarkerbymarkId">
+        DELETE FROM ag_mark_user
+        WHERE
+         mark_id = #{markId}
+    </delete>
+    <select id="getUserMarkerByUserAndView" resultType="AgUserMarker">
+        SELECT <include refid="USERMARK"/>
+        FROM AG_MARK_USER
+        WHERE USER_ID = #{userId} and VIEW_STATE = #{viewState}
+        ORDER BY SHARE_TIME DESC
+    </select>
+    <insert id="saveMarkRemind">
+        INSERT INTO ag_mark_remind(
+        id, USER_ID,STATE
+        ) VALUES (
+        #{id}, #{userId}, #{state}
+        )
+    </insert>
+    <update id="updateMarkRemind">
+        UPDATE ag_mark_remind
+        <set>
+            <if test="state != null">
+                STATE= #{state},
+            </if>
+        </set>
+        WHERE
+        USER_ID = #{userId}
+    </update>
+
+    <select id="findMarkRemindByUserId" resultType="AgMarkRemind">
+        SELECT
+        ID id,
+        USER_ID  userId,
+        STATE state
+        FROM
+        ag_mark_remind
+        WHERE
+        USER_ID = #{userId}
+    </select>
+</mapper>

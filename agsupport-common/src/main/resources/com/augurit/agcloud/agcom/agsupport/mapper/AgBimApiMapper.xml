@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimApiMapper">
+
+    <sql id="allColumns">
+         ID id,
+         NAME "name",
+         TYPE "type",
+         URL url,
+         METHOD "method",
+         PARAM param,
+         TICKET ticket,
+         NOTE note,
+         CREATER creater,
+         CREATE_TIME createTime
+    </sql>
+
+    <!--根据id获取数据-->
+    <select id="getById" resultType="AgBimApi" parameterType="java.lang.String">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_API WHERE ID = #{id}
+    </select>
+
+    <!--获取所有数据-->
+    <select id="getAll" resultType="AgBimApi">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_API order by create_time asc
+    </select>
+
+    <!--根据id删除一条数据-->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM AG_BIM_API WHERE ID = #{id}
+    </delete>
+
+    <!--删除更多数据-->
+    <delete id="deleteMany">
+        DELETE FROM AG_BIM_API
+        WHERE
+        ID IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--添加一条数据-->
+    <insert id="add" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimApi">
+        INSERT INTO AG_BIM_API (
+          ID,
+          NAME,
+          TYPE,
+          URL,
+          METHOD,
+          PARAM,
+          TICKET,
+          NOTE,
+          CREATER,
+          CREATE_TIME
+        ) VALUES (
+          #{id},
+          #{name},
+          #{type},
+          #{url},
+          #{method},
+          #{param},
+          #{ticket},
+          #{note},
+          #{creater},
+          #{createTime}
+        )
+    </insert>
+
+    <!--编辑一条数据-->
+    <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgBimApi">
+        UPDATE AG_BIM_API
+        <set>
+            <if test="null != name">
+                NAME = #{name},
+            </if>
+            <if test="null != type">
+                TYPE = #{type},
+            </if>
+            <if test="null != url">
+                URL = #{url},
+            </if>
+            <if test="null != method">
+                METHOD = #{method},
+            </if>
+            <if test="null != param">
+                PARAM = #{param},
+            </if>
+            <if test="null != ticket">
+                TICKET = #{ticket},
+            </if>
+            <if test="null != note">
+                NOTE = #{note},
+            </if>
+            <if test="null != creater">
+                CREATER = #{creater},
+            </if>
+            <if test="null != createTime">
+                CREATER_TIME = #{createTime},
+            </if>
+        </set>
+        WHERE
+        ID = #{id}
+    </update>
+
+    <!--特殊条件Or分页查询-->
+    <select id="getByNameOrUrl" resultType="AgBimApi">
+        SELECT
+        <include refid="allColumns"/>
+        FROM AG_BIM_API
+        <if test="null != name">
+            WHERE
+            NAME LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            OR URL LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            OR NOTE LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+        </if>
+        ORDER BY CREATE_TIME DESC
+    </select>
+
+
+</mapper>

@@ -1,0 +1,40 @@
+archivesBaseName = 'agcloud-agcom-agsupport-rest'
+version '5.0.0'
+jar {
+    enabled = true
+}
+ext {
+    springCloudVersion = 'Finchley.RELEASE'
+    springBootVersion = '2.0.3.RELEASE'
+    agcloudVersion = '5.0.0'
+    flowableVersion = '6.3.0'
+}
+
+repositories {
+    // 本地仓库
+    mavenLocal()
+    // 阿里仓库
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    //agcloud私服仓库  192.168.19.192:8081
+    //maven { url 'http://192.168.19.192:8081/nexus/repository/agcloud/' }
+    //agcloud公网仓库
+//    maven { url 'http://106.52.77.101:8081/repository/agcloud/' }
+    // 中央仓库
+    mavenCentral()
+}
+// build不执行test
+//check.dependsOn.remove(test)
+
+dependencies {
+    compile project(":agsupport-common")
+    compile "com.augurit.agcloud:agcloud-agx-common:${agcloudVersion}"
+    compile "com.augurit.agcloud:agcloud-opus-common:5.0.1"
+    compile "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
+    compile fileTree(include: ['*.jar'], dir: 'src/main/webapp/WEB-INF/lib')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // pdf  itext jar包
+    compile "com.itextpdf:itextpdf:5.5.10"
+    compile "com.itextpdf:itext-asian:5.2.0"
+
+}

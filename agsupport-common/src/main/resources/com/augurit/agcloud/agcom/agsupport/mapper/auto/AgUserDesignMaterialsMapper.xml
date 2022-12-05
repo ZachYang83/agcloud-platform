@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.AgUserDesignMaterialsMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterials" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="orientation" property="orientation" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="model_matrix" property="modelMatrix" jdbcType="VARCHAR" />
+    <result column="property_url" property="propertyUrl" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="design_scheme_id" property="designSchemeId" jdbcType="VARCHAR" />
+    <result column="angle" property="angle" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="components" property="components" jdbcType="VARCHAR" />
+    <result column="style" property="style" jdbcType="VARCHAR" />
+    <result column="tile_url" property="tileUrl" jdbcType="VARCHAR" />
+    <result column="component_type" property="componentType" jdbcType="VARCHAR" />
+    <result column="component_id" property="componentId" jdbcType="VARCHAR" />
+    <result column="boundingbox" property="boundingbox" jdbcType="VARCHAR" />
+    <result column="topologyelements" property="topologyelements" jdbcType="VARCHAR" />
+    <result column="obb_center" property="obbCenter" jdbcType="VARCHAR" />
+    <result column="subtract" property="subtract" jdbcType="VARCHAR" />
+    <result column="relation_ids" property="relationIds" jdbcType="VARCHAR" />
+    <result column="measure" property="measure" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="clip_matrix" property="clipMatrix" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, type, name, position, orientation, url, model_matrix, property_url, user_id, 
+    create_time, modify_time, remark, design_scheme_id, angle, table_name, components, 
+    style, tile_url, component_type, component_id, boundingbox, topologyelements, obb_center, 
+    subtract, relation_ids, measure, size, clip_matrix
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterialsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ag_user_design_materials
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from ag_user_design_materials
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ag_user_design_materials
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterialsExample" >
+    delete from ag_user_design_materials
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterials" >
+    insert into ag_user_design_materials (id, type, name, 
+      position, orientation, url, 
+      model_matrix, property_url, user_id, 
+      create_time, modify_time, remark, 
+      design_scheme_id, angle, table_name, 
+      components, style, tile_url, 
+      component_type, component_id, boundingbox, 
+      topologyelements, obb_center, subtract, 
+      relation_ids, measure, size, 
+      clip_matrix)
+    values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{position,jdbcType=VARCHAR}, #{orientation,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{modelMatrix,jdbcType=VARCHAR}, #{propertyUrl,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+      #{designSchemeId,jdbcType=VARCHAR}, #{angle,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, 
+      #{components,jdbcType=VARCHAR}, #{style,jdbcType=VARCHAR}, #{tileUrl,jdbcType=VARCHAR}, 
+      #{componentType,jdbcType=VARCHAR}, #{componentId,jdbcType=VARCHAR}, #{boundingbox,jdbcType=VARCHAR}, 
+      #{topologyelements,jdbcType=VARCHAR}, #{obbCenter,jdbcType=VARCHAR}, #{subtract,jdbcType=VARCHAR}, 
+      #{relationIds,jdbcType=VARCHAR}, #{measure,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}, 
+      #{clipMatrix,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterials" >
+    insert into ag_user_design_materials
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="orientation != null" >
+        orientation,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="modelMatrix != null" >
+        model_matrix,
+      </if>
+      <if test="propertyUrl != null" >
+        property_url,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="designSchemeId != null" >
+        design_scheme_id,
+      </if>
+      <if test="angle != null" >
+        angle,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="components != null" >
+        components,
+      </if>
+      <if test="style != null" >
+        style,
+      </if>
+      <if test="tileUrl != null" >
+        tile_url,
+      </if>
+      <if test="componentType != null" >
+        component_type,
+      </if>
+      <if test="componentId != null" >
+        component_id,
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox,
+      </if>
+      <if test="topologyelements != null" >
+        topologyelements,
+      </if>
+      <if test="obbCenter != null" >
+        obb_center,
+      </if>
+      <if test="subtract != null" >
+        subtract,
+      </if>
+      <if test="relationIds != null" >
+        relation_ids,
+      </if>
+      <if test="measure != null" >
+        measure,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="clipMatrix != null" >
+        clip_matrix,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="orientation != null" >
+        #{orientation,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="modelMatrix != null" >
+        #{modelMatrix,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUrl != null" >
+        #{propertyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="designSchemeId != null" >
+        #{designSchemeId,jdbcType=VARCHAR},
+      </if>
+      <if test="angle != null" >
+        #{angle,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="components != null" >
+        #{components,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null" >
+        #{style,jdbcType=VARCHAR},
+      </if>
+      <if test="tileUrl != null" >
+        #{tileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="componentType != null" >
+        #{componentType,jdbcType=VARCHAR},
+      </if>
+      <if test="componentId != null" >
+        #{componentId,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        #{boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="topologyelements != null" >
+        #{topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="obbCenter != null" >
+        #{obbCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="subtract != null" >
+        #{subtract,jdbcType=VARCHAR},
+      </if>
+      <if test="relationIds != null" >
+        #{relationIds,jdbcType=VARCHAR},
+      </if>
+      <if test="measure != null" >
+        #{measure,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="clipMatrix != null" >
+        #{clipMatrix,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterialsExample" resultType="java.lang.Integer" >
+    select count(*) from ag_user_design_materials
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ag_user_design_materials
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.position != null" >
+        position = #{record.position,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orientation != null" >
+        orientation = #{record.orientation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null" >
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modelMatrix != null" >
+        model_matrix = #{record.modelMatrix,jdbcType=VARCHAR},
+      </if>
+      <if test="record.propertyUrl != null" >
+        property_url = #{record.propertyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null" >
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.designSchemeId != null" >
+        design_scheme_id = #{record.designSchemeId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.angle != null" >
+        angle = #{record.angle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tableName != null" >
+        table_name = #{record.tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.components != null" >
+        components = #{record.components,jdbcType=VARCHAR},
+      </if>
+      <if test="record.style != null" >
+        style = #{record.style,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tileUrl != null" >
+        tile_url = #{record.tileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.componentType != null" >
+        component_type = #{record.componentType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.componentId != null" >
+        component_id = #{record.componentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boundingbox != null" >
+        boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topologyelements != null" >
+        topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="record.obbCenter != null" >
+        obb_center = #{record.obbCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subtract != null" >
+        subtract = #{record.subtract,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relationIds != null" >
+        relation_ids = #{record.relationIds,jdbcType=VARCHAR},
+      </if>
+      <if test="record.measure != null" >
+        measure = #{record.measure,jdbcType=VARCHAR},
+      </if>
+      <if test="record.size != null" >
+        size = #{record.size,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clipMatrix != null" >
+        clip_matrix = #{record.clipMatrix,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ag_user_design_materials
+    set id = #{record.id,jdbcType=VARCHAR},
+    type = #{record.type,jdbcType=VARCHAR},
+    name = #{record.name,jdbcType=VARCHAR},
+    position = #{record.position,jdbcType=VARCHAR},
+    orientation = #{record.orientation,jdbcType=VARCHAR},
+    url = #{record.url,jdbcType=VARCHAR},
+    model_matrix = #{record.modelMatrix,jdbcType=VARCHAR},
+    property_url = #{record.propertyUrl,jdbcType=VARCHAR},
+    user_id = #{record.userId,jdbcType=VARCHAR},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP},
+    modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    design_scheme_id = #{record.designSchemeId,jdbcType=VARCHAR},
+    angle = #{record.angle,jdbcType=VARCHAR},
+    table_name = #{record.tableName,jdbcType=VARCHAR},
+    components = #{record.components,jdbcType=VARCHAR},
+    style = #{record.style,jdbcType=VARCHAR},
+    tile_url = #{record.tileUrl,jdbcType=VARCHAR},
+    component_type = #{record.componentType,jdbcType=VARCHAR},
+    component_id = #{record.componentId,jdbcType=VARCHAR},
+    boundingbox = #{record.boundingbox,jdbcType=VARCHAR},
+    topologyelements = #{record.topologyelements,jdbcType=VARCHAR},
+    obb_center = #{record.obbCenter,jdbcType=VARCHAR},
+    subtract = #{record.subtract,jdbcType=VARCHAR},
+    relation_ids = #{record.relationIds,jdbcType=VARCHAR},
+    measure = #{record.measure,jdbcType=VARCHAR},
+    size = #{record.size,jdbcType=VARCHAR},
+    clip_matrix = #{record.clipMatrix,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterials" >
+    update ag_user_design_materials
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="orientation != null" >
+        orientation = #{orientation,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="modelMatrix != null" >
+        model_matrix = #{modelMatrix,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUrl != null" >
+        property_url = #{propertyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="designSchemeId != null" >
+        design_scheme_id = #{designSchemeId,jdbcType=VARCHAR},
+      </if>
+      <if test="angle != null" >
+        angle = #{angle,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="components != null" >
+        components = #{components,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null" >
+        style = #{style,jdbcType=VARCHAR},
+      </if>
+      <if test="tileUrl != null" >
+        tile_url = #{tileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="componentType != null" >
+        component_type = #{componentType,jdbcType=VARCHAR},
+      </if>
+      <if test="componentId != null" >
+        component_id = #{componentId,jdbcType=VARCHAR},
+      </if>
+      <if test="boundingbox != null" >
+        boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      </if>
+      <if test="topologyelements != null" >
+        topologyelements = #{topologyelements,jdbcType=VARCHAR},
+      </if>
+      <if test="obbCenter != null" >
+        obb_center = #{obbCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="subtract != null" >
+        subtract = #{subtract,jdbcType=VARCHAR},
+      </if>
+      <if test="relationIds != null" >
+        relation_ids = #{relationIds,jdbcType=VARCHAR},
+      </if>
+      <if test="measure != null" >
+        measure = #{measure,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="clipMatrix != null" >
+        clip_matrix = #{clipMatrix,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.AgUserDesignMaterials" >
+    update ag_user_design_materials
+    set type = #{type,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      orientation = #{orientation,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      model_matrix = #{modelMatrix,jdbcType=VARCHAR},
+      property_url = #{propertyUrl,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      design_scheme_id = #{designSchemeId,jdbcType=VARCHAR},
+      angle = #{angle,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      components = #{components,jdbcType=VARCHAR},
+      style = #{style,jdbcType=VARCHAR},
+      tile_url = #{tileUrl,jdbcType=VARCHAR},
+      component_type = #{componentType,jdbcType=VARCHAR},
+      component_id = #{componentId,jdbcType=VARCHAR},
+      boundingbox = #{boundingbox,jdbcType=VARCHAR},
+      topologyelements = #{topologyelements,jdbcType=VARCHAR},
+      obb_center = #{obbCenter,jdbcType=VARCHAR},
+      subtract = #{subtract,jdbcType=VARCHAR},
+      relation_ids = #{relationIds,jdbcType=VARCHAR},
+      measure = #{measure,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      clip_matrix = #{clipMatrix,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

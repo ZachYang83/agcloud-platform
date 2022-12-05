@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgBimCheckProjectModelCustomMapper">
+    <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.AgBimCheckProjectModel">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="ag_bim_check_project_id" property="agBimCheckProjectId" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="info_rel_table_name" property="infoRelTableName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="createExcelTable">
+        ${createTableSql}
+    </insert>
+
+    <insert id="batchInsertModelInfoByExcel">
+        <foreach collection="allColumns" separator=";" item="columnList" index="dataListIndex">
+            insert into ${tableName}
+            <foreach collection="columnList" item="column" separator="," open="(" close=")">
+                ${column}
+            </foreach>
+            values
+            <foreach collection="columnList" item="column" separator="," open="(" close=")">
+                #{dataList[${dataListIndex}].${column}}
+            </foreach>
+        </foreach>
+    </insert>
+
+    <delete id="deleteModelInfoTable">
+        DROP TABLE  IF EXISTS ${infoRelTableName}
+    </delete>
+
+</mapper>

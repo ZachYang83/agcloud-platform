@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.opus.common.mapper.OpuOmUserInfoMapper" >
+
+    <!-- 所有用户信息字段 -->
+    <sql id="AllColumns" >
+        ID as id,
+        USER_ID as userId,
+        USER_CODE as userCode,
+        USER_OLD_NAME as userOldName,
+        USER_NICK_NAME as userNickName,
+        USER_TITLE as userTitle,
+        USER_EX_TITLE as userExTitle,
+        USER_IN_TITLE as userInTitle,
+        USER_TECH_TITLE as userTechTitle,
+        USER_RANK as userRank,
+        USER_POST as userPost,
+        IS_SOP as isSop,
+        USER_TYPE as userType,
+        USER_POST_STATUS as userPostStatus,
+        USER_ASSIGN_DATE as userAssignDate,
+        USER_WORK_DATE as userWorkDate,
+        USER_FORMAL_DATE as userFormalDate,
+        USER_LEAVE_REASON as userLeaveReason,
+        USER_LEAVE_DATE as userLeaveDate,
+        LABOR_CONTRACT_START_DATE as laborContractStartDate,
+        LABOR_CONTRACT_END_DATE as laborContractEndDate,
+        LABOR_CONTRACT_COUNT as laborContractCount,
+        USER_ID_CARD_NO as userIdCardNo,
+        USER_ID_CARD_UNIT as userIdCardUnit,
+        USER_FAMILY_ADDRESS as userFamilyAddress,
+        USER_FAMILY_ZIP_CODE as userFamilyZipCode,
+        USER_FAMILY_TEL as userFamilyTel,
+        USER_OFFICAL_TEL as userOfficalTel,
+        USER_MOBILE as userMobile,
+        USER_EMAIL as userEmail,
+        USER_QQ as userQq,
+        USER_MARITAL_STATUS as userMaritalStatus,
+        USER_DOMICILE_PLACE as userDomicilePlace,
+        USER_BIRTH_PLACE as userBirthPlace,
+        USER_BIRTHDAY as userBirthday,
+        USER_NATIVE_PLACE_PROVINCE as userNativePlaceProvince,
+        USER_NATIVE_PLACT_CITY as userNativePlactCity,
+        USER_NATION as userNation,
+        USER_POLITICS_FACE as userPoliticsFace,
+        USER_JOIN_PARTY_DATE as userJoinPartyDate,
+        USER_HIGH_EDUCATION as userHighEducation,
+        USER_HIGH_DEGREE as userHighDegree,
+        USER_RECENT_GRADUATION_COLLEGE as userRecentGraduationCollege,
+        USER_RECENT_GRADUATION_DATE as userRecentGraduationDate,
+        USER_PROFESSIONAL_SKILL as userProfessionalSkill,
+        IS_PUBLIC as isPublic,
+        USER_DELETED as userDeleted,
+        CREATER as creater,
+        CREATE_TIME as createTime,
+        MODIFIER as modifier,
+        MODIFY_TIME as modifyTime,
+        EMP_POS_COST_ID as empPosCostId
+    </sql>
+
+    <!-- 用户信息所有字段 -->
+    <sql id="AllColumnsUserInfo" >
+	    info.USER_CODE as userCode,
+	    info.USER_OLD_NAME as userOldName,
+	    info.USER_NICK_NAME as userNickName,
+	    info.USER_TITLE as userTitle,
+	    info.USER_EX_TITLE as userExTitle,
+	    info.USER_IN_TITLE as userInTitle,
+	    info.USER_TECH_TITLE as userTechTitle,
+	    info.USER_RANK as userRank,
+	    info.USER_POST as userPost,
+	    info.USER_POST_STATUS as userPostStatus,
+	    info.USER_TYPE  as userType,
+	    info.USER_WORK_DATE as userWorkDate,
+	    info.USER_FORMAL_DATE as userFormalDate,
+	    info.USER_LEAVE_REASON as userLeaveReason,
+	    info.LABOR_CONTRACT_START_DATE as laborContractStartDate,
+	    info.LABOR_CONTRACT_COUNT as laborContractCount,
+	    info.USER_ID_CARD_UNIT as userIdCardUnit,
+	    info.USER_WEIXIN as userWeixin,
+	    info.USER_ASSIGN_DATE as userAssignDate,
+	    info.USER_LEAVE_DATE as userLeaveDate,
+	    info.USER_ID_CARD_NO as userIdCardNo,
+	    info.USER_FAMILY_ADDRESS as userFamilyAddress,
+	    info.USER_FAMILY_ZIP_CODE as userFamilyZipCode,
+	    info.USER_FAMILY_TEL as userFamilyTel,
+	    info.USER_OFFICAL_TEL as userOfficalTel,
+	    info.USER_MOBILE as userMobile,
+	    info.USER_EMAIL as userEmail,
+	    info.USER_QQ as userQq,
+	    info.USER_MARITAL_STATUS as userMaritalStatus,
+	    info.USER_DOMICILE_PLACE as userDomicilePlace,
+	    info.USER_BIRTH_PLACE as userBirthPlace,
+	    info.USER_BIRTHDAY as userBirthday,
+	    info.USER_NATIVE_PLACE_PROVINCE as userNativePlaceProvince,
+	    info.USER_NATIVE_PLACT_CITY as userNativePlactCity,
+	    info.USER_NATION as userNation,
+	    info.USER_POLITICS_FACE as userPoliticsFace,
+	    info.USER_JOIN_PARTY_DATE as userJoinPartyDate,
+	    info.USER_HIGH_EDUCATION as userHighEducation,
+	    info.USER_HIGH_DEGREE as userHighDegree,
+	    info.USER_RECENT_GRADUATION_COLLEGE as userRecentGraduationCollege,
+	    info.USER_RECENT_GRADUATION_DATE as userRecentGraduationDate,
+	    info.USER_PROFESSIONAL_SKILL as userProfessionalSkill,
+	    info.IS_PUBLIC as isPublic,
+	    info.USER_DELETED as userDeleted,
+	    info.CREATER as creater,
+	    info.CREATE_TIME as createTime,
+	    info.MODIFIER as modifier,
+	    info.MODIFY_TIME as modifyTime,
+	    info.EMP_POS_COST_ID as empPosCostId
+    </sql>
+
+    <!-- 用户帐号所有字段 -->
+    <sql id="AllColumnsUser">
+        info.ID as id,
+	    omuser.USER_ID as userId,
+        omuser.LOGIN_NAME as loginName,
+        omuser.LOGIN_PWD as loginPwd,
+        omuser.DINGTALK_ACCOUNT as dingtalkAccount,
+        omuser.DINGTALK_ID as dingtalkId,
+        omuser.WECHAT_ACCOUNT as wechatAccount,
+        omuser.WECHAT_ID as wechatId,
+        omuser.USER_NAME as userName,
+        omuser.USER_SEX as userSex,
+        omuser.IS_PWD_ENCRYPTED as isPwdEncrypted,
+        omuser.ENCRYPT_SALT as encryptSalt,
+        omuser.PWD_STRENGTH_GRADE as pwdStrengthGrade,
+        omuser.IS_ACTIVE as isActive,
+        omuser.ACTIVE_BEGIN_TIME as activeBeginTime,
+        omuser.ACTIVE_END_TIME as activeEndTime,
+        omuser.ROOT_ORG_ID as rootOrgId
+    </sql>
+
+    <!-- 新增用户基本信息 -->
+    <insert id="insertUserInfo" parameterType="OpuOmUserInfo" >
+        insert into OPU_OM_USER_INFO (
+            ID,
+            USER_ID,
+            USER_CODE,
+            USER_OLD_NAME,
+            USER_NICK_NAME,
+            USER_TITLE,
+            USER_EX_TITLE,
+            USER_IN_TITLE,
+            USER_TECH_TITLE,
+            USER_RANK,
+            USER_POST,
+            IS_SOP,
+            USER_TYPE,
+            USER_POST_STATUS,
+            USER_ASSIGN_DATE,
+            USER_WORK_DATE,
+            USER_FORMAL_DATE,
+            USER_LEAVE_REASON,
+            USER_LEAVE_DATE,
+            LABOR_CONTRACT_START_DATE,
+            LABOR_CONTRACT_END_DATE,
+            LABOR_CONTRACT_COUNT,
+            USER_ID_CARD_NO,
+            USER_ID_CARD_UNIT,
+            USER_FAMILY_ADDRESS,
+            USER_FAMILY_ZIP_CODE,
+            USER_FAMILY_TEL,
+            USER_OFFICAL_TEL,
+            USER_MOBILE,
+            USER_EMAIL,
+            USER_WEIXIN,
+            USER_QQ,
+            USER_MARITAL_STATUS,
+            USER_DOMICILE_PLACE,
+            USER_BIRTH_PLACE,
+            USER_BIRTHDAY,
+            USER_NATIVE_PLACE_PROVINCE,
+            USER_NATIVE_PLACT_CITY,
+            USER_NATION,
+            USER_POLITICS_FACE,
+            USER_JOIN_PARTY_DATE,
+            USER_HIGH_EDUCATION,
+            USER_HIGH_DEGREE,
+            USER_RECENT_GRADUATION_COLLEGE,
+            USER_RECENT_GRADUATION_DATE,
+            USER_PROFESSIONAL_SKILL,
+            IS_PUBLIC,
+            USER_DELETED,
+            CREATER,
+            CREATE_TIME,
+            MODIFIER,
+            MODIFY_TIME,
+            EMP_POS_COST_ID
+        )
+        values (
+          #{id},
+          #{userId},
+          #{userCode},
+          #{userOldName},
+          #{userNickName},
+          #{userTitle},
+          #{userExTitle},
+          #{userInTitle},
+          #{userTechTitle},
+          #{userRank},
+          #{userPost},
+          #{isSop},
+          #{userType},
+          #{userPostStatus},
+          #{userWorkDate,jdbcType=TIMESTAMP},
+          #{userAssignDate,jdbcType=TIMESTAMP},
+          #{userFormalDate,jdbcType=TIMESTAMP},
+          #{userLeaveReason},
+          #{userLeaveDate,jdbcType=TIMESTAMP},
+          #{laborContractStartDate,jdbcType=TIMESTAMP},
+          #{laborContractEndDate,jdbcType=TIMESTAMP},
+          #{laborContractCount,jdbcType=DECIMAL},
+          #{userIdCardNo},
+          #{userIdCardUnit},
+          #{userFamilyAddress},
+          #{userFamilyZipCode},
+          #{userFamilyTel},
+          #{userOfficalTel},
+          #{userMobile},
+          #{userEmail},
+          #{userWeixin},
+          #{userQq},
+          #{userMaritalStatus},
+          #{userDomicilePlace},
+          #{userBirthPlace},
+          #{userBirthday,jdbcType=TIMESTAMP},
+          #{userNativePlaceProvince},
+          #{userNativePlactCity},
+          #{userNation},
+          #{userPoliticsFace},
+          #{userJoinPartyDate,jdbcType=TIMESTAMP},
+          #{userHighEducation},
+          #{userHighDegree},
+          #{userRecentGraduationCollege},
+          #{userRecentGraduationDate,jdbcType=TIMESTAMP},
+          #{userProfessionalSkill},
+          #{isPublic,jdbcType=CHAR},
+          #{userDeleted,jdbcType=CHAR},
+          #{creater},
+          #{createTime,jdbcType=TIMESTAMP},
+          #{modifier},
+          #{modifyTime,jdbcType=TIMESTAMP},
+          #{empPosCostId}
+        )
+    </insert>
+
+
+    <update id="deleteUserInfo" parameterType="string" >
+        update OPU_OM_USER_INFO
+        <set>
+            USER_DELETED ='1'
+        </set>
+        where
+        ID = #{id}
+    </update>
+
+    <!-- 根据用户帐号主键删除用户信息 -->
+    <delete id="deleteUserInfoByUserAccountId" parameterType="string" >
+        update OPU_OM_USER_INFO
+        <set>
+            USER_DELETED ='1'
+        </set>
+        where
+        USER_ID = #{userId}
+    </delete>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUserInfo" parameterType="OpuOmUserInfo" >
+        update OPU_OM_USER_INFO
+        <set >
+            <if test="userId != null and userId !='' " >
+                USER_ID = #{userId},
+            </if>
+            <if test="userCode != null and userCode !='' " >
+                USER_Code = #{userCode},
+            </if>
+            <if test="userOldName != null and userOldName !='' " >
+                USER_OLD_NAME = #{userOldName},
+            </if>
+            <if test="userNickName != null and userNickName !='' " >
+                USER_NICK_NAME = #{userNickName},
+            </if>
+            <if test="userTitle != null and userTitle !='' " >
+                USER_TITLE = #{userTitle},
+            </if>
+            <if test="userExTitle != null and userExTitle !='' " >
+                USER_EX_TITLE = #{userExTitle},
+            </if>
+            <if test="userInTitle != null and userInTitle !='' " >
+                USER_IN_TITLE = #{userInTitle},
+            </if>
+            <if test="userTechTitle != null and userTechTitle !='' " >
+                USER_TECH_TITLE = #{userTechTitle},
+            </if>
+            <if test="userRank != null and userRank !='' " >
+                USER_RANK = #{userRank},
+            </if>
+            <if test="userPost != null and userPost !='' " >
+                USER_POST = #{userPost},
+            </if>
+            <if test="isSop != null and isSop !='' " >
+                IS_SOP = #{isSop},
+            </if>
+            <if test="userType != null and userType !='' " >
+                USER_TYPE = #{userType},
+            </if>
+            <if test="userPostStatus != null and userPostStatus !='' " >
+                USER_POST_STATUS = #{userPostStatus},
+            </if>
+            <if test="userAssignDate != null" >
+                USER_ASSIGN_DATE = #{userAssignDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userWorkDate != null" >
+                USER_WORK_DATE = #{userWorkDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userFormalDate != null" >
+                USER_FORMAL_DATE = #{userFormalDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userLeaveReason != null and userLeaveReason !='' " >
+                USER_LEAVE_REASON = #{userLeaveReason},
+            </if>
+            <if test="userLeaveDate != null" >
+                USER_LEAVE_DATE = #{userLeaveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="laborContractStartDate != null" >
+                LABOR_CONTRACT_START_DATE = #{laborContractStartDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="laborContractEndDate != null" >
+                LABOR_CONTRACT_END_DATE = #{laborContractEndDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="laborContractCount != null and laborContractCount !='' " >
+                LABOR_CONTRACT_COUNT = #{laborContractCount,jdbcType=DECIMAL},
+            </if>
+            <if test="userIdCardNo != null and userIdCardNo !='' " >
+                USER_ID_CARD_NO = #{userIdCardNo},
+            </if>
+            <if test="userIdCardUnit != null and userIdCardUnit !='' " >
+                USER_ID_CARD_UNIT = #{userIdCardUnit},
+            </if>
+            <if test="userFamilyAddress != null and userFamilyAddress !='' " >
+                USER_FAMILY_ADDRESS = #{userFamilyAddress},
+            </if>
+            <if test="userFamilyZipCode != null and userFamilyZipCode !='' " >
+                USER_FAMILY_ZIP_CODE = #{userFamilyZipCode},
+            </if>
+            <if test="userFamilyTel != null and userFamilyTel !='' " >
+                USER_FAMILY_TEL = #{userFamilyTel},
+            </if>
+            <if test="userOfficalTel != null and userOfficalTel !='' " >
+                USER_OFFICAL_TEL = #{userOfficalTel},
+            </if>
+            <if test="userMobile != null and userMobile !='' " >
+                USER_MOBILE = #{userMobile},
+            </if>
+            <if test="userEmail != null and userEmail !='' " >
+                USER_EMAIL = #{userEmail},
+            </if>
+            <if test="userWeixin != null and userWeixin !='' " >
+                USER_WEIXIN = #{userWeixin},
+            </if>
+            <if test="userQq != null and userQq !='' " >
+                USER_QQ = #{userQq},
+            </if>
+            <if test="userMaritalStatus != null and userMaritalStatus !='' " >
+                USER_MARITAL_STATUS = #{userMaritalStatus},
+            </if>
+            <if test="userDomicilePlace != null and userDomicilePlace !='' " >
+                USER_DOMICILE_PLACE = #{userDomicilePlace},
+            </if>
+            <if test="userBirthPlace != null and userBirthPlace !='' " >
+                USER_BIRTH_PLACE = #{userBirthPlace},
+            </if>
+            <if test="userBirthday != null" >
+                USER_BIRTHDAY = #{userBirthday,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userNativePlaceProvince != null" >
+                USER_NATIVE_PLACE_PROVINCE = #{userNativePlaceProvince},
+            </if>
+            <if test="userNativePlactCity != null and userNativePlactCity !='' " >
+                USER_NATIVE_PLACT_CITY = #{userNativePlactCity},
+            </if>
+            <if test="userNation != null and userNation !='' " >
+                USER_NATION = #{userNation},
+            </if>
+            <if test="userPoliticsFace != null and userPoliticsFace !='' " >
+                USER_POLITICS_FACE = #{userPoliticsFace},
+            </if>
+            <if test="userJoinPartyDate != null" >
+                USER_JOIN_PARTY_DATE = #{userJoinPartyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userHighEducation != null and userHighEducation !='' " >
+                USER_HIGH_EDUCATION = #{userHighEducation},
+            </if>
+            <if test="userHighDegree != null and userHighDegree !='' " >
+                USER_HIGH_DEGREE = #{userHighDegree},
+            </if>
+            <if test="userRecentGraduationCollege != null and userRecentGraduationCollege !='' " >
+                USER_RECENT_GRADUATION_COLLEGE = #{userRecentGraduationCollege},
+            </if>
+            <if test="userRecentGraduationDate != null" >
+                USER_RECENT_GRADUATION_DATE = #{userRecentGraduationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userProfessionalSkill != null and userProfessionalSkill !='' " >
+                USER_PROFESSIONAL_SKILL = #{userProfessionalSkill},
+            </if>
+            <if test="isPublic != null and isPublic !='' " >
+                IS_PUBLIC = #{isPublic,jdbcType=CHAR},
+            </if>
+            <if test="userDeleted != null and userDeleted !='' " >
+                USER_DELETED = #{userDeleted,jdbcType=CHAR},
+            </if>
+            <if test="creater != null and creater !='' " >
+                CREATER = #{creater},
+            </if>
+            <if test="modifier != null and modifier !='' " >
+                MODIFIER = #{modifier},
+            </if>
+            <if test="modifyTime != null  " >
+                MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="empPosCostId !=null and empPosCostId !='' ">
+                EMP_POS_COST_ID = #{empPosCostId}
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!-- 根据主键获取用户信息 -->
+    <select id="getUserInfo" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_USER_INFO
+        where
+        ID = #{id}
+    </select>
+
+    <select id="getOpuOmUserInfoByUserId" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser LEFT JOIN  OPU_OM_USER_INFO info on
+        (info.USER_ID = omuser.USER_ID)
+        where omuser.USER_DELETED = '0' and  omuser.USER_ID = #{userId}
+    </select>
+
+    <select id="getUserInfoByUserId" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+        info.ID as id,
+        <include refid="AllColumnsUserInfo" />
+        from OPU_OM_USER_INFO info
+        where   info.USER_ID = #{userId}
+    </select>
+
+    <select id="getOpuOmUserInfoByLoginName" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser LEFT JOIN  OPU_OM_USER_INFO info on
+        (info.USER_ID = omuser.USER_ID)
+        where omuser.USER_DELETED = '0' and  omuser.LOGIN_NAME = #{loginName}
+    </select>
+
+
+    <!--  根据用户帐号主键获取用户信息form对象 -->
+    <select id="getUserInfoByUserAccountId" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_USER_INFO
+        where
+        USER_ID = #{userId}
+    </select>
+
+    <!--  根据用户帐号获取用户信息form对象 -->
+    <select id="getUserInfoByLoginName" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+            info.ID as id,
+            info.USER_ID as userId,
+            info.USER_CODE as userCode,
+            info.USER_OLD_NAME as userOldName,
+            info.USER_NICK_NAME as userNickName,
+            info.USER_TITLE as userTitle,
+            info.USER_TECHNICAL_TITLE as userTechnicalTitle,
+            info.USER_RANK as userRank,
+            info.USER_POST as userPost,
+            info.USER_POST_STATUS as userPostStatus,
+            info.USER_WORK_DATE as userWorkDate,
+            info.USER_ASSIGN_DATE as userAssignDate,
+            info.USER_LEAVE_DATE as userLeaveDate,
+            info.USER_ID_CARD_NO as userIdCardNo,
+            info.USER_FAMILY_ADDRESS as userFamilyAddress,
+            info.USER_FAMILY_ZIP_CODE as userFamilyZipCode,
+            info.USER_FAMILY_TEL as userFamilyTel,
+            info.USER_OFFICAL_TEL as userOfficalTel,
+            info.USER_MOBILE as userMobile,
+            info.USER_EMAIL as userEmail,
+            info.USER_QQ as userQq,
+            info.USER_MARITAL_STATUS as userMaritalStatus,
+            info.USER_DOMICILE_PLACE as userDomicilePlace,
+            info.USER_BIRTH_PLACE as userBirthPlace,
+            info.USER_BIRTHDAY as userBirthday,
+            info.USER_NATIVE_PLACE_PROVINCE as userNativePlaceProvince,
+            info.USER_NATIVE_PLACT_CITY as userNativePlactCity,
+            info.USER_NATION as userNation,
+            info.USER_POLITICS_FACE as userPoliticsFace,
+            info.USER_JOIN_PARTY_DATE as userJoinPartyDate,
+            info.USER_HIGH_EDUCATION as userHighEducation,
+            info.USER_HIGH_DEGREE as userHighDegree,
+            info.USER_RECENT_GRADUATION_COLLEGE as userRecentGraduationCollege,
+            info.USER_RECENT_GRADUATION_DATE as userRecentGraduationDate,
+            info.USER_PROFESSIONAL_SKILL as userProfessionalSkill,
+            info.IS_PUBLIC as isPublic,
+            info.USER_DELETED as userDeleted,
+            info.CREATER as creater,
+            info.CREATE_TIME as createTime,
+            info.MODIFIER as modifier,
+            info.MODIFY_TIME as modifyTime,
+            info.EMP_POS_COST_ID as empPosCostId
+        from
+          OPU_OM_USER_INFO info,OPU_OM_USER_ACCOUNT account
+        where info.USER_ID=account.ID and
+          account.LOGIN_NAME = #{loginName}
+    </select>
+
+    <!-- 获取所有用户信息 -->
+    <select id="findAllUserInfos" resultType="OpuOmUserInfo" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_USER_INFO ORDER BY ID DESC
+    </select>
+
+    <select id="getOpuOmUserInfoByOrgId" resultType="OpuOmUserInfo" >
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser left join OPU_OM_USER_ORG uo on omuser.USER_ID = uo.USER_ID
+        left join OPU_OM_USER_INFO info on info.USER_ID = uo.USER_ID
+        where (uo.ORG_ID = #{orgId} and omuser.USER_DELETED = 0 )
+        order by uo.SORT_NO
+    </select>
+
+    <select id="getOpuOmUserInfoByPosId" resultType="OpuOmUserInfo" >
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser left join OPU_OM_USER_POS up on omuser.USER_ID = up.USER_ID
+        left join OPU_OM_USER_INFO info on info.USER_ID = up.USER_ID
+        where (up.POS_ID = #{posId} and omuser.USER_DELETED = 0 )
+        order by up.SORT_NO
+    </select>
+
+    <!-- 分页查询用户信息 -->
+    <select id="pfindUserInfos" resultType="OpuOmUserInfo" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_USER_INFO
+    </select>
+
+
+    <!-- 分页查询用户信息 -->
+    <select id="list" resultType="OpuOmUserInfo" >
+        select
+        <include refid="AllColumns" />
+        from
+        OPU_OM_USER_INFO
+        <where>
+            <if test="userNickName != null and userNickName !='' " >
+                AND    USER_NICK_NAME = #{userNickName}
+            </if>
+            <if test="userType != null  and userType !='' " >
+                AND    USER_TYPE = #{userType}
+            </if>
+            <if test="userMobile != null and userMobile !='' " >
+                AND    USER_MOBILE = #{userMobile}
+            </if>
+            <if test="userPostStatus != null and userPostStatus !='' " >
+                AND    USER_POST_STATUS = #{userPostStatus}
+            </if>
+        </where>
+    </select>
+
+    <!--获取当前机构下的所有用户信息-->
+    <select id="listAllOpuOmUserInfoByOrgId" resultType="OpuOmUserInfo">
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser LEFT JOIN  OPU_OM_USER_INFO info on
+        (info.USER_ID = omuser.USER_ID)
+        where omuser.USER_ID in (
+        SELECT uorg.USER_ID FROM OPU_OM_ORG org LEFT JOIN OPU_OM_USER_ORG uorg ON uorg.ORG_ID=org.ORG_ID
+        WHERE org.ORG_SEQ like CONCAT (CONCAT('%.',#{orgId}), '.%')
+        )
+        <if test="opuOmUser.userName != null and opuOmUser.userName !='' " >
+            AND omuser.USER_NAME like CONCAT(CONCAT('%',#{opuOmUser.userName}),'%')
+        </if>
+        <if test="opuOmUser.loginName != null and opuOmUser.loginName !='' " >
+            AND omuser.LOGIN_NAME like CONCAT(CONCAT('%',#{opuOmUser.loginName}),'%')
+        </if>
+        <if test="opuOmUser.dingtalkAccount != null and opuOmUser.dingtalkAccount !='' " >
+            AND omuser.DINGTALK_ACCOUNT = #{opuOmUser.dingtalkAccount}
+        </if>
+        <if test="opuOmUser.wechatAccount != null and opuOmUser.wechatAccount !='' " >
+            AND omuser.WECHAT_ACCOUNT = #{opuOmUser.wechatAccount}
+        </if>
+        <if test="opuOmUser.userType != null  and opuOmUser.userType !='' " >
+            AND info.USER_TYPE = #{opuOmUser.userType}
+        </if>
+        <if test="opuOmUser.userMobile != null and opuOmUser.userMobile !='' " >
+            AND info.USER_MOBILE = #{userMobile}
+        </if>
+        <if test="opuOmUser.userPostStatus != null and opuOmUser.userPostStatus !='' " >
+            AND info.USER_POST_STATUS = #{userPostStatus}
+        </if>
+        <if test="opuOmUser.isActive != null and opuOmUser.isActive !='' " >
+            AND omuser.IS_Active = #{opuOmUser.isActive}
+        </if>
+        and  omuser.USER_DELETED = '0'
+        order by omuser.CREATE_TIME desc,omuser.MODIFY_TIME desc
+    </select>
+
+    <select id="listOpuOmUserByUserIds" resultType="OpuOmUserInfo" >
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser LEFT JOIN  OPU_OM_USER_INFO info on
+        (info.USER_ID = omuser.USER_ID)
+        where
+        omuser.USER_DELETED = '0'
+        and omuser.USER_ID in
+        <foreach collection="userIds" item="userId"  open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        <if test="userName != null and userName != ''">
+            AND omuser.USER_NAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
+        </if>
+    </select>
+
+    <select id="listUserInfoByPos" resultType="OpuOmUserInfo" parameterType="OpuOmPos" >
+        SELECT <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />,
+        temp1.ORG_NAME as orgName,
+        temp1.ORG_ID as orgId
+        FROM OPU_OM_USER omuser
+        LEFT JOIN OPU_OM_USER_INFO info ON info.USER_ID = omuser.USER_ID
+        LEFT JOIN (
+        SELECT userorg.USER_ID, org.ORG_NAME, org.ORG_ID
+        FROM OPU_OM_ORG org
+        LEFT JOIN OPU_OM_USER_ORG userorg ON userorg.ORG_ID = org.ORG_ID
+        WHERE userorg.is_main = '1'
+        ) temp1 ON temp1.USER_ID = omuser.USER_ID
+        WHERE omuser.USER_DELETED = '0'
+        AND omuser.USER_ID IN (
+        SELECT USER_ID
+        FROM OPU_OM_USER_POS
+        WHERE POS_ID IN (
+        SELECT POS_ID
+        FROM OPU_OM_POS
+        <where>
+            <if test="posId != null and posId !='' " >
+                AND    POS_ID = #{posId}
+            </if>
+            <if test="posCode != null  and posCode !='' " >
+                AND    POS_CODE = #{posCode}
+            </if>
+            <if test="isActive != null and isActive !=''" >
+                AND    IS_ACTIVE = #{isActive}
+            </if>
+            <if test="isPublic != null and isPublic !=''" >
+                AND    IS_PUBLIC = #{isPublic}
+            </if>
+            <if test="posRank != null and posRank !=''" >
+                AND    POS_RANK = #{posRank}
+            </if>
+            and  POS_DELETED='0'
+        </where>
+        )
+        )
+    </select>
+
+    <select id="listCommonUserInfoByOrgCodeAndOrgId" resultType="OpuOmUserInfo" parameterType="string" >
+        SELECT <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        FROM OPU_OM_USER omuser
+        LEFT JOIN OPU_OM_USER_INFO info ON info.USER_ID = omuser.USER_ID
+        WHERE info.user_id IN (
+        SELECT user_id
+        FROM OPU_OM_USER_ORG
+        WHERE ORG_ID = #{orgId}
+        INTERSECT
+        SELECT user_id
+        FROM OPU_OM_USER_ORG userorg
+        LEFT JOIN OPU_OM_ORG org ON org.ORG_ID = userorg.ORG_ID
+        WHERE ORG_CODE = #{orgCode}
+        )
+    </select>
+
+    <!-- 2020-12-09 删除用户后，再添加此用户报错，此处修改判断用户名是否存在的逻辑，
+    把是否已删除的用户也查询出来，添加用户的时候，就会提示用户已存在
+     修改内容：去掉 omuser.USER_DELETED = '0' and 这个条件
+      where omuser.USER_DELETED = '0' and  omuser.LOGIN_NAME = #{loginName}
+     -->
+    <select id="listOpuOmUserInfoByLoginName" resultType="OpuOmUserInfo">
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser LEFT JOIN  OPU_OM_USER_INFO info on
+        (info.USER_ID = omuser.USER_ID)
+
+        where omuser.LOGIN_NAME = #{loginName}
+        <if test="userId != null and userId !='' " >
+            AND omuser.USER_ID != #{userId}
+        </if>
+        <if test="rootOrgId != null and rootOrgId !='' " >
+            AND omuser.ROOT_ORG_ID = #{rootOrgId}
+        </if>
+    </select>
+
+    <select id="getDelOpuOmUserInfoByUserId" resultType="OpuOmUserInfo" parameterType="string" >
+        select
+        <include refid="AllColumnsUser" />,
+        <include refid="AllColumnsUserInfo" />
+        from
+        OPU_OM_USER omuser LEFT JOIN  OPU_OM_USER_INFO info on
+        info.USER_ID = omuser.USER_ID
+        where omuser.USER_DELETED = '1' and  omuser.USER_ID = #{userId}
+    </select>
+
+</mapper>

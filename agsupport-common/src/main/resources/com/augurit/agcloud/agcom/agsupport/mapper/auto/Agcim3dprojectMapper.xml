@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.auto.Agcim3dprojectMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dproject" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="units" property="units" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="creattime" property="creattime" jdbcType="VARCHAR" />
+    <result column="projectphase" property="projectphase" jdbcType="VARCHAR" />
+    <result column="constructiontype" property="constructiontype" jdbcType="VARCHAR" />
+    <result column="ecoindex" property="ecoindex" jdbcType="VARCHAR" />
+    <result column="ecoindextable" property="ecoindextable" jdbcType="VARCHAR" />
+    <result column="metadata" property="metadata" jdbcType="VARCHAR" />
+    <result column="serverurl" property="serverurl" jdbcType="VARCHAR" />
+    <result column="servertype" property="servertype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, units, address, owner, creattime, projectphase, constructiontype, ecoindex, 
+    ecoindextable, metadata, serverurl, servertype
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dprojectExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from agcim3dproject
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from agcim3dproject
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from agcim3dproject
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dprojectExample" >
+    delete from agcim3dproject
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dproject" >
+    insert into agcim3dproject (id, name, units, 
+      address, owner, creattime, 
+      projectphase, constructiontype, ecoindex, 
+      ecoindextable, metadata, serverurl, 
+      servertype)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{units,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{creattime,jdbcType=VARCHAR}, 
+      #{projectphase,jdbcType=VARCHAR}, #{constructiontype,jdbcType=VARCHAR}, #{ecoindex,jdbcType=VARCHAR}, 
+      #{ecoindextable,jdbcType=VARCHAR}, #{metadata,jdbcType=VARCHAR}, #{serverurl,jdbcType=VARCHAR}, 
+      #{servertype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dproject" >
+    insert into agcim3dproject
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="units != null" >
+        units,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="owner != null" >
+        owner,
+      </if>
+      <if test="creattime != null" >
+        creattime,
+      </if>
+      <if test="projectphase != null" >
+        projectphase,
+      </if>
+      <if test="constructiontype != null" >
+        constructiontype,
+      </if>
+      <if test="ecoindex != null" >
+        ecoindex,
+      </if>
+      <if test="ecoindextable != null" >
+        ecoindextable,
+      </if>
+      <if test="metadata != null" >
+        metadata,
+      </if>
+      <if test="serverurl != null" >
+        serverurl,
+      </if>
+      <if test="servertype != null" >
+        servertype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="units != null" >
+        #{units,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="creattime != null" >
+        #{creattime,jdbcType=VARCHAR},
+      </if>
+      <if test="projectphase != null" >
+        #{projectphase,jdbcType=VARCHAR},
+      </if>
+      <if test="constructiontype != null" >
+        #{constructiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="ecoindex != null" >
+        #{ecoindex,jdbcType=VARCHAR},
+      </if>
+      <if test="ecoindextable != null" >
+        #{ecoindextable,jdbcType=VARCHAR},
+      </if>
+      <if test="metadata != null" >
+        #{metadata,jdbcType=VARCHAR},
+      </if>
+      <if test="serverurl != null" >
+        #{serverurl,jdbcType=VARCHAR},
+      </if>
+      <if test="servertype != null" >
+        #{servertype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dprojectExample" resultType="java.lang.Integer" >
+    select count(*) from agcim3dproject
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update agcim3dproject
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.units != null" >
+        units = #{record.units,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.owner != null" >
+        owner = #{record.owner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creattime != null" >
+        creattime = #{record.creattime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectphase != null" >
+        projectphase = #{record.projectphase,jdbcType=VARCHAR},
+      </if>
+      <if test="record.constructiontype != null" >
+        constructiontype = #{record.constructiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ecoindex != null" >
+        ecoindex = #{record.ecoindex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ecoindextable != null" >
+        ecoindextable = #{record.ecoindextable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.metadata != null" >
+        metadata = #{record.metadata,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverurl != null" >
+        serverurl = #{record.serverurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.servertype != null" >
+        servertype = #{record.servertype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update agcim3dproject
+    set id = #{record.id,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      units = #{record.units,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      owner = #{record.owner,jdbcType=VARCHAR},
+      creattime = #{record.creattime,jdbcType=VARCHAR},
+      projectphase = #{record.projectphase,jdbcType=VARCHAR},
+      constructiontype = #{record.constructiontype,jdbcType=VARCHAR},
+      ecoindex = #{record.ecoindex,jdbcType=VARCHAR},
+      ecoindextable = #{record.ecoindextable,jdbcType=VARCHAR},
+      metadata = #{record.metadata,jdbcType=VARCHAR},
+      serverurl = #{record.serverurl,jdbcType=VARCHAR},
+      servertype = #{record.servertype,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dproject" >
+    update agcim3dproject
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="units != null" >
+        units = #{units,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        owner = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="creattime != null" >
+        creattime = #{creattime,jdbcType=VARCHAR},
+      </if>
+      <if test="projectphase != null" >
+        projectphase = #{projectphase,jdbcType=VARCHAR},
+      </if>
+      <if test="constructiontype != null" >
+        constructiontype = #{constructiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="ecoindex != null" >
+        ecoindex = #{ecoindex,jdbcType=VARCHAR},
+      </if>
+      <if test="ecoindextable != null" >
+        ecoindextable = #{ecoindextable,jdbcType=VARCHAR},
+      </if>
+      <if test="metadata != null" >
+        metadata = #{metadata,jdbcType=VARCHAR},
+      </if>
+      <if test="serverurl != null" >
+        serverurl = #{serverurl,jdbcType=VARCHAR},
+      </if>
+      <if test="servertype != null" >
+        servertype = #{servertype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.augurit.agcloud.agcom.agsupport.domain.auto.Agcim3dproject" >
+    update agcim3dproject
+    set name = #{name,jdbcType=VARCHAR},
+      units = #{units,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      creattime = #{creattime,jdbcType=VARCHAR},
+      projectphase = #{projectphase,jdbcType=VARCHAR},
+      constructiontype = #{constructiontype,jdbcType=VARCHAR},
+      ecoindex = #{ecoindex,jdbcType=VARCHAR},
+      ecoindextable = #{ecoindextable,jdbcType=VARCHAR},
+      metadata = #{metadata,jdbcType=VARCHAR},
+      serverurl = #{serverurl,jdbcType=VARCHAR},
+      servertype = #{servertype,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgFieldAuthorizeMapper">
+
+    <sql id="allColumns">
+        ID id,
+        ROLE_LAYER_ID roleLayerId,
+        FIELD_ID fieldId,
+        VIEW_IN_RESULT viewInResult,
+        EDITABLE editable,
+        VIEW_IN_BLURQUERY viewInBlurquery
+    </sql>
+
+    <!--按角色目录图层id查找-->
+    <select id="findListByRoleLayerId" resultType="AgFieldAuthorize">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_field_authorize
+        WHERE
+            role_layer_id = #{roleLayerId}
+    </select>
+
+    <!--按字段id查找-->
+    <select id="findListByFieldId" resultType="AgFieldAuthorize">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_field_authorize
+        WHERE
+            field_id = #{fieldId}
+    </select>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            ag_field_authorize
+        WHERE
+            id = #{id}
+    </delete>
+
+</mapper>

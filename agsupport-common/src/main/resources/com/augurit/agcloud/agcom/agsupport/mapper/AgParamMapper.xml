@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgParamMapper">
+
+    <sql id="allColumns">
+        ID id,
+        NAME "name",
+        ORIGIN origin,
+        EXTENT extent,
+        CENTER center,
+        SCALES scales,
+        ZOOM zoom,
+        ADD_FLAG addFlag,
+        REFERENCE reference,
+        MIN_ZOOM minZoom,
+        MAX_ZOOM maxZoom,
+        CUT_MAP_ORIGIN tileOrigin,
+        DEFAULT_MAP  defaultMap
+    </sql>
+    <!--获取所有地图参数-->
+    <select id="searchAll" resultType="AgMapParam">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_map_param
+    </select>
+
+    <!--按条件查询-->
+    <select id="findList" resultType="AgMapParam">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_map_param
+        WHERE
+        1 = 1
+        <if test="name != null">
+            AND name LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+        </if>
+    </select>
+
+    <!--按图层名字查询-->
+    <select id="findByName" resultType="AgMapParam">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_map_param
+        WHERE
+        name = #{name}
+    </select>
+    <!--查找默认地图参数-->
+    <select id="findDefaultMap" resultType="AgMapParam">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_map_param
+        WHERE
+        default_map = #{defaultMap}
+    </select>
+
+    <!--按id查找地图参数-->
+    <select id="findById" resultType="AgMapParam">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_map_param
+        WHERE
+        id = #{id}
+    </select>
+
+
+    <!--按所有字段查询-->
+    <select id="find" resultType="AgMapParam">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_map_param
+        WHERE
+        name = #{name}
+        AND
+        origin = #{origin}
+        AND
+        extent = #{extent}
+        AND
+        center = #{center}
+        AND
+        scales = #{scales}
+        AND
+        zoom = #{zoom}
+        AND
+        reference = #{reference}
+        AND
+        min_zoom = #{minZoom}
+        AND
+        max_zoom = #{maxZoom}
+        AND
+        cut_map_origin = #{tileOrigin}
+        AND
+        default_map = #{defaultMap}
+    </select>
+
+    <!--保存-->
+    <insert id="save">
+        INSERT
+        INTO ag_map_param (
+          id,name,origin,extent,center,scales,zoom,add_flag,reference,min_zoom,max_zoom,cut_map_origin,default_map
+        ) VALUES (
+          #{id},#{name},#{origin},#{extent},#{center},#{scales},#{zoom},#{addFlag},#{reference},#{minZoom},#{maxZoom},#{tileOrigin},#{defaultMap}
+        )
+    </insert>
+
+    <!--批量保存-->
+    <insert id="saveBatch">
+        <if test="_databaseId == 'oracle'">
+            BEGIN
+        </if>
+        <foreach collection="list" item="item" separator=";">
+            INSERT
+            INTO ag_map_param (
+            id,name,origin,extent,center,scales,zoom,add_flag,reference,min_zoom,max_zoom,cut_map_origin,default_map
+            ) VALUES (
+            #{item.id},#{item.name},#{item.origin},#{item.extent},#{item.center},#{item.scales},#{item.zoom},#{item.addFlag},#{item.reference},#{item.minZoom},#{item.maxZoom},#{item.tileOrigin},#{defaultMap}
+            )
+        </foreach>
+        <if test="_databaseId == 'oracle'">
+            ;END;
+        </if>
+    </insert>
+
+    <!--修改-->
+    <update id="update">
+        UPDATE ag_map_param
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="origin != null">
+                origin = #{origin},
+            </if>
+            <if test="extent != null">
+                extent = #{extent},
+            </if>
+            <if test="center != null">
+                center = #{center},
+            </if>
+            <if test="scales != null">
+                scales = #{scales},
+            </if>
+            <if test="zoom != null">
+                zoom = #{zoom},
+            </if>
+            <if test="addFlag != null">
+                add_flag = #{addFlag},
+            </if>
+            <if test="reference != null">
+                reference = #{reference},
+            </if>
+            <if test="minZoom != null">
+                min_zoom = #{minZoom},
+            </if>
+            <if test="maxZoom != null">
+                max_zoom = #{maxZoom},
+            </if>
+            <if test="tileOrigin != null">
+                cut_map_origin = #{tileOrigin},
+            </if>
+            <if test="defaultMap != null">
+                default_map = #{defaultMap}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            ag_map_param
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBatch">
+        DELETE
+        FROM
+        ag_map_param
+        WHERE id IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--批量删除非默认地图参数-->
+    <delete id="deleteBatchNotDefaultParam">
+        DELETE
+        FROM
+        ag_map_param
+        WHERE (DEFAULT_MAP is null or DEFAULT_MAP != '1') AND ID IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

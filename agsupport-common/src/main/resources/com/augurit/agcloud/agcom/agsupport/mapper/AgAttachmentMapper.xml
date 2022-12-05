@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgAttachmentMapper">
+
+    <sql id="allColumns">
+        ID id,
+        NAME "name",
+        FILE_PATH filePath,
+        FUNC_NAME funcName,
+        UPLOAD_DATE uploadDate,
+        UPLOAD_MAN uploadMan,
+        REMARK remark
+    </sql>
+
+    <!--按id查找-->
+    <select id="findById" resultType="AgAttachment">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_attachment
+        WHERE
+            id = #{id}
+    </select>
+
+    <!--按条件查找-->
+    <select id="findList" resultType="AgAttachment">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+            ag_attachment
+        <where>
+            1 = 1
+            <if test="name != null">
+                AND name LIKE CONCAT(CONCAT('%', TRIM(#{name})), '%')
+            </if>
+        </where>
+    </select>
+
+    <!--保存-->
+    <insert id="save">
+        INSERT INTO ag_attachment(
+            id, name, file_path, func_name, upload_date, upload_man, remark
+        ) VALUES (
+            #{id}, #{name}, #{filePath}, #{funcName}, #{uploadDate}, #{uploadMan}, #{remark}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="delete">
+        DELETE
+        FROM
+            ag_attachment
+        WHERE
+            id = #{id}
+    </delete>
+</mapper>

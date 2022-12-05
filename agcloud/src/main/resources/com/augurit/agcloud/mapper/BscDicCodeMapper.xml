@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 业务字典模块的SQL配置 -->
+<mapper namespace="com.augurit.agcloud.mapper.BscDicCodeAppMapper">
+
+    <!-- 返回所有字段的SQL子句 -->
+    <sql id="typeAllColumns">
+	TYPE_ID as typeId,
+	TYPE_CODE as typeCode, 
+	TYPE_NAME as typeName, 
+	IS_TREE as typeIsTree, 
+	IS_ACTIVE as typeIsActive,
+	TYPE_MEMO as typeMemo,
+	CREATER as typeCreater,
+	CREATE_TIME as typeCreateTime,
+	MODIFIER as typeModifier,
+	MODIFY_TIME as typeModifyTime
+</sql>
+
+
+    <!-- 根据类型编码获取所有已启用子项，将放入缓存所以只取必要的一些字段 -->
+    <select id="getActiveItemsByTypeCode" resultType="com.augurit.agcloud.bsc.domain.BscDicCodeItem" parameterType="string" >
+	select
+		item.ITEM_CODE itemCode,item.ITEM_NAME itemName,item.SORT_NO sortNo,item.ITEM_ID itemId
+	from
+		BSC_DIC_CODE_ITEM item,bsc_dic_code_type type
+	where
+		item.TYPE_ID=type.TYPE_ID and item.IS_ACTIVE = '1' and type.TYPE_CODE = #{typeCode} AND type.ORG_ID = #{orgId}
+	order by
+		SORT_NO
+</select>
+
+</mapper>

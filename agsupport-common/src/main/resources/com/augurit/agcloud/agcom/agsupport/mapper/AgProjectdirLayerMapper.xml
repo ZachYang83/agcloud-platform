@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgProjectdirLayerMapper">
+
+    <sql id="allColumns">
+        ID id,
+        PROJECTDIR_ID projectdirId,
+        LAYER_ID layerId,
+        ORDER_NM orderNm
+    </sql>
+    <insert id="save">
+        INSERT INTO ag_projectdir_layer (
+        id,projectdir_id,layer_id,order_nm
+        ) VALUES (
+        #{id},#{projectdirId},#{layerId},#{orderNm}
+        )
+    </insert>
+    <select id="findByDirIdAndLayerId" resultType="AgProjectdirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir_layer
+        WHERE
+        projectdir_id = #{dirId}
+        AND
+        layer_id = #{layerId}
+        ORDER BY
+        order_nm
+    </select>
+    <!--获取最大顺序-->
+    <select id="getMaxOrder" resultType="java.lang.String">
+        SELECT
+        max(order_nm)
+        FROM ag_projectdir_layer
+    </select>
+    <select id="findListByDirId" resultType="AgProjectdirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir_layer
+        WHERE
+        projectdir_id = #{dirId}
+        ORDER BY
+        order_nm
+    </select>
+
+    <delete id="delete">
+        DELETE FROM ag_projectdir_layer
+        WHERE
+        id = #{id}
+    </delete>
+
+    <delete id="deleteBacthByLayerIds">
+        DELETE FROM ag_projectdir_layer
+        WHERE
+        layer_id IN
+        <foreach collection="layerIds" open="(" separator="," close=")" item="dirLayer">
+            #{dirLayer.id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByDirIdAndLayerIds">
+        DELETE FROM ag_projectdir_layer
+        WHERE
+        projectdir_id = #{dirId}
+        AND
+        layer_id IN
+        <foreach collection="layerIds" open="(" separator="," close=")" item="layerId">
+            #{layerId}
+        </foreach>
+    </delete>
+
+
+    <update id="update">
+        UPDATE ag_projectdir_layer
+        <set>
+            <if test="projectdirId != null">
+                projectdir_id = #{projectdirId},
+            </if>
+            <if test="layerId != null">
+                layer_id = #{layerId},
+            </if>
+            <if test="orderNm != null">
+                order_nm = #{orderNm}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <select id="findByIds" resultType="AgProjectdirLayer">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir_layer
+        WHERE
+        projectdir_id = #{dirId}
+        AND
+        layer_id IN
+        <foreach collection="ids" item="layerId" separator="," open="(" close=")">
+            #{layerId}
+        </foreach>
+        ORDER BY order_nm
+    </select>
+    <!--批量修改图层-->
+    <update id="updateBatch" parameterType="java.util.List">
+        <if test="_databaseId == 'oracle'">
+            BEGIN
+        </if>
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE ag_projectdir_layer
+            <set>
+                <if test="item.projectdirId != null">
+                    projectdir_id = #{item.projectdirId},
+                </if>
+                <if test="item.layerId != null">
+                    layer_id = #{item.layerId},
+                </if>
+
+                <if test="item.orderNm != null">
+                    order_nm = #{item.orderNm}
+                </if>
+            </set>
+            WHERE id = #{item.id}
+        </foreach>
+        <if test="_databaseId == 'oracle'">
+            ;END;
+        </if>
+    </update>
+</mapper>

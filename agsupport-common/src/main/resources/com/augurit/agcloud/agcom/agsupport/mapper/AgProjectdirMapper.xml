@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgProjectdirMapper">
+    <sql id="allColumns">
+        ID id,
+        NAME "name",
+        PARENT_ID parentId,
+        XPATH xpath,
+        DIR_SEQ dirSeq,
+        ORDER_NM orderNm,
+        MAP_PARAM_ID mapParamId,
+        PROJECTORDER  projectorder,
+        OWNER  "owner",
+        ROLEIDS roleids
+    </sql>
+    <select id="getProjectName" resultType="AgProjectdir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        ag_projectdir
+        WHERE
+        PARENT_ID IS NULL
+    </select>
+    <select id="findAll" resultType="AgProjectdir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir
+        ORDER BY order_nm
+    </select>
+    <select id="findById" resultType="AgProjectdir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir
+        WHERE id = #{id}
+        ORDER BY order_nm
+    </select>
+    <select id="findByPid" resultType="AgProjectdir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir
+        WHERE parent_id = #{pid}
+        ORDER BY order_nm
+    </select>
+    <select id="findByXpath" resultType="AgProjectdir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir
+        WHERE xpath LIKE CONCAT(#{xpath},'/%')
+    </select>
+
+    <select id="findProjectByXpath" resultType="AgProjectdir">
+        SELECT
+        <include refid="allColumns"/>
+        FROM ag_projectdir
+        WHERE xpath LIKE CONCAT(#{xpath},'%')
+    </select>
+
+    <select id="findListByUser" resultType="AgProjectdir">
+        SELECT
+        distinct
+        a.ID id,
+        a.NAME "name",
+        a.PARENT_ID parentId,
+        a.XPATH xpath,
+        a.DIR_SEQ dirSeq,
+        a.ORDER_NM orderNm,
+        a.MAP_PARAM_ID mapParamId,
+        a.PROJECTORDER  projectorder,
+        a.OWNER  "owner",
+        a.ROLEIDS roleids
+        FROM ag_projectdir a left join ag_user_project b on a.id = b.project_id
+        WHERE (b.user_id = 'b2fbf5f8-24db-47d6-951a-c53c26a46dfb' or a.OWNER = 'zhangguo') and a.parent_id is null
+    </select>
+
+    <select id="getOrder" resultType="java.lang.Integer">
+        SELECT
+        max(order_nm)
+        FROM ag_projectdir
+        WHERE parent_id = #{pid}
+    </select>
+    <insert id="save">
+        INSERT INTO ag_projectdir (
+        id,name,parent_id,xpath,dir_seq,order_nm,map_param_id,projectorder,owner,roleids
+        ) VALUES (
+        #{id},#{name},#{parentId},#{xpath},#{dirSeq},#{orderNm},#{mapParamId},#{projectorder},#{owner},#{roleids}
+        )
+    </insert>
+    <!--修改-->
+    <update id="update">
+        UPDATE ag_projectdir
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="xpath != null">
+                xpath = #{xpath},
+            </if>
+            <if test="dirSeq != null">
+                dir_seq = #{dirSeq},
+            </if>
+            <if test="orderNm != null">
+                order_nm = #{orderNm},
+            </if>
+            <if test="mapParamId != null">
+                map_param_id = #{mapParamId},
+            </if>
+            <if test="projectorder != null">
+                projectorder = #{projectorder},
+            </if>
+            <if test="owner != null">
+                owner = #{owner},
+            </if>
+            <if test="roleids != null">
+                roleids = #{roleids}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM ag_projectdir
+        WHERE id = #{id}
+    </delete>
+    <!--删除目录以及子目录-->
+    <delete id="deleteByXpath">
+        DELETE FROM ag_projectdir
+        WHERE xpath = #{xpath}
+        OR xpath LIKE CONCAT(#{xpath},'/%')
+    </delete>
+</mapper>

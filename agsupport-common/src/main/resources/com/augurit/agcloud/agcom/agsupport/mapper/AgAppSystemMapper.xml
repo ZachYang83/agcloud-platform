@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgAppSystemMapper">
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgAppSystem">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="APP_NAME" jdbcType="VARCHAR" property="appName" />
+    <result column="APP_LOGIN_URL" jdbcType="VARCHAR" property="appLoginUrl" />
+    <result column="APP_URL" jdbcType="VARCHAR" property="appUrl" />
+    <result column="PUBLIC_USER_NAME" jdbcType="VARCHAR" property="publicUserName" />
+    <result column="PUBLIC_PWD" jdbcType="VARCHAR" property="publicPwd" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+    <result column="USE_SSO" jdbcType="CHAR" property="useSso" />
+    <result column="ICON_ADDR" jdbcType="VARCHAR" property="iconAddr" />
+    <result column="USE_IE" jdbcType="CHAR" property="useIe" />
+    <result column="OPEN_TYPE" jdbcType="CHAR" property="openType" />
+    <result column="ORIGINAL_APP_LOGIN_URL" jdbcType="VARCHAR" property="originalAppLoginUrl" />
+    <result column="ISMUST_SHOW_IN_DESKTOP" jdbcType="CHAR" property="ismustShowInDesktop" />
+    <result column="ISSET_VISIBLE_RANGE" jdbcType="CHAR" property="issetVisibleRange" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="AUTHORIZE_STATUS" jdbcType="CHAR" property="authorizeStatus" />
+    <result column="BACKGROUND_COLOR" jdbcType="VARCHAR" property="backGroundColor" />
+  </resultMap>
+  <sql id="Base_Column_List">
+
+    ID, APP_NAME, APP_LOGIN_URL, APP_URL, PUBLIC_USER_NAME, PUBLIC_PWD, STATUS, USE_SSO, 
+    ICON_ADDR, USE_IE, OPEN_TYPE, ORIGINAL_APP_LOGIN_URL, ISMUST_SHOW_IN_DESKTOP, ISSET_VISIBLE_RANGE, 
+    CREATE_TIME, MODIFY_TIME,AUTHORIZE_STATUS,BACKGROUND_COLOR
+  </sql>
+  <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+    select 
+    <include refid="Base_Column_List" />
+    from AG_APP_SYSTEM
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.String">
+    delete from AG_APP_SYSTEM
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByIds">
+    delete from AG_APP_SYSTEM
+    WHERE ID IN
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+<!--  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgAppSystem">
+    insert into AG_APP_SYSTEM (ID, APP_NAME, APP_LOGIN_URL, 
+      APP_URL, PUBLIC_USER_NAME, PUBLIC_PWD, 
+      STATUS, USE_SSO, ICON_ADDR, 
+      USE_IE, OPEN_TYPE, ORIGINAL_APP_LOGIN_URL, 
+      ISMUST_SHOW_IN_DESKTOP, ISSET_VISIBLE_RANGE, CREATE_TIME, 
+      MODIFY_TIME,AUTHORIZE_STATUS)
+    values (#{id,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, #{appLoginUrl,jdbcType=VARCHAR}, 
+      #{appUrl,jdbcType=VARCHAR}, #{publicUserName,jdbcType=VARCHAR}, #{publicPwd,jdbcType=VARCHAR}, 
+      #{status,jdbcType=CHAR}, #{useSso,jdbcType=CHAR}, #{iconAddr,jdbcType=VARCHAR}, 
+      #{useIe,jdbcType=CHAR}, #{openType,jdbcType=CHAR}, #{originalAppLoginUrl,jdbcType=VARCHAR}, 
+      #{ismustShowInDesktop,jdbcType=CHAR}, #{issetVisibleRange,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP},#{authorizeStatus,jdbcType=CHAR})
+  </insert>-->
+
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgAppSystem">
+    insert into AG_APP_SYSTEM
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="appName != null">
+        APP_NAME,
+      </if>
+      <if test="appLoginUrl != null">
+        APP_LOGIN_URL,
+      </if>
+      <if test="appUrl != null">
+        APP_URL,
+      </if>
+      <if test="publicUserName != null">
+        PUBLIC_USER_NAME,
+      </if>
+      <if test="publicPwd != null">
+        PUBLIC_PWD,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="useSso != null">
+        USE_SSO,
+      </if>
+      <if test="iconAddr != null">
+        ICON_ADDR,
+      </if>
+      <if test="useIe != null">
+        USE_IE,
+      </if>
+      <if test="openType != null">
+        OPEN_TYPE,
+      </if>
+      <if test="originalAppLoginUrl != null">
+        ORIGINAL_APP_LOGIN_URL,
+      </if>
+      <if test="ismustShowInDesktop != null">
+        ISMUST_SHOW_IN_DESKTOP,
+      </if>
+      <if test="issetVisibleRange != null">
+        ISSET_VISIBLE_RANGE,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+      <if test="authorizeStatus != null">
+        AUTHORIZE_STATUS,
+      </if>
+      <if test="authorizeStatus != null">
+        BACKGROUND_COLOR,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="appLoginUrl != null">
+        #{appLoginUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="appUrl != null">
+        #{appUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="publicUserName != null">
+        #{publicUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="publicPwd != null">
+        #{publicPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="useSso != null">
+        #{useSso,jdbcType=CHAR},
+      </if>
+      <if test="iconAddr != null">
+        #{iconAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="useIe != null">
+        #{useIe,jdbcType=CHAR},
+      </if>
+      <if test="openType != null">
+        #{openType,jdbcType=CHAR},
+      </if>
+      <if test="originalAppLoginUrl != null">
+        #{originalAppLoginUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ismustShowInDesktop != null">
+        #{ismustShowInDesktop,jdbcType=CHAR},
+      </if>
+      <if test="issetVisibleRange != null">
+        #{issetVisibleRange,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authorizeStatus != null">
+        #{authorizeStatus,jdbcType=CHAR},
+      </if>
+      <if test="backGroundColor != null">
+        #{backGroundColor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateAppSystem" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgAppSystem">
+    update AG_APP_SYSTEM
+    <set>
+      <if test="appName != null">
+        APP_NAME = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="appLoginUrl != null">
+        APP_LOGIN_URL = #{appLoginUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="appUrl != null">
+        APP_URL = #{appUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="publicUserName != null">
+        PUBLIC_USER_NAME = #{publicUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="publicPwd != null">
+        PUBLIC_PWD = #{publicPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+      <if test="useSso != null">
+        USE_SSO = #{useSso,jdbcType=CHAR},
+      </if>
+      <if test="iconAddr != null">
+        ICON_ADDR = #{iconAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="useIe != null">
+        USE_IE = #{useIe,jdbcType=CHAR},
+      </if>
+      <if test="openType != null">
+        OPEN_TYPE = #{openType,jdbcType=CHAR},
+      </if>
+      <if test="originalAppLoginUrl != null">
+        ORIGINAL_APP_LOGIN_URL = #{originalAppLoginUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ismustShowInDesktop != null">
+        ISMUST_SHOW_IN_DESKTOP = #{ismustShowInDesktop,jdbcType=CHAR},
+      </if>
+      <if test="issetVisibleRange != null">
+        ISSET_VISIBLE_RANGE = #{issetVisibleRange,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authorizeStatus != null">
+        AUTHORIZE_STATUS = #{authorizeStatus,jdbcType=CHAR},
+      </if>
+      <if test="backGroundColor != null">
+        BACKGROUND_COLOR = #{backGroundColor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findAllRest" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM AG_APP_SYSTEM
+    WHERE APP_NAME LIKE CONCAT(CONCAT('%', TRIM(#{appName})), '%')
+    <if test="authorizeStatus != null and authorizeStatus !=''">
+      and AUTHORIZE_STATUS = #{authorizeStatus,jdbcType=CHAR}
+    </if>
+  </select>
+
+  <select id="findByIds" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM AG_APP_SYSTEM
+    WHERE ID in
+    <foreach collection="list" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM AG_APP_SYSTEM
+    WHERE APP_NAME LIKE CONCAT(CONCAT('%', TRIM(#{appName})), '%')
+  </select>
+</mapper>

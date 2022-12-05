@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.augurit.agcloud.agcom.agsupport.mapper.AgUserThirdappMapper" >
+  <resultMap id="BaseResultMap" type="com.augurit.agcloud.agcom.agsupport.domain.AgUserThirdapp" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="APP_ID" property="appId" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL" />
+    <result column="TO_DESKTOP" property="toDesktop" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, APP_ID, ORDER_NO,TO_DESKTOP
+  </sql>
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from AG_USER_THIRDAPP
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findByAppId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from AG_USER_THIRDAPP
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+    order by ORDER_NO asc
+  </select>
+
+  <select id="findByAppIdAndUserId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from AG_USER_THIRDAPP
+    where APP_ID = #{appId,jdbcType=VARCHAR}
+    and USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findByMaxOrder" resultType="Long">
+    select
+    max(ORDER_NO) as max
+    from AG_USER_THIRDAPP
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.String" >
+    delete from AG_USER_THIRDAPP
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByIds" parameterType="java.lang.String" >
+    delete from AG_USER_THIRDAPP
+    where USER_ID IN
+    <foreach collection="userIds" item="userId" open="(" close=")" separator=",">
+      #{userId}
+    </foreach>
+    and APP_ID = #{appId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgUserThirdapp" >
+    insert into AG_USER_THIRDAPP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="appId != null" >
+        APP_ID,
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO,
+      </if>
+      <if test="toDesktop != null" >
+        TO_DESKTOP,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=DECIMAL},
+      </if>
+      <if test="toDesktop != null" >
+        #{toDesktop,jdbcType=VARCHAR},
+      </if>
+
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.augurit.agcloud.agcom.agsupport.domain.AgUserThirdapp" >
+    update AG_USER_THIRDAPP
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null" >
+        APP_ID = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+      </if>
+      <if test="toDesktop != null" >
+        TO_DESKTOP = #{toDesktop,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from AG_USER_THIRDAPP
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+    order by ORDER_NO asc
+  </select>
+
+  <select id="findByUserIdAndAppIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from AG_USER_THIRDAPP
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+    and APP_ID in
+    <foreach collection="appIds" item="appId" separator="," open="(" close=")">
+      #{appId}
+    </foreach>
+    order by ORDER_NO asc
+  </select>
+
+  <!--批量修改-->
+  <update id="updateBatch">
+    <if test="_databaseId == 'oracle'">
+      BEGIN
+    </if>
+    <foreach collection="list" item="item" index="index" separator=";">
+      update AG_USER_THIRDAPP
+      <set >
+        <if test="item.userId != null" >
+          USER_ID = #{item.userId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.appId != null" >
+          APP_ID = #{item.appId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.orderNo != null" >
+          ORDER_NO = #{item.orderNo,jdbcType=DECIMAL},
+        </if>
+        <if test="item.toDesktop != null" >
+          TO_DESKTOP = #{item.toDesktop,jdbcType=VARCHAR},
+        </if>
+      </set>
+      WHERE
+      id = #{item.id}
+    </foreach>
+    <if test="_databaseId == 'oracle'">
+      ;END;
+    </if>
+  </update>
+</mapper>
